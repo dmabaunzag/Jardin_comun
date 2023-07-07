@@ -280,12 +280,12 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 
 mclust.options(hcUse="SVD")
 mean.phenodata.selected.log.pca.varsel.back <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("backward"))
-#examine results
+#resultados examinados
 attributes(mean.phenodata.selected.log.pca.varsel.back)
 summary(mean.phenodata.selected.log.pca.varsel.back)
 names(mean.phenodata.selected.log.pca.varsel.back$subset) 
 mean.phenodata.selected.log.pca.varsel.back$steps.info
 mean.phenodata.selected.log.pca.varsel.back$search
 mean.phenodata.selected.log.pca.varsel.back$direction
-#these are the traits selected, in the order they were selected: 1,2,3,4,5,6,7,8,9,10,11,12
+#éstos son los rasgos seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
 
