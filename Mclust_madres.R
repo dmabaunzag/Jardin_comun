@@ -21,9 +21,7 @@
 ###################################################################################################################
 # 1.1) Librerías:
 
-library(mclust) # librería para adaptar modelos de mezclas normales
-library(clustvarsel) #librería para la selección de variables para el modelos de mexclas normales
-library(ellipse)
+<
 ###################################################################################################################
 # 1.2) lectura de los datos fenotípicos. Estos datos son promedios de cada variable para cada especímen. 
 
@@ -292,7 +290,7 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 
 ###################################################################################################################
 # 3.2) selección de variables haia adelante unsando PCA de la matriz de covarianza de los rasgos fenotípicos con
-#       transformación logarítmica.Forward variable selection using PCA on the covariace matrix of the log-transformed data.
+#       transformación logarítmica.
 
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
 #argumento "hcUse"; revisar las opciones de MClust: hep("Mclust)
@@ -301,29 +299,31 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 mclust.options(hcUse="PCS")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
                                                           search=c("greedy"), direction = c("forward"))
-#resultados examinados
+#resultado:
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
 names(mean.phenodata.selected.log.pca.varsel.for$subset) 
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#these are the traits selected, in the order they were selected: 1,3,2,6,5,4,7,8,9,10,12,11
+#éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
 mclust.options(hcUse="VARS")
-mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
-#examine results
+mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
+                                                          search=c("greedy"), direction = c("forward"))
+#resultado:
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
 names(mean.phenodata.selected.log.pca.varsel.for$subset) 
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#these are the traits selected, in the order they were selected: 1,3,2,6,5,4,7,8,9,10,12,11
+#rasgos seleccionados en orden: 1,2,4,3,6,7,5,8,9,11,10
 
 mclust.options(hcUse="STD")
-mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
-#examine results
+mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
+                                                          search=c("greedy"), direction = c("forward"))
+#resultados:
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
 names(mean.phenodata.selected.log.pca.varsel.for$subset) 
@@ -334,14 +334,14 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 
 mclust.options(hcUse="SPH")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
-#examine results
+#Resultados:
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
 names(mean.phenodata.selected.log.pca.varsel.for$subset) 
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#these are the traits selected, in the order they were selected: 1,3,2,6,5,4,7,8,9,10,12,11
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
 mclust.options(hcUse="PCR")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
@@ -352,18 +352,18 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#these are the traits selected, in the order they were selected: 1,3,2,6,5,4,7,10,8,9,12,11
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
 mclust.options(hcUse="SVD")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
-#examine results
+#Resultados
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
 names(mean.phenodata.selected.log.pca.varsel.for$subset) 
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#these are the traits selected, in the order they were selected: 1,3,2,6,5,4,7,10,8,9,12,11
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
 
 ###################################################################################################################
