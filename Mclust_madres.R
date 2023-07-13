@@ -21,12 +21,16 @@
 ###################################################################################################################
 # 1.1) Librerías:
 
-<
+library(mclust) # librería para adaptar modelos de mezclas normales
+library(clustvarsel) #librería para la selección de variables para el modelos de mexclas normales
+library(ellipse)
 ###################################################################################################################
 # 1.2) lectura de los datos fenotípicos. Estos datos son promedios de cada variable para cada especímen. 
 
 #directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun")#copiar su directorio de trabajo acá
+setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 
 #leer las tablas de datos, examinar y resumir los datos
 
@@ -208,7 +212,7 @@ plot(mean.phenodata.selected.log.pca$x[,PCA.x], mean.phenodata.selected.log.pca$
 ###################################################################################################################
 
 ###################################################################################################################
-# 3.1) selección de variables haia atrás unsando PCA de la matriz de covarianza de los rasgos fenotípicos con
+# 3.1) selección de variables hacia atrás usando PCA de la matriz de covarianza de los rasgos fenotípicos con
 #       transformación logarítmica.
 
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
@@ -216,7 +220,7 @@ plot(mean.phenodata.selected.log.pca$x[,PCA.x], mean.phenodata.selected.log.pca$
 
 mclust.options(hcUse="PCS") #principal components computed using SVD on centered variables (i.e. using the covariance matrix)
 mean.phenodata.selected.log.pca.varsel.back <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
-                                                           search=c("greedy"), direction = c("backward"))
+                                                          search=c("greedy"), direction = c("backward"))
 #examinar los resultados
 attributes(mean.phenodata.selected.log.pca.varsel.back)
 summary(mean.phenodata.selected.log.pca.varsel.back)
@@ -333,7 +337,8 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 #éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10 
 
 mclust.options(hcUse="SPH")
-mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
+mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
+                                                          search=c("greedy"), direction = c("forward"))
 #Resultados:
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
@@ -344,18 +349,8 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 #Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
 mclust.options(hcUse="PCR")
-mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
-#examine results
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset) 
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
-
-mclust.options(hcUse="SVD")
-mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, search=c("greedy"), direction = c("forward"))
+mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
+                                                          search=c("greedy"), direction = c("forward"))
 #Resultados
 attributes(mean.phenodata.selected.log.pca.varsel.for)
 summary(mean.phenodata.selected.log.pca.varsel.for)
@@ -365,6 +360,394 @@ mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
 #Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
 
+mclust.options(hcUse="SVD")
+mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
+                                                          search=c("greedy"), direction = c("forward"))
+#Resultados
+attributes(mean.phenodata.selected.log.pca.varsel.for)
+summary(mean.phenodata.selected.log.pca.varsel.for)
+names(mean.phenodata.selected.log.pca.varsel.for$subset) 
+mean.phenodata.selected.log.pca.varsel.for$steps.info
+mean.phenodata.selected.log.pca.varsel.for$search
+mean.phenodata.selected.log.pca.varsel.for$direction
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
+
+##la selección de las variables tanto hacia adelante como hacia atrás, escogieron los primeros 12 rasgos fenotípicos 
+
 
 ###################################################################################################################
 
+###################################################################################################################
+# 4) Ajuste de los modelosde mezlas normales
+###################################################################################################################
+###################################################################################################################
+
+###################################################################################################################
+# 4.1) Seleccioinar rasgos fnotípicos (PCA) para la inclusión del método de meclas normales basado en los resultados
+#     de las secciones 3.1 3.2.
+
+data.for.GMM <- mean.phenodata.selected.log.pca$x[,1:12]
+
+###################################################################################################################
+# 4.2)ajuste de mezclas normales usandoo diferentes valores de inicialización, usando el argument "hcUse"
+
+#"PCS"
+mclust.options(hcUse="PCS") 
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
+attributes(Mcluster.phenodata)
+# ---------------------------------------------------- 
+#   Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 8 components: 
+#   
+#   log-likelihood   n  df       BIC       ICL
+#      186.1445     350 265   -1180.063   -1186.984
+# 
+# Clustering table:
+#   1   2   3   4   5   6   7   8 
+#   23 124  23  59  32  46  29  14 
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#"VARS"
+mclust.options(hcUse="VARS")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
+attributes(Mcluster.phenodata)
+# ---------------------------------------------------- 
+#   Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 8 components: 
+#   
+#   log-likelihood   n  df       BIC       ICL
+#     186.1445      350 265     -1180.063 -1186.984
+# 
+# Clustering table:
+#   1   2   3   4   5   6   7   8 
+#   23 124  23  59  32  46  29  14 
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#"STD"
+mclust.options(hcUse="STD")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)## Sin embargo al correr con 
+#G=1:20 da 11 componentes.... para revisar
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
+attributes(Mcluster.phenodata)
+# ---------------------------------------------------- 
+# Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
+#   
+#   log-likelihood   n  df       BIC       ICL
+#     206.3722     350  315     -1432.505 -1450.444
+# 
+# Clustering table:
+#   1  2  3  4  5  6  7  8  9 10 
+#   23 25 42 21 58 50 16 27 47 41
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#"SPH"
+mclust.options(hcUse="SPH")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)# al igual que en STD, el
+#número de componentes aumenta a 11 componentes si corro g=1:20
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
+attributes(Mcluster.phenodata)
+
+# ---------------------------------------------------- 
+#   Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
+#   
+#   log-likelihood   n  df       BIC       ICL
+#     206.3722      350 315   -1432.505  -1450.444
+# 
+# Clustering table:
+#   1  2  3  4  5  6  7  8  9 10 
+#   23 25 42 21 58 50 16 27 47 41 
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#"PCR"
+mclust.options(hcUse="PCR")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+
+#Resultados
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#the specimens included in the analysis
+Mcluster.phenodata$classification #classification of specimens
+Mcluster.phenodata$uncertainty #the uncertainty of the classification
+attributes(Mcluster.phenodata)
+# ---------------------------------------------------- 
+#   Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
+#   
+#   log-likelihood   n  df       BIC       ICL
+# 206.3722 350 315 -1432.505 -1450.444
+# 
+# Clustering table:
+#   1  2  3  4  5  6  7  8  9 10 
+# 23 25 42 21 58 50 16 27 47 41 
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#"SDV"
+mclust.options(hcUse="SVD")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#the specimens included in the analysis
+Mcluster.phenodata$classification #classification of specimens
+Mcluster.phenodata$uncertainty #the uncertainty of the classification
+attributes(Mcluster.phenodata)
+
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+###################################################################################################################
+###################################################################################################################
+# 5) Examine phenotypic groups in the best normal mixture model.
+###################################################################################################################
+###################################################################################################################
+
+#load best normal mixture model as needed
+#set working directory
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda")# Diana's directory
+load("Mcluster.phenodata_2020June09.RData")
+
+###################################################################################################################
+# 5.1) Examine and save in a file the assignment of specimens to phenotypic groups. 
+
+#create and write a file with the assignment of specimens to phenotypic groups
+phenotypic.group.assignment <- data.frame(as.numeric(rownames(mean.phenodata.selected)),
+                                          mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),1], Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty)
+colnames(phenotypic.group.assignment) <- c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
+head(phenotypic.group.assignment)
+setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda")# Diana's directory
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(phenotypic.group.assignment, file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
+
+###################################################################################################################
+# 5.2) Examine the parameters of the multivariate normal distributions defining each phenotypic group according
+# to the best normal mixture mode
+
+#directory to save figures
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda/Figures")# Diana's directory
+
+#jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
+jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
+#jet.gray <- colorRampPalette(c("gray90", "black"))
+
+xy.coo <- seq(0, 1, length.out=12)
+
+#calculate range of values in the correlation matrices of phenotypic groups
+minmaxCO <- matrix(NA, nrow=6, ncol=2)
+for(i in 1:6){
+  CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,i])
+  diag(CO) <- NA
+  CO[lower.tri(CO)] <- NA
+  minmaxCO[i,] <- range(CO, na.rm=T) 
+}
+range(minmaxCO) #for graphs we use range -0.9 to 0.6
+
+
+#select phenotypic group
+P <- 6
+
+#http://www.statistics4u.com/fundstat_eng/cc_scaling.html
+#range scaling for the mean
+M.Rmin <- 1.06
+M.Rmax <- 1.28 
+M.Dmin <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=min)
+M.Dmax <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=max)
+#M.range.scaling <- (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
+M.rs <- Mcluster.phenodata$parameters$mean * (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
+
+#range scaling for the variance
+V.Rmin <- 0.5
+V.Rmax <- 4 
+V.Dmin <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=min))
+V.Dmax <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=max))
+V.raw <- matrix(NA, nrow=12, ncol=6)
+for(i in 1:6){
+  V.raw[,i] <- diag(Mcluster.phenodata$parameters$variance$sigma[,,i])
+}
+V.rs <- V.raw * (V.Rmax - V.Rmin)/(V.Dmax - V.Dmin) + (V.Rmin*V.Dmax - V.Rmax*V.Dmin)/(V.Dmax - V.Dmin)
+
+#obtain correlation matrix
+CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,P])
+diag(CO) <- NA
+CO[lower.tri(CO)] <- NA
+
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(1,1,1,1))
+image(CO, col=jet.colors3(20), xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3), zlim=c(-0.9,0.6))
+#par(new=T)
+#image(xy.coo, xy.coo-0.095, P1.SD, col=jet.gray(20), xaxt="n", yaxt="n", bty="n", xlab="", ylab="", xlim=c(-0.6, 1.3), ylim=c(-0.6, 1.3))
+#par(new=T)
+#image(xy.coo, xy.coo-0.275, P1.M, col=jet.gray(20), xaxt="n", yaxt="n", bty="n", xlab="", ylab="", xlim=c(-0.6, 1.3), ylim=c(-0.6, 1.3))
+#points(xy.coo, xy.coo, pch=21, cex= 0.5, col="gray70")
+#points(xy.coo, xy.coo, pch=21, cex= 4, col="gray70")
+#graph variances
+#points(xy.coo, xy.coo, pch=19, cex= 4, col="gray90")
+#points(xy.coo, xy.coo, pch=19, cex= 0.5, col="white")
+#points(xy.coo, xy.coo, pch=21, cex=V.rs[,P])
+points(xy.coo, xy.coo, pch=19, cex=V.rs[,P])
+#points(xy.coo, xy.coo-0.1, type="p", pch=as.character(1:12))
+text(xy.coo, xy.coo-0.08, labels=as.character(1:12), adj=0.5, cex=1.5)
+text(-0.1, xy.coo, labels=as.character(1:12), cex=1.5)
+#points(xy.coo, rep(1.1, 12), type="l", lty=1, lwd=0.5, col="gray")
+#points(xy.coo, rep(1.28, 12), type="l", lty=1, lwd=0.5, col="gray")
+#points(xy.coo, rep(1.19, 12), type="l", lty=3, lwd=0.5, col="gray")
+#segments(x0=-0.05, y0=1.1, x1=1.05, y1=1.1, lwd=0.5, col="gray")
+#segments(x0=-0.05, y0=1.28, x1=1.05, y1=1.28, lwd=0.5, col="gray")
+rect(xleft=-0.05, ybottom=1.06, xright=1.05, ytop=1.28, col = "gray90", border="gray90")
+segments(x0=-0.05, y0=1.17, x1=1.05, y1=1.17, lwd=0.5, col="gray60", lty=3)
+points(xy.coo, M.rs[,P], pch=19, cex=0.6)
+segments(x0=xy.coo, y0=1.17, x1=xy.coo, y1=M.rs[,P], lty=1)
+text(xy.coo[10], xy.coo[4], paste(letters[P], ") ", "P" , P, sep=""), cex=2)
+
+#legend for the mean and variance
+par(mar=c(1,1,1,1))
+image(CO, col="transparent", xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3), zlim=c(-0.9,0.6))
+rect(xleft=-0.05, ybottom=1.06, xright=0.09090909+0.05, ytop=1.28, col = "gray90", border="gray90")
+segments(x0=-0.05, y0=1.17, x1=0.09090909+0.05, y1=1.17, lwd=0.5, col="gray60", lty=3)
+points(xy.coo[1:2], c(1.06,1.28), pch=19, cex=0.6)
+segments(x0=xy.coo[1:2], y0=1.17, x1=xy.coo[1:2], y1=c(M.Rmin, M.Rmax), lty=1)
+text(mean(xy.coo[1:2]), 1, "Mean", cex=1.5)
+text(xy.coo[2]+0.3, 1.11, "minimun", cex=1.5)
+text(xy.coo[2]+0.3, 1.24, "maximum", cex=1.5)
+#legend for variance
+points(xy.coo[c(8,8)]+0.045, c(1.11,1.24), pch=19, cex=c(V.Rmin, V.Rmax))
+text(xy.coo[c(8,8)]+0.045, 1, "Variance", cex=1.5)
+#text(xy.coo[c(9,9)]+0.045, 1.16, "Variance", cex=1.5, srt=90)
+rect(xleft=-0.07, ybottom=0.95, xright=xy.coo[c(9,9)]+0.11, ytop=1.3, col = "transparent", border="black")
+
+#add legend for correlation matrices
+imagelegend <- function(xl, yt, width, nbox, bheight, bgap, col, border=NULL) 
+{ 
+  x <- c(xl,xl,xl+width,xl+width) 
+  top <- 0 
+  bottom <- bheight 
+  y <- c(yt-bottom,yt-top,yt-top,yt-bottom) 
+  polygon(x,y,border=border,col=col[1]) 
+  for (i in 2:nbox) { 
+    top <- top + bheight + bgap 
+    bottom <- top + bheight 
+    y <- c(yt-bottom,yt-top,yt-top,yt-bottom) 
+    polygon(x,y,border=border,col=col[i]) 
+  } 
+} 
+#From R. Bivand:
+#As far as I remenber, the arguments are: 
+#xl x-location of legend panel left edge 
+#yt y-location of legend panel top edge 
+#width fill box width 
+#nbox number of boxes 
+#bheight fill box height 
+#bgap vertical gap between boxes 
+#col nbox colours 
+#border colour to draw fill box boundaries 
+
+#image(CO, col="transparent", xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3))
+#imagelegend(0.8, 0.7, 0.02, 20, 0.02, 0, jet.colors3(20), "black")
+#imagelegend(xl=0.8, yt=0.7, width=0.02, nbox=20, bheight=0.02, bgap=0, col=jet.colors3(20)[20:1], border="transparent")
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(1,1,1,1))
+plot(c(-0.9,0.6), c(-0.9,0.6), xaxt="n", yaxt="n", bty="n", type="n")
+#imagelegend(xl=0, yt=1, width=0.05, nbox=29, bheight=0.05, bgap=0, col=jet.colors3(20)[20:1], border="transparent")
+imagelegend(xl=0, yt=0.6, width=0.05, nbox=30, bheight=0.05, bgap=0, col=jet.colors3(30)[30:1], border="transparent")
+axis(4, line=-9, at=seq(-0.9, 0.6, 0.05), labels=F)
+axis(4, line=-9, at=seq(-0.9, 0.6, 0.1), labels=F, tcl=-1, cex.axis=1.5)
+axis(4, line=-8.5, at=seq(-0.9, 0.6, 0.1), labels=T, tcl=-1, cex.axis=1.5, lwd=0)
+mtext(side=4, "Correlation (Pearson's r)", cex=1.5, line=-5)
+#text(-0.6, -0.1, labels="I) Correlation", cex=2, srt=90)
+
+#par(mar=c(5,4.5,4,2)+0.1) #default
+par(mar=c(7,1,7,1))
+#image(CO, col="transparent", xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3))
+#plot(rep(1:12, 2), c(M.Dmin, M.Dmax), xaxt="n", yaxt="n", bty="n", type="n")
+#plot(rep(1:12, 2), c(M.Dmin, M.Dmax), xaxt="n", xlab="", ylab="Mean", bty="n", type="n", cex.axis=1.5, cex.lab=1.5, ylim=c(-1.7,0.7))
+plot(rep(xy.coo, 2), c(M.Dmin, M.Dmax), xaxt="n", yaxt="n", xlab="", ylab="", bty="n", type="n",
+     cex.axis=1.5, cex.lab=1.5,  xlim=c(-0.15, 1.3), ylim=c(-1.7,0.7), xaxs="i")
+points(xy.coo, M.Dmax, type="o", pch=19)
+points(xy.coo, M.Dmin, type="o", pch=19)
+axis(2, at=round(seq(-1.7,0.7,0.1),3), labels=F, tcl=-0.5, line=-2.2)
+axis(2, at=c(-1.5,-1,-0.5,0,0.5), labels=F, tcl=-0.7, line=-2.2)
+axis(2, at=c(-1.5,-1,-0.5,0, 0.5), labels=T, cex.axis=1.5, line=-2.2, lwd=0, las=2)
+#abline(h=0, lty=3)
+axis(1, at=xy.coo, labels=F, line=0, cex.axis=1.5)
+axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
+axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
+text(xy.coo[8], -1, labels="G) Mean", cex=2)
+mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
+
+#par(mar=c(5,4.5,4,2)+0.1) #default
+par(mar=c(7,1,7,1))
+plot(rep(xy.coo, 2), c(V.Dmin, V.Dmax), xaxt="n", yaxt="n", xlab="", ylab="", bty="n", type="n",
+     cex.axis=1.5, cex.lab=1.5,  xlim=c(-0.15, 1.3), xaxs="i")
+points(xy.coo, V.Dmax, type="o", pch=19)
+points(xy.coo, V.Dmin, type="o", pch=19)
+axis(2, at=round(seq(0,1.5,0.1),3), labels=F, tcl=-0.5, line=-2.2)
+axis(2, at=c(0,0.5,1,1.5), labels=F, tcl=-0.7, line=-2.2)
+axis(2, at=c(0,0.5,1,1.5), labels=T, cex.axis=1.5, lwd=0, las=2,  line=-2.2)
+axis(1, at=xy.coo, labels=F, line=0, cex.axis=1.5)
+axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
+axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
+text(xy.coo[8], 1, labels="H) Variance", cex=2)
+mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
