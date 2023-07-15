@@ -280,7 +280,7 @@ mean.phenodata.selected.log.pca.varsel.back$search
 mean.phenodata.selected.log.pca.varsel.back$direction
 #éstos son los rasgos seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
 
-mclust.options(hcUse="SVD")
+mclust.options(hcUse="SVD")#scaled SVD transformation (default)
 mean.phenodata.selected.log.pca.varsel.back <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
                                                            search=c("greedy"), direction = c("backward"))
 #resultados examinados
@@ -393,7 +393,7 @@ data.for.GMM <- mean.phenodata.selected.log.pca$x[,1:12]
 
 #"PCS"
 mclust.options(hcUse="PCS") 
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
 
 #Resultados:
 Mcluster.phenodata
@@ -420,9 +420,10 @@ plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
 
+
 #"VARS"
 mclust.options(hcUse="VARS")
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
 
 #Resultados:
 Mcluster.phenodata
@@ -451,8 +452,7 @@ plot(Mcluster.phenodata, what="BIC")
 
 #"STD"
 mclust.options(hcUse="STD")
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)## Sin embargo al correr con 
-#G=1:20 da 11 componentes.... para revisar
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
 
 #Resultados:
 Mcluster.phenodata
@@ -461,58 +461,96 @@ names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
-# ---------------------------------------------------- 
-# Gaussian finite mixture model fitted by EM algorithm 
-# ---------------------------------------------------- 
-#   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
-#   
-#   log-likelihood   n  df       BIC       ICL
-#     206.3722     350  315     -1432.505 -1450.444
-# 
-# Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 
-#   23 25 42 21 58 50 16 27 47 41
-
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
-plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
-#gráfica del soporte empríco de los diferentess modelos
-plot(Mcluster.phenodata, what="BIC")
-
-#"SPH"
-mclust.options(hcUse="SPH")
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)# al igual que en STD, el
-#número de componentes aumenta a 11 componentes si corro g=1:20
-
-#Resultados:
-Mcluster.phenodata
-summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
-Mcluster.phenodata$classification #clasificación de los especímenes
-Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
-attributes(Mcluster.phenodata)
-
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
 #   
-#   log-likelihood   n  df       BIC       ICL
-#     206.3722      350 315   -1432.505  -1450.444
+#   log-likelihood   n  df      BIC      ICL
+# 331.3036          350 340   -1329.09 -1341.62
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 
-#   23 25 42 21 58 50 16 27 47 41 
+#   1  2  3  4  5  6  7  8  9 10 11 
+#   23 12 41 25 59 48 16 39 46 25 16 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
 
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+
+
+#"SPH"
+mclust.options(hcUse="SPH")
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
+
+#Resultados:
+Mcluster.phenodata
+summary(Mcluster.phenodata)
+names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
+attributes(Mcluster.phenodata)
+
+# ---------------------------------------------------- 
+# Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   
+#   log-likelihood   n  df      BIC      ICL
+#   331.3036        350 340   -1329.09 -1341.62
+# 
+# Clustering table:
+#   1  2  3  4  5  6  7  8  9 10 11 
+#   23 12 41 25 59 48 16 39 46 25 16 
+
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+
 #"PCR"
 mclust.options(hcUse="PCR")
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
 
 #Resultados
 Mcluster.phenodata
@@ -525,22 +563,49 @@ attributes(Mcluster.phenodata)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 10 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
 #   
-#   log-likelihood   n  df       BIC       ICL
-# 206.3722 350 315 -1432.505 -1450.444
+#   log-likelihood   n  df      BIC      ICL
+#     331.3036     350  340   -1329.09   -1341.62
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 
-# 23 25 42 21 58 50 16 27 47 41 
+#   1  2  3  4  5  6  7  8  9 10 11 
+#  23 12 41 25 59 48 16 39 46 25 16 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
 
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+
+#save best Mclust model
+#set working directory
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun")
+save(Mcluster.phenodata, file="Mcluster.phenodata_2023July14.RData")
+load("Mcluster.phenodata_2023July14.RData")
+
 #"SDV"
 mclust.options(hcUse="SVD")
-Mcluster.phenodata <- Mclust(data.for.GMM, G=1:10)
+Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
 
 #Resultados:
 Mcluster.phenodata
@@ -549,12 +614,40 @@ names(Mcluster.phenodata$classification)#the specimens included in the analysis
 Mcluster.phenodata$classification #classification of specimens
 Mcluster.phenodata$uncertainty #the uncertainty of the classification
 attributes(Mcluster.phenodata)
-
+# ---------------------------------------------------- 
+#   Gaussian finite mixture model fitted by EM algorithm 
+# ---------------------------------------------------- 
+#   
+#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   
+#   log-likelihood   n  df      BIC      ICL
+#     331.3036      350 340   -1329.09 -1341.62
+# 
+# Clustering table:
+#   1  2  3  4  5  6  7  8  9 10 11 
+#  23 12 41 25 59 48 16 39 46 25 16 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
+
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+
 
 ###################################################################################################################
 ###################################################################################################################
@@ -566,18 +659,20 @@ plot(Mcluster.phenodata, what="BIC")
 #set working directory
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda")# Diana's directory
-load("Mcluster.phenodata_2020June09.RData")
+setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+load("Mcluster.phenodata_2023July14.RData")
 
 ###################################################################################################################
 # 5.1) Examine and save in a file the assignment of specimens to phenotypic groups. 
 
 #create and write a file with the assignment of specimens to phenotypic groups
 phenotypic.group.assignment <- data.frame(as.numeric(rownames(mean.phenodata.selected)),
-                                          mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),1], Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty)
-colnames(phenotypic.group.assignment) <- c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
+                                          mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),1], 
+                                          Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty)
+colnames(phenotypic.group.assignment) <- 
+  c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
 head(phenotypic.group.assignment)
-setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda")# Diana's directory
+setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 write.csv(phenotypic.group.assignment, file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
 
@@ -587,7 +682,7 @@ write.csv(phenotypic.group.assignment, file=paste("PhenotypicGroupAssignment_", 
 
 #directory to save figures
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-setwd("C:/Users/usuario/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Melissa_Pineda/Figures")# Diana's directory
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
 
 #jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
 jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
@@ -597,7 +692,7 @@ xy.coo <- seq(0, 1, length.out=12)
 
 #calculate range of values in the correlation matrices of phenotypic groups
 minmaxCO <- matrix(NA, nrow=6, ncol=2)
-for(i in 1:6){
+for(i in 1:11){
   CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,i])
   diag(CO) <- NA
   CO[lower.tri(CO)] <- NA
@@ -607,7 +702,7 @@ range(minmaxCO) #for graphs we use range -0.9 to 0.6
 
 
 #select phenotypic group
-P <- 6
+P <- 11
 
 #http://www.statistics4u.com/fundstat_eng/cc_scaling.html
 #range scaling for the mean
@@ -623,8 +718,8 @@ V.Rmin <- 0.5
 V.Rmax <- 4 
 V.Dmin <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=min))
 V.Dmax <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=max))
-V.raw <- matrix(NA, nrow=12, ncol=6)
-for(i in 1:6){
+V.raw <- matrix(NA, nrow=12, ncol=11)
+for(i in 1:11){
   V.raw[,i] <- diag(Mcluster.phenodata$parameters$variance$sigma[,,i])
 }
 V.rs <- V.raw * (V.Rmax - V.Rmin)/(V.Dmax - V.Dmin) + (V.Rmin*V.Dmax - V.Rmax*V.Dmin)/(V.Dmax - V.Dmin)
@@ -736,6 +831,7 @@ axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
 axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
 text(xy.coo[8], -1, labels="G) Mean", cex=2)
 mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
+
 
 #par(mar=c(5,4.5,4,2)+0.1) #default
 par(mar=c(7,1,7,1))
