@@ -651,37 +651,39 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 
 ###################################################################################################################
 ###################################################################################################################
-# 5) Examine phenotypic groups in the best normal mixture model.
+# 5) Examinar grupos fenotípicos en el mejor modelo de mezclas normales.
 ###################################################################################################################
 ###################################################################################################################
 
-#load best normal mixture model as needed
-#set working directory
-#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
-#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+#cargar el mejor modelo de mezcla normal
+#directorio de trabajo
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
 load("Mcluster.phenodata_2023July14.RData")
 
 ###################################################################################################################
-# 5.1) Examine and save in a file the assignment of specimens to phenotypic groups. 
+# 5.1)Examinar y guardar en un documento para asignación de los especímenes a los grupos fenotípicos. 
 
-#create and write a file with the assignment of specimens to phenotypic groups
+#crear y escribir documento para la asignación de los grupos fenotípicos.
 phenotypic.group.assignment <- data.frame(as.numeric(rownames(mean.phenodata.selected)),
                                           mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),1], 
                                           Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty)
 colnames(phenotypic.group.assignment) <- 
   c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
 head(phenotypic.group.assignment)
-setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-write.csv(phenotypic.group.assignment, file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
+write.csv(phenotypic.group.assignment, 
+          file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
 
 ###################################################################################################################
-# 5.2) Examine the parameters of the multivariate normal distributions defining each phenotypic group according
-# to the best normal mixture mode
+# 5.2) Examinar los parámetros de la distribución normal multivariable definiendo cada grupo fenotípico de acuerdo
+# al mejor modelo de mezcla de normales.
 
-#directory to save figures
+# directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
+
 setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
 
 #jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
@@ -690,30 +692,31 @@ jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
 
 xy.coo <- seq(0, 1, length.out=12)
 
-#calculate range of values in the correlation matrices of phenotypic groups
-minmaxCO <- matrix(NA, nrow=6, ncol=2)
+#Calcular rangos de valores en la correlación de matrices de los grupos fenotípicos
+minmaxCO <- matrix(NA, nrow=11, ncol=2)
 for(i in 1:11){
   CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,i])
   diag(CO) <- NA
   CO[lower.tri(CO)] <- NA
   minmaxCO[i,] <- range(CO, na.rm=T) 
 }
-range(minmaxCO) #for graphs we use range -0.9 to 0.6
+range(minmaxCO) #para graficar usar este rango: -0.9 to 0.6
 
 
-#select phenotypic group
+#seleccionar grupo fenotípico
 P <- 11
 
 #http://www.statistics4u.com/fundstat_eng/cc_scaling.html
-#range scaling for the mean
+#escalando rano spara el promedio
 M.Rmin <- 1.06
 M.Rmax <- 1.28 
 M.Dmin <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=min)
 M.Dmax <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=max)
 #M.range.scaling <- (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
-M.rs <- Mcluster.phenodata$parameters$mean * (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
+M.rs <- Mcluster.phenodata$parameters$mean * (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + 
+  (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
 
-#range scaling for the variance
+# Escalando el rango para la varianza
 V.Rmin <- 0.5
 V.Rmax <- 4 
 V.Dmin <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=min))
@@ -724,7 +727,7 @@ for(i in 1:11){
 }
 V.rs <- V.raw * (V.Rmax - V.Rmin)/(V.Dmax - V.Dmin) + (V.Rmin*V.Dmax - V.Rmax*V.Dmin)/(V.Dmax - V.Dmin)
 
-#obtain correlation matrix
+#Obtener matriz de correlación.
 CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,P])
 diag(CO) <- NA
 CO[lower.tri(CO)] <- NA
@@ -757,7 +760,7 @@ points(xy.coo, M.rs[,P], pch=19, cex=0.6)
 segments(x0=xy.coo, y0=1.17, x1=xy.coo, y1=M.rs[,P], lty=1)
 text(xy.coo[10], xy.coo[4], paste(letters[P], ") ", "P" , P, sep=""), cex=2)
 
-#legend for the mean and variance
+#Leyenda para el promedio y la varianza.
 par(mar=c(1,1,1,1))
 image(CO, col="transparent", xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3), zlim=c(-0.9,0.6))
 rect(xleft=-0.05, ybottom=1.06, xright=0.09090909+0.05, ytop=1.28, col = "gray90", border="gray90")
@@ -767,13 +770,13 @@ segments(x0=xy.coo[1:2], y0=1.17, x1=xy.coo[1:2], y1=c(M.Rmin, M.Rmax), lty=1)
 text(mean(xy.coo[1:2]), 1, "Mean", cex=1.5)
 text(xy.coo[2]+0.3, 1.11, "minimun", cex=1.5)
 text(xy.coo[2]+0.3, 1.24, "maximum", cex=1.5)
-#legend for variance
+#leyenda para la varianza
 points(xy.coo[c(8,8)]+0.045, c(1.11,1.24), pch=19, cex=c(V.Rmin, V.Rmax))
 text(xy.coo[c(8,8)]+0.045, 1, "Variance", cex=1.5)
 #text(xy.coo[c(9,9)]+0.045, 1.16, "Variance", cex=1.5, srt=90)
 rect(xleft=-0.07, ybottom=0.95, xright=xy.coo[c(9,9)]+0.11, ytop=1.3, col = "transparent", border="black")
 
-#add legend for correlation matrices
+# agregar leyenda para la correlación de las matrices
 imagelegend <- function(xl, yt, width, nbox, bheight, bgap, col, border=NULL) 
 { 
   x <- c(xl,xl,xl+width,xl+width) 
@@ -788,7 +791,7 @@ imagelegend <- function(xl, yt, width, nbox, bheight, bgap, col, border=NULL)
     polygon(x,y,border=border,col=col[i]) 
   } 
 } 
-#From R. Bivand:
+#Desde R. Bivand:
 #As far as I remenber, the arguments are: 
 #xl x-location of legend panel left edge 
 #yt y-location of legend panel top edge 
@@ -847,3 +850,97 @@ axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
 axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
 text(xy.coo[8], 1, labels="H) Variance", cex=2)
 mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
+
+###################################################################################################################
+# 5.3) Examinar la tabulación cruzada de las variables en los datos originales (mean.phenodata) y grupos fenotípicos 
+# particulares en el mejor modelo de mezcla normal.
+
+#seleccionar un morfogrupo en el modelo de mezla normal.
+pg.nmm <- 6
+# Seleccionar una columna en los datos originales(mean.phenodata)
+colnames(mean.phenodata)
+col.phenodata <- 11 
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==pg.nmm],col.phenodata])
+
+###################################################################################################################
+# 5.4) Graficar el soporte empírico para el mejor modelo para cada grupo fenotípico.
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+
+###################################################################################################################
+# 5.5) Plot phenotypic groups in the best normal mixture model. 
+
+#directory to save figures
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+
+#PC1 vs PC2
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,2), main="", addEllipses = F,
+     xlab="PC1 (44.46% variance)", ylab="PC2 (16.29% variance)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:6), col=mclust.options("classPlotColors"),
+       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
+#add ellipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[1:2,1:2,i],
+                 centre = Mcluster.phenodata$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#add ellipse labels
+text(0.9, 0.79, "P1")
+text(-1.7, 0.95, "P4")
+text(0.5, -1.7, "P6")
+text(-0.82, -0.85, "P2")
+text(-1.03, -0.24, "P3")
+text(0.85, -0.4, "P5")
+arrows(x0=0.7, y0=-0.4, x1 =-0.25, y1 =-0.1, length = 0.1, angle = 20, code = 2)
+#mtext(side=2, "a)", at=2, las=2, line=2, cex=1.5)
+
+#PC1 vs PC3
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,3), main="", addEllipses = F,
+     xlab="PC1 (44.46% variance)", ylab="PC3 (10.60% variance)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomright", paste("P", 1:6), col=mclust.options("classPlotColors"),
+       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
+#add ellipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(1,3),c(1,3),i],
+                 centre = Mcluster.phenodata$parameters$mean[c(1,3),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+
+#PC3 vs PC2
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(3,2), main="", addEllipses = F,
+     xlab="PC3 (10.60% variance)", ylab="PC2 (16.29% variance)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:6), col=mclust.options("classPlotColors"),
+       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
+#add ellipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(3,2),c(3,2),i],
+                 centre = Mcluster.phenodata$parameters$mean[c(3,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#add ellipse labels
+text(0.13, 0.82, "P1")
+text(-0.83, 0.9, "P4")
+text(0.32, -1.72, "P6")
+text(-0.5, -0.89, "P2")
+text(0.475, -0.27, "P3")
+text(-0.76, -0.06, "P5")
+#mtext(side=2, "b)", at=2, las=2, line=2, cex=1.5)
