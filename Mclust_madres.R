@@ -677,13 +677,18 @@ setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
 write.csv(phenotypic.group.assignment, 
           file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
 
+#Examinar ls grupos fenotípicps de as plantas del piloto
+
+phenotypic.group.assignment.piloto<-phenotypic.group.assignment[308:350,]
+
+phenotypic.group.assignment.piloto##Las plantas del piloto se encuentran en tres de los 11 grupos fenotípicos: 4,10 y 11
+
 ###################################################################################################################
 # 5.2) Examinar los parámetros de la distribución normal multivariable definiendo cada grupo fenotípico de acuerdo
 # al mejor modelo de mezcla de normales.
 
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-
 setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
 
 #jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
@@ -881,19 +886,21 @@ axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
 abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
 
 ###################################################################################################################
-# 5.5) Plot phenotypic groups in the best normal mixture model. 
+# 5.5) Graficar grupos fenotípicos en el mejr modelo de mezclas normales. 
 
-#directory to save figures
+# directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
+
 
 #PC1 vs PC2
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar=c(5,5,4,2)+0.1)
 plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,2), main="", addEllipses = F,
-     xlab="PC1 (44.46% variance)", ylab="PC2 (16.29% variance)", cex.axis=1.5, cex.lab=1.5)
-legend("bottomleft", paste("P", 1:6), col=mclust.options("classPlotColors"),
-       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
-#add ellipses
+     xlab="PC1 (44.46% varianza)", ylab="PC2 (16.29% varianza)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:11), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
+#agregar elipses
 for (i in 1:Mcluster.phenodata$G){
   points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[1:2,1:2,i],
                  centre = Mcluster.phenodata$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
@@ -944,3 +951,4 @@ text(-0.5, -0.89, "P2")
 text(0.475, -0.27, "P3")
 text(-0.76, -0.06, "P5")
 #mtext(side=2, "b)", at=2, las=2, line=2, cex=1.5)
+
