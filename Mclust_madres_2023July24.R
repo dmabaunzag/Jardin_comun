@@ -420,6 +420,29 @@ plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
 
+#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
+#gráfica del soporte empríco de los diferentess modelos
+plot(Mcluster.phenodata, what="BIC")
+
+#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,6,4,2))
+plot(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], type="n", bty="n", xlim=c(1,12), ylim=c(2000,0), yaxt="n", xaxt="n",
+     xlab="Número de grupos morfológicos", ylab=expression(paste("Soporte empírico (",Delta, "BIC)", sep="")), 
+     main="", cex.axis=1.2, cex.lab=1.2, cex.main=1.2)
+points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd=1)
+#mostrar el mejor modelo
+#agregar eje
+axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
+axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
+abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
 
 #"VARS"
 mclust.options(hcUse="VARS")
@@ -677,7 +700,7 @@ setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
 write.csv(phenotypic.group.assignment, 
           file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
 
-#Examinar ls grupos fenotípicps de as plantas del piloto
+#Examinar los grupos fenotípicps de as plantas del piloto
 
 phenotypic.group.assignment.piloto<-phenotypic.group.assignment[308:350,]
 
