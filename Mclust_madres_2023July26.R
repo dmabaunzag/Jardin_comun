@@ -444,6 +444,15 @@ axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
 axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
 abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
 
+
+#guardar el mejor modelo en el directorio de trabajo
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun")
+save(Mcluster.phenodata, file=paste("Mcluster.phenodata_", format(Sys.time(), "%Y%b%d"), ".RData", sep=""))
+load("Mcluster.phenodata_2023jul.26.RData")
+
+
 #"VARS"
 mclust.options(hcUse="VARS")
 Mcluster.phenodata <- Mclust(data.for.GMM, G=1:12)
@@ -618,13 +627,6 @@ axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
 axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
 abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
 
-#save best Mclust model
-#set working directory
-#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
-#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
-setwd("C:/Users/usuario/Documents/Jardin_comun")
-save(Mcluster.phenodata, file="Mcluster.phenodata_2023July14.RData")
-load("Mcluster.phenodata_2023July14.RData")
 
 #"SDV"
 mclust.options(hcUse="SVD")
@@ -683,7 +685,7 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
-load("Mcluster.phenodata_2023July14.RData")
+load("Mcluster.phenodata_2023jul.26.RData")
 
 ###################################################################################################################
 # 5.1)Examinar y guardar en un documento para asignación de los especímenes a los grupos fenotípicos. 
