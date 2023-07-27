@@ -1,0 +1,237 @@
+Numero_coleccion_planta_madre;Jardin_Comun;Fecha_siembra;Fecha_trasplante;Bandeja;Fila;Columna;Fecha_medicion;Longitud_tallo_(cm);Numero_de_hojas;OBSERVACIONES
+1024;Quebradas;2/04/2019;6/08/2019;1A;3;9;9/03/2020;1.7;13;"Primeras hojas muertas y tres hojas amarillas; hoja tiene margen serrado"
+1002;Quebradas;2/04/2019;6/08/2019;1A;5;10;9/03/2020;1.8;10;Primeras dos hojas muertas y 3 amarillas
+1015;Quebradas;2/04/2019;6/08/2019;1A;1;7;9/03/2020;1.9;14;"Dos rosetas: 3 hojas; primeras dos hojas muertas"
+1018;Quebradas;5/04/2019;6/08/2019;1A;2;5;9/03/2020;2.1;12;Primeras 3 hojas muertas y una amarilla
+1028;Quebradas;5/04/2019;6/08/2019;1A;5;8;9/03/2020;2;15;Primeras 4 hojas muertas y 1 hoja amarilla
+1009;Quebradas;5/04/2019;6/08/2019;1A;5;6;9/03/2020;0.9;14;Primeras 3 hojas muertasy una hoja muerta
+1009;Quebradas;5/04/2019;6/08/2019;1A;3;7;9/03/2020;1.2;14;Primeras 4 hojas muertas y una hoja amarilla
+1020;Quebradas;5/04/2019;6/08/2019;1A;3;1;9/03/2020;1.5;16;Primeras 4 hojas muertas
+1010;Quebradas;5/04/2019;6/08/2019;1A;4;2;9/03/2020;1.5;15;Primeras 4 hojas muertas
+1032;Quebradas;5/04/2019;6/08/2019;1A;1;5;9/03/2020;1.7;11;Primeras 4 hojas muertas
+1025;Quebradas;5/04/2019;6/08/2019;1A;1;9;9/03/2020;1.7;11;4 hojas muertas y 1 amarilla
+1007;Quebradas;5/04/2019;6/08/2019;1A;2;2;9/03/2020;0.8;11;2 hojas muertas y 2 amarillas
+1012;Quebradas;5/04/2019;6/08/2019;1A;4;9;9/03/2020;1.3;10;3 hojas muertas y 1 amarilla
+1014;Quebradas;5/04/2019;6/08/2019;1A;4;3;9/03/2020;1.1;15;1 hoja muerta y 3 hojas amarillas
+1014;Quebradas;5/04/2019;6/08/2019;1A;2;7;9/03/2020;1.4;14;2 hojas muertas y 1 hoja amarilla
+1014;Quebradas;5/04/2019;6/08/2019;1A;3;6;9/03/2020;1.7;16;2 hojas muertas y 1 hoja amarilla
+1003;Quebradas;5/04/2019;6/08/2019;1A;4;7;9/03/2020;0.9;11;1 hoja muerta y 2 amarillas
+1017;Quebradas;5/04/2019;6/08/2019;1A;5;7;10/03/2020;1.9;12;Primeras 3 hojas muertas y una amarilla
+1003;Quebradas;5/04/2019;6/08/2019;1A;5;5;10/03/2020;1.7;10;"Segunda roseta: 1,2 (Longitud del tallo); 9 (número de hojas); 77 (ángulo 1); 137 (ángulo 2); 96 (ángulo 3); 154 (ángulo 4); 126 (ángulo 5); 143 (ángulo 6); 112 (ángulo 7). Dos rosetas en un mismo tallo, hojas con margen serrado. Hojas muertas: 2 (primera roseta), 1 (segunda roseta) "
+1009;Quebradas;5/04/2019;6/08/2019;1A;5;1;10/03/2020;1.2;13;Primeras 5 hojas muertas y 2 hojas amarillas
+1003;Quebradas;5/04/2019;6/08/2019;1A;3;3;10/03/2020;1.3;12;Primeras 4 hojas muertas
+1017;Quebradas;5/04/2019;6/08/2019;1A;1;10;10/03/2020;1.5;13;Primeras 4 hojas muertas
+1009;Quebradas;5/04/2019;6/08/2019;1A;2;4;10/03/2020;1.3;13;Primeras 3 hojas muertas
+1008;Quebradas;5/04/2019;6/08/2019;1A;3;4;10/03/2020;0.8;9;Primeras 2 hojas muertas y 1 amarilla
+1009;Quebradas;5/04/2019;6/08/2019;1A;3;5;10/03/2020;1;13;Primeras 3 hojas muertas y una amarilla
+1009;Quebradas;5/04/2019;6/08/2019;1A;5;9;10/03/2020;1.3;12;Una hoja amarilla
+1008;Quebradas;5/04/2019;6/08/2019;1A;3;8;10/03/2020;1;9;Dos hojas muertas y una amarilla
+1013;Quebradas;5/04/2019;6/08/2019;1A;2;6;10/03/2020;1.2;8;Dos hojas muertas y dos amarillas
+1035;Quebradas;5/04/2019;6/08/2019;1A;3;2;10/03/2020;0.7;13;Tres hojas muertas
+1035;Quebradas;5/04/2019;6/08/2019;1A;4;6;10/03/2020;0.5;14;Tres hojas muertas
+1027;Quebradas;5/04/2019;6/08/2019;1A;2;9;10/03/2020;0.9;11;Tres hojas muertas y una amarilla
+1027;Quebradas;5/04/2019;6/08/2019;1A;3;10;10/03/2020;0.7;11;Dos hojas muertas y una amarilla
+1017;Quebradas;5/04/2019;6/08/2019;1A;4;1;10/03/2020;1.4;14;Cuatro hojas muertas y una amarilla
+1003;Quebradas;5/04/2019;6/08/2019;1A;4;5;10/03/2020;1.4;13;Tres hojas muertas y dos amarillas
+1012;Quebradas;5/04/2019;6/08/2019;1A;4;4;10/03/2020;0.9;9;Dos hojas muertas y dos amarillas
+1017;Quebradas;5/04/2019;6/08/2019;1A;1;4;10/03/2020;1.7;15;Cuatro hojas muertas y una amarilla
+1003;Quebradas;5/04/2019;6/08/2019;1A;1;2;10/03/2020;1.1;16;Cinco hojas muertas y una amarilla
+1007;Quebradas;5/04/2019;6/08/2019;1A;5;2;10/03/2020;1.4;11;Dos hojas muertas, dos amarillas
+1007;Quebradas;5/04/2019;6/08/2019;1A;1;3;10/03/2020;1.1;11;Dos hojas muertas
+1009;Quebradas;5/04/2019;6/08/2019;1A;1;8;10/03/2020;1.1;11;Dos hojas muertas, dos amarillas
+1007;Quebradas;5/04/2019;6/08/2019;1A;4;10;10/03/2020;0.5;6;Dos hojas muertas
+1020;Quebradas;5/04/2019;6/08/2019;1A;2;8;10/03/2020;0.7;15;Seis hojas muertas y una amarilla
+1007;Quebradas;5/04/2019;6/08/2019;1A;1;6;10/03/2020;0.6;9;Tres hojas muertas y una amarilla
+1009;Quebradas;5/04/2019;6/08/2019;1A;2;10;10/03/2020;0.5;10;Dos hojas muertas y dos amarillas
+1035;Quebradas;5/04/2019;6/08/2019;1A;5;3;10/03/2020;0.4;13;Tres hojas muertas y una amarilla
+1036;Quebradas;5/04/2019;6/08/2019;1A;2;1;10/03/2020;0.6;11;Cinco hojas muertas  
+1002;Quebradas;2/04/2019;4/09/2019;2A;3;3;10/03/2020;0.6;12;Dos hojas muertas
+1002;Quebradas;2/04/2019;4/09/2019;2A;2;6;10/03/2020;1.2;13;Tres hojas muertas
+1002;Quebradas;2/04/2019;4/09/2019;2A;4;4;10/03/2020;1.2;12;Tres hojas muertas y una amarilla
+1015;Quebradas;2/04/2019;4/09/2019;2A;2;9;10/03/2020;0.1;11;Tres hojas muertas 
+1015;Quebradas;2/04/2019;4/09/2019;2A;5;4;10/03/2020;0.4;10;NA
+1039;Quebradas;2/04/2019;4/09/2019;2A;4;7;10/03/2020;0.3;8;NA
+1039;Quebradas;2/04/2019;4/09/2019;2A;5;10;10/03/2020;0.5;10;Tres hojas amarillas
+1037;Quebradas;2/04/2019;4/09/2019;2A;3;10;10/03/2020;0.5;11;Una hoja muerta y una amarilla
+1006;Quebradas;2/04/2019;4/09/2019;2A;5;8;10/03/2020;0.6;8;NA
+1040;Quebradas;5/04/2019;4/09/2019;2A;3;2;10/03/2020;0.7;11;Tres hojas amarillas
+1001;Quebradas;5/04/2019;4/09/2019;2A;5;2;10/03/2020;0.6;13;Tres hojas muertas
+1034;Quebradas;5/04/2019;4/09/2019;2A;2;1;10/03/2020;0.3;11;Tres hojas muertas y una amarilla
+1034;Quebradas;5/04/2019;4/09/2019;2A;1;5;10/03/2020;0.4;9;NA
+1009;Quebradas;5/04/2019;4/09/2019;2A;4;8;10/03/2020;1.3;16;Cuatro hojas muertas y una amarilla
+1009;Quebradas;5/04/2019;4/09/2019;2A;5;9;10/03/2020;1.3;14;Una hoja muerta y dos amarillas
+1009;Quebradas;5/04/2019;4/09/2019;2A;5;3;10/03/2020;1.2;17;Dos hojas muertas y una amarilla
+1009;Quebradas;5/04/2019;4/09/2019;2A;4;3;10/03/2020;1.4;13;Tres hojas muertas y una amarilla
+1008;Quebradas;5/04/2019;4/09/2019;2A;4;5;10/03/2020;0.9;10;Dos hojas muertas y una amarilla
+1008;Quebradas;5/04/2019;4/09/2019;2A;2;7;10/03/2020;0.9;12;Tres hojas muertas y una amarilla
+1035;Quebradas;5/04/2019;4/09/2019;2A;2;8;10/03/2020;0.8;10;Dos hojas amarillas
+1035;Quebradas;5/04/2019;4/09/2019;2A;4;2;10/03/2020;0.6;11;NA
+1028;Quebradas;5/04/2019;4/09/2019;2A;4;9;11/03/2020;0.4;10;Cuatro hojas muertas y una amarilla
+1028;Quebradas;5/04/2019;4/09/2019;2A;1;6;11/03/2020;1.1;12;Tres hojas muertas y una amarilla
+1028;Quebradas;5/04/2019;4/09/2019;2A;5;5;11/03/2020;0.9;14;Cuatro hojas muertas y dos amarillas
+1036;Quebradas;5/04/2019;4/09/2019;2A;3;8;11/03/2020;0.9;13;Cinco hojas muertas
+1036;Quebradas;5/04/2019;4/09/2019;2A;1;10;11/03/2020;0.5;14;Dos hojas muertas
+1036;Quebradas;5/04/2019;4/09/2019;2A;1;9;11/03/2020;0.6;15;Tres hojas muertas  
+1027;Quebradas;5/04/2019;4/09/2019;2A;5;7;11/03/2020;1;13;Tres hojas amarillas
+1018;Quebradas;5/04/2019;4/09/2019;2A;1;7;11/03/2020;1.1;11;Dos hojas muertas
+1018;Quebradas;5/04/2019;4/09/2019;2A;3;1;11/03/2020;1.1;12;Tres hojas muertas
+1018;Quebradas;5/04/2019;4/09/2019;2A;5;6;11/03/2020;0.8;11;Una hoja muerta y una amarilla
+1027;Quebradas;5/04/2019;4/09/2019;2A;3;7;11/03/2020;0.3;10;Una hoja muerta  
+1007;Quebradas;5/04/2019;4/09/2019;2A;4;1;11/03/2020;1;11;Dos hojas muertas y una amarilla
+1014;Quebradas;5/04/2019;4/09/2019;2A;3;9;11/03/2020;0.7;12;Dos hojas muertas
+1014;Quebradas;5/04/2019;4/09/2019;2A;1;2;11/03/2020;1;12;Cuatro hojas muertas y una amarilla
+1014;Quebradas;5/04/2019;4/09/2019;2A;4;6;11/03/2020;0.3;8;Una hoja muerta y dos amarillas
+1012;Quebradas;5/04/2019;4/09/2019;2A;2;10;11/03/2020;0.8;10;Dos hojas muertas y una amarilla
+1011;Quebradas;5/04/2019;4/09/2019;2A;1;3;11/03/2020;0.4;9;Dos hojas amarillas
+1007;Quebradas;5/04/2019;4/09/2019;2A;1;4;11/03/2020;0.5;8;Dos hojas amarillas
+1008;Quebradas;5/04/2019;4/09/2019;2A;5;1;11/03/2020;0.3;9;Una hoja muerta
+1033;Quebradas;5/04/2019;4/09/2019;2A;3;6;11/03/2020;1.2;9;Una hoja muerta y una amarilla
+1020;Quebradas;5/04/2019;4/09/2019;2A;3;4;11/03/2020;1;15;Tres hojas amarillas
+1020;Quebradas;5/04/2019;4/09/2019;2A;3;5;11/03/2020;1.1;15;Tres hojas muertas y una amarilla
+1010;Quebradas;5/04/2019;4/09/2019;2A;2;3;11/03/2020;0.6;12;Tres hojas muertas y una amarilla
+1017;Quebradas;5/04/2019;4/09/2019;2A;4;10;11/03/2020;1.5;14;Dos hojas muertas y dos amarillas
+1003;Quebradas;5/04/2019;4/09/2019;2A;1;8;11/03/2020;0.5;13;Dos hojas muertas y dos amarillas
+1042;Quebradas;5/04/2019;4/09/2019;2A;2;4;11/03/2020;0.5;8;Una hoja muerta y una amarilla
+1038;Quebradas;5/04/2019;4/09/2019;2A;2;5;11/03/2020;0.3;8;Una hoja muerta y dos amarillas
+1030;Quebradas;5/04/2019;4/09/2019;2A;2;2;11/03/2020;0.8;9;Dos hojas muertas y una amarilla
+1039;Quebradas;2/04/2019;4/11/2019;3A;3;9;11/03/2020;1;12;Dos hojas amarillas
+1024;Quebradas;2/04/2019;4/11/2019;3A;1;4;11/03/2020;1.3;8;Una hoja muerta
+1002;Quebradas;2/04/2019;4/11/2019;3A;5;3;11/03/2020;1.1;10;Dos hojas muertas
+1002;Quebradas;2/04/2019;4/11/2019;3A;1;2;11/03/2020;1.1;11;Dos hojas amarillas
+1037;Quebradas;2/04/2019;4/11/2019;3A;2;9;11/03/2020;1;10;Dos hojas muertas y una amarilla
+1015;Quebradas;2/04/2019;4/11/2019;3A;2;2;11/03/2020;0.9;8;NA
+1040;Quebradas;5/04/2019;4/11/2019;3A;2;6;11/03/2020;0.6;10;Una hoja muerta
+1034;Quebradas;5/04/2019;4/11/2019;3A;4;10;11/03/2020;0.9;10;Una hoja amarilla
+1009;Quebradas;5/04/2019;4/11/2019;3A;1;5;11/03/2020;1.1;13;Dos hojas muertas y una amarilla
+1008;Quebradas;5/04/2019;4/11/2019;3A;2;7;11/03/2020;0.9;10;"Dos rosetas: Principal (Una hoja muerta y dos amarillas); roseta secundaria (4 hojas; 0,4 cm)"
+1035;Quebradas;5/04/2019;4/11/2019;3A;3;10;11/03/2020;0.9;11;Dos hojas amarillas
+1036;Quebradas;5/04/2019;4/11/2019;3A;1;10;11/03/2020;0.6;10;Una hoja amarilla
+1027;Quebradas;5/04/2019;4/11/2019;3A;3;6;11/03/2020;0.9;10;NA
+1018;Quebradas;5/04/2019;4/11/2019;3A;5;2;11/03/2020;1.2;12;Tres hojas muertas y una amarilla
+1014;Quebradas;5/04/2019;4/11/2019;3A;3;3;11/03/2020;1.2;12;Tres hojas muertas  
+1012;Quebradas;5/04/2019;4/11/2019;3A;2;1;11/03/2020;1.4;6;"Hoja ancha y margen serrado; Una hoja amarilla"
+1041;Quebradas;5/04/2019;4/11/2019;3A;5;6;11/03/2020;0.7;10;"Hoja ancha y margen serrado; Dos hojas muertas"
+1007;Quebradas;5/04/2019;4/11/2019;3A;3;5;11/03/2020;0.3;6;Una hoja muerta
+1020;Quebradas;5/04/2019;4/11/2019;3A;3;2;11/03/2020;0.7;12;Una hoja amarilla
+1010;Quebradas;5/04/2019;4/11/2019;3A;4;3;11/03/2020;0.9;13;Dos hojas muertas
+1017;Quebradas;5/04/2019;4/11/2019;3A;2;8;11/03/2020;0.8;11;Una hoja muerta y una amarilla
+1003;Quebradas;5/04/2019;4/11/2019;3A;5;4;11/03/2020;1.3;15;Dos hojas muertas
+1039;Quebradas;5/04/2019;4/11/2019;3A;3;8;11/03/2020;1;11;"Una hoja muerta y una amarilla; margen serrado"
+1024;Quebradas;5/04/2019;4/11/2019;3A;2;10;11/03/2020;0.9;10;Dos hojas muertas
+1002;Quebradas;5/04/2019;4/11/2019;3A;2;5;11/03/2020;1.2;12;Dos hojas muertas y una amarilla
+1037;Quebradas;5/04/2019;4/11/2019;3A;1;8;11/03/2020;0.6;11;Una hoja muerta y una amarilla
+1034;Quebradas;5/04/2019;4/11/2019;3A;1;6;11/03/2020;1;11;Dos hojas muertas y dos amarillas
+1009;Quebradas;5/04/2019;4/11/2019;3A;1;7;11/03/2020;1;12;"Dos rosetas: roseta principal (Dos hojas muertas y dos amarillas); roseta secundaria (0,4 cm; 3 hojas)"
+1008;Quebradas;5/04/2019;4/11/2019;3A;4;2;11/03/2020;1;10;Tres hojas muertas
+1035;Quebradas;5/04/2019;4/11/2019;3A;3;1;11/03/2020;0.7;11;Una hoja amarilla
+1028;Quebradas;5/04/2019;4/11/2019;3A;4;9;11/03/2020;0.5;10;Cuatro hojas muertas y una amarilla
+1036;Quebradas;5/04/2019;4/11/2019;3A;4;7;11/03/2020;0.4;13;Dos hojas muertas
+1018;Quebradas;5/04/2019;4/11/2019;3A;2;4;11/03/2020;0.7;13;Dos hojas muertas y una amarilla
+1014;Quebradas;5/04/2019;4/11/2019;3A;2;3;11/03/2020;0.4;6;NA
+1012;Quebradas;5/04/2019;4/11/2019;3A;1;9;11/03/2020;1;8;"Hoja con margen serrado y hoja ancha; Dos hojas muertas "
+1041;Quebradas;5/04/2019;4/11/2019;3A;1;1;11/03/2020;0.6;10;Hoja con margen serrado y hoja ancha  
+1020;Quebradas;5/04/2019;4/11/2019;3A;5;1;11/03/2020;0.7;12;Tres hojas amarillas
+1017;Quebradas;5/04/2019;4/11/2019;3A;5;5;11/03/2020;0.7;10;"Dos rosetas: roseta principal (2 hojas muertas); roseta secundaria (2 hojas; 0,2 cm)"
+1012;Quebradas;5/04/2019;4/11/2019;3A;5;8;11/03/2020;0.9;7;Una hoja muerta y una amarilla
+1017;Quebradas;5/04/2019;4/11/2019;3A;1;3;11/03/2020;1.2;11;Dos hojas muertas y una amarilla
+1020;Quebradas;5/04/2019;4/11/2019;3A;4;6;11/03/2020;1.1;12;Hoja con margen serrado y hoja ancha. Tres hojas muertas
+1032;Quebradas;5/04/2019;4/11/2019;3A;3;4;11/03/2020;0.5;8;Dos hojas muertas   
+1009;Quebradas;5/04/2019;4/11/2019;3A;4;4;11/03/2020;1.2;14;Tres hojas muertas y una amarilla
+1008;Quebradas;5/04/2019;4/11/2019;3A;4;1;11/03/2020;0.9;13;Una hoja muerta y dos amarillas
+1035;Quebradas;5/04/2019;4/11/2019;3A;4;5;11/03/2020;0.8;11;Dos hojas muertas y una amarilla
+1036;Quebradas;5/04/2019;4/11/2019;3A;4;8;11/03/2020;1;10;Una hoja amarilla
+1039;Quebradas;5/04/2019;4/11/2019;3A;5;7;11/03/2020;0.9;9;Dos hojas muertas
+1002;Quebradas;5/04/2019;4/11/2019;3A;5;10;11/03/2020;1.2;9;Dos hojas muertas
+1026;Quebradas;2/04/2019;7/12/2019;4A;5;1;12/03/2020;0.3;4;No creo que sea un frailejón (Álvaro). No es frailejón
+1039;Quebradas;2/04/2019;7/12/2019;4A;4;10;12/03/2020;0.6;10;NA
+1002;Quebradas;2/04/2019;7/12/2019;4A;2;3;12/03/2020;0.7;10;NA
+1002;Quebradas;2/04/2019;7/12/2019;4A;5;4;12/03/2020;0.7;12;Tres hojas muertas
+1002;Quebradas;2/04/2019;7/12/2019;4A;4;6;12/03/2020;1.1;10;Una hoja muerta y una amarilla
+1002;Quebradas;2/04/2019;7/12/2019;4A;1;5;12/03/2020;0.8;12;Dos hojas muertas
+1002;Quebradas;2/04/2019;7/12/2019;4A;2;4;12/03/2020;0.6;12;Tres hojas muertas y una amarilla
+1037;Quebradas;2/04/2019;7/12/2019;4A;5;5;12/03/2020;0.4;7;NA
+1037;Quebradas;2/04/2019;7/12/2019;4A;1;6;12/03/2020;0.3;7;NA
+1022;Quebradas;2/04/2019;7/12/2019;4A;3;4;12/03/2020;0.3;8;NA
+1022;Quebradas;2/04/2019;7/12/2019;4A;2;10;12/03/2020;0.4;7;NA
+1022;Quebradas;2/04/2019;7/12/2019;4A;5;3;12/03/2020;0.3;6;NA
+1004;Quebradas;2/04/2019;7/12/2019;4A;2;8;12/03/2020;0.6;9;NA
+1004;Quebradas;2/04/2019;7/12/2019;4A;1;7;12/03/2020;0.5;10;NA
+1040;Quebradas;5/04/2019;7/12/2019;4A;5;10;12/03/2020;0.7;11;NA
+1034;Quebradas;5/04/2019;7/12/2019;4A;4;5;12/03/2020;0.6;10;NA
+1034;Quebradas;5/04/2019;7/12/2019;4A;1;4;12/03/2020;0.5;9;NA
+1034;Quebradas;5/04/2019;7/12/2019;4A;4;9;12/03/2020;0.7;9;NA
+1009;Quebradas;5/04/2019;7/12/2019;4A;4;8;12/03/2020;0.9;14;Dos hojas muertas y una amarilla
+1034;Quebradas;5/04/2019;7/12/2019;4A;5;6;12/03/2020;0.7;9;NA
+1008;Quebradas;5/04/2019;7/12/2019;4A;4;2;12/03/2020;0.8;11;NA
+1035;Quebradas;5/04/2019;7/12/2019;4A;4;7;12/03/2020;0.4;8;NA
+1009;Quebradas;5/04/2019;7/12/2019;4A;5;8;12/03/2020;1.1;13;Dos hojas muertas y una amarilla
+1034;Quebradas;5/04/2019;7/12/2019;4A;3;8;12/03/2020;0.7;8;NA
+1009;Quebradas;5/04/2019;7/12/2019;4A;2;6;12/03/2020;0.6;9;Una hoja muerta y una amarilla
+1008;Quebradas;5/04/2019;7/12/2019;4A;2;1;12/03/2020;1;10;Una hoja amarilla
+1035;Quebradas;5/04/2019;7/12/2019;4A;2;2;12/03/2020;0.5;8;NA
+1009;Quebradas;5/04/2019;7/12/2019;4A;3;6;12/03/2020;0.9;13;Dos hojas muertas y una amarilla
+1008;Quebradas;5/04/2019;7/12/2019;4A;4;1;12/03/2020;0.9;9;NA
+1008;Quebradas;5/04/2019;7/12/2019;4A;3;7;12/03/2020;1.1;10;Dos hojas muertas
+1008;Quebradas;5/04/2019;7/12/2019;4A;5;9;12/03/2020;0.8;10;Dos hojas amarillas
+1008;Quebradas;5/04/2019;7/12/2019;4A;1;3;12/03/2020;0.7;12;Tres hojas muertas
+1008;Quebradas;5/04/2019;7/12/2019;4A;5;7;12/03/2020;0.7;9;Una hoja muerta
+1036;Quebradas;5/04/2019;7/12/2019;4A;1;10;12/03/2020;0.8;13;Una hoja muerta
+1018;Quebradas;5/04/2019;7/12/2019;4A;1;2;12/03/2020;0.7;10;NA
+1018;Quebradas;5/04/2019;7/12/2019;4A;2;5;12/03/2020;0.7;10;Una hoja muerta
+1033;Quebradas;5/04/2019;7/12/2019;4A;3;1;12/03/2020;0.7;10;NA
+1018;Quebradas;5/04/2019;7/12/2019;4A;1;1;12/03/2020;0.8;11;Dos hojas muertas y dos amarilla
+1014;Quebradas;5/04/2019;7/12/2019;4A;3;5;12/03/2020;0.6;8;Una hoja amarilla
+1012;Quebradas;5/04/2019;7/12/2019;4A;1;8;12/03/2020;0.7;10;Una hoja muerta
+1041;Quebradas;5/04/2019;7/12/2019;4A;3;10;12/03/2020;0.7;10;Una hoja muerta
+1033;Quebradas;5/04/2019;7/12/2019;4A;3;9;12/03/2020;0.3;8;Una hoja muerta, tiene una hepática muy cerca
+1020;Quebradas;5/04/2019;7/12/2019;4A;3;2;12/03/2020;0.4;9;Dos hojas muertas  
+1020;Quebradas;5/04/2019;7/12/2019;4A;1;9;12/03/2020;1.2;14;Cuatro hojas muertas
+1032;Quebradas;5/04/2019;7/12/2019;4A;3;3;12/03/2020;0.8;9;Margen de la hoja serrado
+1020;Quebradas;5/04/2019;7/12/2019;4A;2;9;12/03/2020;0.2;5;Parece 3 rosetas: 1 principal y 2 secundarias ( 3 y 2 hojas ). Muy pequeña
+1020;Quebradas;5/04/2019;7/12/2019;4A;4;4;12/03/2020;0.6;11;Dos hojas amarillas, margen de las hojas serradas
+1032;Quebradas;5/04/2019;7/12/2019;4A;4;3;12/03/2020;0.8;9;Una hoja muerta y margen de la hoja serrado
+1029;Quebradas;5/04/2019;7/12/2019;5A;3;10;13/03/2020;0.5;9;NA
+1038;Quebradas;5/04/2019;7/12/2019;5A;4;1;13/03/2020;0.7;10;Una hoja muerta
+1012;Quebradas;5/04/2019;7/12/2019;5A;4;5;13/03/2020;0.9;10;Una hoja muerta
+1041;Quebradas;5/04/2019;7/12/2019;5A;3;7;13/03/2020;0.6;10;NA
+1007;Quebradas;5/04/2019;7/12/2019;5A;5;3;13/03/2020;0.8;9;Una hoja muerta
+1031;Quebradas;5/04/2019;7/12/2019;5A;2;9;13/03/2020;0.5;8;Margen de la hoja serrado
+1033;Quebradas;5/04/2019;7/12/2019;5A;4;6;13/03/2020;0.7;9;Margen de la hoja serrado
+1033;Quebradas;5/04/2019;7/12/2019;5A;5;5;13/03/2020;0.8;11;Margen de la hoja serrado
+1020;Quebradas;5/04/2019;7/12/2019;5A;4;7;13/03/2020;0.7;9;NA
+1020;Quebradas;5/04/2019;7/12/2019;5A;1;9;13/03/2020;0.7;9;NA
+1020;Quebradas;5/04/2019;7/12/2019;5A;3;2;13/03/2020;0.8;10;NA
+1020;Quebradas;5/04/2019;7/12/2019;5A;1;1;13/03/2020;0.9;11;NA
+1010;Quebradas;5/04/2019;7/12/2019;5A;1;10;13/03/2020;0.4;7;NA
+1032;Quebradas;5/04/2019;7/12/2019;5A;1;6;13/03/2020;0.6;11;"Dos hojas muertas; Margen de la hoja serrado"
+1010;Quebradas;5/04/2019;7/12/2019;5A;2;3;13/03/2020;0.7;12;Dos hojas muertas 
+1032;Quebradas;5/04/2019;7/12/2019;5A;5;8;13/03/2020;0.6;7;Dos roseta: roseta secundaria (3 hojas)
+1040;Quebradas;5/04/2019;7/12/2019;5A;5;9;13/03/2020;0.6;7;NA
+1032;Quebradas;5/04/2019;7/12/2019;5A;3;8;13/03/2020;1.1;10;Dos hojas muertas
+1032;Quebradas;5/04/2019;7/12/2019;5A;2;10;13/03/2020;0.8;8;NA
+1034;Quebradas;5/04/2019;7/12/2019;5A;5;10;13/03/2020;0.3;7;Muy pequeña
+1034;Quebradas;5/04/2019;7/12/2019;5A;4;3;13/03/2020;0.3;7;NA
+1034;Quebradas;5/04/2019;7/12/2019;5A;2;4;13/03/2020;0.8;10;Una hoja muerta. Margen en la hoja serrado
+1034;Quebradas;5/04/2019;7/12/2019;5A;4;4;13/03/2020;1.2;8;Una hoja muerta y una amarilla
+1034;Quebradas;5/04/2019;7/12/2019;5A;1;7;13/03/2020;0.6;9;NA
+1034;Quebradas;5/04/2019;7/12/2019;5A;4;10;13/03/2020;0.6;10;Una hoja muerta
+1034;Quebradas;5/04/2019;7/12/2019;5A;1;4;13/03/2020;0.3;5;NA
+1009;Quebradas;5/04/2019;7/12/2019;5A;5;4;13/03/2020;1.3;11;Dos hojas amarillas
+1009;Quebradas;5/04/2019;7/12/2019;5A;2;5;13/03/2020;1.1;10;Dos hojas muertas
+1009;Quebradas;5/04/2019;7/12/2019;5A;1;2;13/03/2020;0.9;11;Una hoja muerta y una amarilla
+1009;Quebradas;5/04/2019;7/12/2019;5A;3;1;13/03/2020;0.1;7;NA
+1009;Quebradas;5/04/2019;7/12/2019;5A;3;6;13/03/2020;0.9;11;NA
+1008;Quebradas;5/04/2019;7/12/2019;5A;4;8;13/03/2020;0.9;9;Una hoja muerta
+1008;Quebradas;5/04/2019;7/12/2019;5A;1;5;13/03/2020;0.9;10;Dos hojas muertasy una amarilla
+1008;Quebradas;5/04/2019;7/12/2019;5A;5;6;13/03/2020;0.8;10;Dos hojas muertas
+1008;Quebradas;5/04/2019;7/12/2019;5A;2;8;13/03/2020;1.5;9;Una hoja muerta y una amarilla
+1008;Quebradas;5/04/2019;7/12/2019;5A;5;2;13/03/2020;0.7;8;Una hoja muerta
+1008;Quebradas;5/04/2019;7/12/2019;5A;2;6;13/03/2020;0.3;7;NA
+1035;Quebradas;5/04/2019;7/12/2019;5A;2;2;13/03/2020;0.4;8;NA
+1035;Quebradas;5/04/2019;7/12/2019;5A;3;9;13/03/2020;0.5;8;NA
+1028;Quebradas;5/04/2019;7/12/2019;5A;5;1;13/03/2020;0.8;8;NA
+1036;Quebradas;5/04/2019;7/12/2019;5A;1;3;13/03/2020;0.9;11;NA
+1036;Quebradas;5/04/2019;7/12/2019;5A;3;3;13/03/2020;0.3;6;NA
+1018;Quebradas;5/04/2019;7/12/2019;5A;1;8;13/03/2020;0.5;10;Una hoja muerta y una amarilla
+1018;Quebradas;5/04/2019;7/12/2019;5A;3;4;13/03/2020;1.1;8;NA
+1008;Quebradas;5/04/2019;7/12/2019;5A;2;7;13/03/2020;0.8;10;NA

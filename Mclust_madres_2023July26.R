@@ -60,7 +60,7 @@ data.frame(colnames(mean.phenodata), measurement.units)
 
 ###################################################################################################################
 ###################################################################################################################
-# 2) Examinar  ladistribución de cada raso fenotípico, edita los datos y transformación y rotación de los datos con
+# 2) Examinar  ladistribución de cada rasgo fenotípico, edita los datos y transformación y rotación de los datos con
 #    análisis de componentes principales.
 ###################################################################################################################
 ###################################################################################################################
