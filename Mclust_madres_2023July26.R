@@ -378,18 +378,18 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 ###################################################################################################################
 
 ###################################################################################################################
-# 4) Ajuste de los modelosde mezlas normales
+# 4) Ajuste de los modelos de mezlas normales
 ###################################################################################################################
 ###################################################################################################################
 
 ###################################################################################################################
-# 4.1) Seleccioinar rasgos fnotípicos (PCA) para la inclusión del método de meclas normales basado en los resultados
+# 4.1) Seleccionar rasgos fenotípicos (PCA) para la inclusión del método de mezclas normales basado en los resultados
 #     de las secciones 3.1 3.2.
 
 data.for.GMM <- mean.phenodata.selected.log.pca$x[,1:12]
 
 ###################################################################################################################
-# 4.2)ajuste de mezclas normales usandoo diferentes valores de inicialización, usando el argument "hcUse"
+# 4.2)ajuste de mezclas normales usando diferentes valores de inicialización, usando el argument "hcUse"
 
 #"PCS"
 mclust.options(hcUse="PCS") 
@@ -420,15 +420,6 @@ plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata, what="BIC")
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
-plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
-#gráfica del soporte empríco de los diferentess modelos
-plot(Mcluster.phenodata, what="BIC")
-
-plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
-#gráfica del soporte empríco de los diferentess modelos
-plot(Mcluster.phenodata, what="BIC")
-
 #graficar soportes empíricos para el mejor modelo a cada morfogrupo
 BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -449,7 +440,7 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun")
-save(Mcluster.phenodata, file=paste("Mcluster.phenodata_", format(Sys.time(), "%Y%b%d"), ".RData", sep=""))
+save(Mcluster.phenodata, file=paste("Mcluster.phenodata_", format(Sys.time(), "%Y%B%d"), ".RData", sep=""))
 load("Mcluster.phenodata_2023jul.26.RData")
 
 
