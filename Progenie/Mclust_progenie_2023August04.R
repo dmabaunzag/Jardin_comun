@@ -1,41 +1,54 @@
 ###################################################################################################################
 ###################################################################################################################
-# 1) Preliminares: cargar las librerías y los datos
-###################################################################################################################
 ###################################################################################################################
 
+
 ###################################################################################################################
-# 1.1) Librerías:
+###################################################################################################################
+###################################################################################################################
+#INTRODUCCIÓN
+
+
+
+###################################################################################################################
+###################################################################################################################
+# 1) Preliminares: cargar las librerías
+###################################################################################################################
+###################################################################################################################
+# Librerías:
 
 library(mclust) # librería para adaptar modelos de mezclas normales
 library(clustvarsel) #librería para la selección de variables para el modelos de mexclas normales
 library(ellipse)
 library(ggplot2)
+
 ###################################################################################################################
-# 1.2) lectura de los datos fenotípicos: éstos son variables promedio de crecimiento de las plantas del piloto
+###################################################################################################################
+# 2) Leer los rasgos fenotípicos
+###################################################################################################################
+###################################################################################################################
 
 #directorio de trabajo
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 
-#leer las tablas de datos, filtrar, examinar y resumir los datos
+#leer la tabla de datos: datos de la progenie tomados en Quebradas en 20/03/2020
 
 phenodata.progenie <- read.table("PhenotypicDataProgeny_Quebradas_2023March20.csv", header=T, sep=",") 
-#datos del jardín común de Quebradas tomados en 20/03/2020
+
 View(phenodata.progenie)
 summary(phenodata.progenie)
 head(phenodata.progenie)
 dim(phenodata.progenie)# 250 plantas del piloto con 26 variables
 
-###################################################################################################################
-###################################################################################################################
-
-# 2. Examinar los rasgos fenotípicos, editar los datos y transformarlos.
 
 ###################################################################################################################
-
-#2.1. Filtrar  variables, limpiar datos faltantes y examinar frecuencia de representación de plantas madres
+###################################################################################################################
+# 3) Limpiar los rasgos fenotípicos: editar los datos y transformarlos.
+###################################################################################################################
+###################################################################################################################
+# 3.1) Filtrar rasgos fenotípicos a usar
 
 colnames(phenodata.progenie)#sólo se usará número de colección (1), longitud del tallo (9) y número de hojas (10)
 phenodata.progenie.selected<-phenodata.progenie[,c(1,9,10)]
@@ -47,11 +60,14 @@ dim(phenodata.progenie.selected) #250 plantas de la progenie y 3 variables
 measurement.units <- c(NA,  "cm", "count")
 data.frame(colnames(phenodata.progenie.selected), measurement.units)
 
+###################################################################################################################
+# 3.2) Remover plantas de la progenie sin madre asignada y con algún faltante en los rasgos fenotípicos
+
 # cuantas plantas madres están representadas
 unique(phenodata.progenie.selected$`Número de colección plantas madres`)## hay dos plantas sin madre
 length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## 39 plantas madres representadas
 
-## excluir plantas de la progenie sin planta madre y que no tenga datos (excluir todos los NAs)
+# excluir plantas de la progenie sin planta madre y que no tenga datos (excluir todos los NAs)
 
 sapply(phenodata.progenie.selected, class)
 
@@ -73,13 +89,14 @@ head(phenodata.progenie.selected)
 length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## hay representación de 37 plantas madres
 unique(phenodata.progenie.selected$`Número de colección plantas madres`)##cuáles
 
-sort(summary(as.factor(phenodata.progenie.selected$`Número de colección plantas madres`)), decreasing = T)
-
-
-
 ###################################################################################################################
-# 2.2. Examinar gráficamente la distribución de cada rasgo fenotípico en escala logarítmica y linear.
+# 3.3) Examinar gráficamente la distribución de cada rasgo fenotípico en escala logarítmica y linear.
 
+# Examinar cuántas hijas tiene cada planta madre
+sort(summary(as.factor(phenodata.progenie.selected$`Número de colección plantas madres`)), decreasing = T)
+#gráfica
+barplot(sort(summary(as.factor(phenodata.progenie.selected$`Número de colección plantas madres`)), decreasing = T), 
+        las=2, xlab =  "Plantas madres", ylab = "Plantas hijas", ylim = c(0,25))
 
 colnames(phenodata.progenie.selected) # nombre de las variables
 trait.x <- 2 # Longitud del tallo
@@ -93,8 +110,7 @@ summary(phenodata.progenie.selected[,trait.x])
 hist(log(phenodata.progenie.selected[,trait.x]), breaks=20, 
      xlab=paste("log (",colnames(phenodata.progenie.selected)[trait.x], "(", measurement.units[trait.x], "))"),
      ylab = "Frecuencia", main="", col="gray80")
-summary(log(phenodata.progenie.selected[,trait.x]))
-
+  summary(log(phenodata.progenie.selected[,trait.x]))
 
 trait.x <- 3 # número de hojas
 colnames(phenodata.progenie.selected)[trait.x] # Qué variable
@@ -104,13 +120,13 @@ hist(phenodata.progenie.selected[,trait.x], breaks=10,
      ylab="Frecuencia",main="", col="gray80")
 summary(phenodata.progenie.selected[,trait.x])
 #distribución del número de hojas en escala logarítmica.
-hist(log(phenodata.progenie.selected[,trait.x]), breaks=20, 
+hist(log(phenodata.progenie.selected[,trait.x]), breaks=10, 
      xlab=paste("log (",colnames(phenodata.progenie.selected)[trait.x], "(", measurement.units[trait.x], "))"),
      ylab = "Frecuencia", main="", col="gray80")
 summary(log(phenodata.progenie.selected[,trait.x]))
 
-
-#examinar gráficamente relaciones bivariables
+###################################################################################################################
+# 3.4) Examinar gráficamente relaciones bivariables
 #definir dos rasgos fenotípicos a examinar:
 colnames(phenodata.progenie.selected)
 trait.x <- 2
@@ -120,16 +136,21 @@ colnames(phenodata.progenie.selected)[trait.x]
 summary(phenodata.progenie.selected[,trait.x])
 colnames(phenodata.progenie.selected)[trait.y]
 summary(phenodata.progenie.selected[,trait.y])
+
 #graficar la relaciones bivariables
+cor(phenodata.progenie.selected[,trait.x], phenodata.progenie.selected[,trait.y])# correlación:0.5300861
+regresion<-lm(phenodata.progenie.selected[,trait.y]~phenodata.progenie.selected[,trait.x])
 plot(phenodata.progenie.selected[,trait.x], phenodata.progenie.selected[,trait.y],
      xlab=paste(colnames(phenodata.progenie.selected)[trait.x], "(", measurement.units[trait.x], ")"), 
      ylab=paste(colnames(phenodata.progenie.selected)[trait.y], "(", measurement.units[trait.y], ")"), cex.lab=1.5, cex.axis=1.5)
+abline(regresion)
 
 
 ###################################################################################################################
-# 2.3. Transfomación de los datos.
+#  3.5) Transfomación de los datos.
 
-# Dado que los rasgos fenotípicos frecuentemenente siguen distribución log-normal se transforman a escala logarítmica
+ # Dado que los rasgos fenotípicos frecuentemenente siguen distribución log-normal se transforman a escala logarítmica
+
 phenodata.progenie.selected.log <- data.frame(phenodata.progenie.selected[,1],log(phenodata.progenie.selected[,2:3]))
 head(phenodata.progenie.selected.log)
 
@@ -138,12 +159,11 @@ colnames(phenodata.progenie.selected.log) <-colnames(phenodata.progenie.selected
 colnames(phenodata.progenie.selected.log)[2:3] <- paste("log", paste(colnames(phenodata.progenie.selected)[2:3], sep=""))
 class(phenodata.progenie.selected.log)
 summary(phenodata.progenie.selected.log)
-## realizar el promedio de las variables para cada planta madre
 
 
 
 ###################################################################################################################
-#2.4. Promedios de los rasgos fenotípicos por planta madre
+# 3.6) Promedios de los rasgos fenotípicos por planta madre
 
 
 mean.phenodata.progenie.selected.log<-aggregate(phenodata.progenie.selected.log, by=list(phenodata.progenie.selected.log[,1]),
@@ -154,32 +174,33 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 save(mean.phenodata.progenie.selected.log, file=paste("mean.phenodata.progenie.selected.log_", format(Sys.time(),"%Y%B%d_%H%M%S"), ".RData", sep=""))
-load("mean.phenodata.progenie.selected.log_2023julio31_171012.RData")
+load("mean.phenodata.progenie.selected.log_2023agosto03_140929.RData")
 
 
 ###################################################################################################################
-#2.5. graficar los ragos fenotípicos
+# 3.7) graficar los rasgos fenotípicos
 
-## longitud del tallo
+#  log longitud del tallo
 
-boxplot(`log Longitud del tallo`~ `Número de colección plantas madres`, data = phenodata.progenie.selected.log )
+boxplot(`log Longitud del tallo`~ `Número de colección plantas madres`, data = phenodata.progenie.selected.log, las=2 )
 promedio.longitud.tallo<- tapply(phenodata.progenie.selected.log$`log Longitud del tallo`,
                                  phenodata.progenie.selected.log$`Número de colección plantas madres`, mean)
 xi<-0.4 +seq(phenodata.progenie.selected.log$n)
 points(promedio.longitud.tallo, col="blue", pch=19)
 legend("bottomright", legend = "Promedio", pch=19, col="blue")
 
-
-boxplot(`log Número de hojas`~`Número de colección plantas madres`, data = phenodata.progenie.selected.log )
+# log número de hojas 
+boxplot(`log Número de hojas`~`Número de colección plantas madres`, data = phenodata.progenie.selected.log, las=2 )
 promedio.numero.hojas<- tapply(phenodata.progenie.selected.log$`log Número de hojas`,
                                  phenodata.progenie.selected.log$`Número de colección plantas madres`, mean)
 xi<-0.4 +seq(phenodata.progenie.selected.log$n)
 points(promedio.numero.hojas, col="blue", pch=19)
 legend("bottomright", legend = "Promedio", pch=19, col="blue")
 
-phenodata.progenie.selected.log[,1]<-as.factor(phenodata.progenie.selected.log[,1])
 
 ## gráficas de dispersión entre la longitud del tallo y el número de hojas por planta madre
+
+phenodata.progenie.selected.log[,1]<-as.factor(phenodata.progenie.selected.log[,1])
 
 ggplot()+
   geom_point(data=phenodata.progenie.selected.log, aes(
@@ -189,24 +210,30 @@ ggplot()+
   geom_point(data=mean.phenodata.progenie.selected.log, aes(x=`log Longitud del tallo`, y=`log Número de hojas`))+
   geom_text(data=mean.phenodata.progenie.selected.log, aes(x=`log Longitud del tallo`, y=`log Número de hojas`,
                                                            label=`Número de colección plantas madres`), cex=2.5, vjust=1.5)
+cor(x=phenodata.progenie.selected.log$`log Longitud del tallo`, y=phenodata.progenie.selected.log$`log Número de hojas`)# 0.5605965
+lm(`log Número de hojas`~`log Longitud del tallo`, data=phenodata.progenie.selected.log)
 
 
 ###################################################################################################################
-
-# 3 Ajuste de modelos de mezclas normales
+###################################################################################################################
+# 4) Ajuste de modelos de mezclas normales
+###################################################################################################################
+###################################################################################################################
+# subset con sólo los rasgos fenotípicos
 data.for.GMM<-mean.phenodata.progenie.selected.log[,2:3]
 
-# 3.1. Ajuste de mezclas normales usando diferentes valores de inicialización, usando el argument "hcUse"
+###################################################################################################################
+# 4.1) Ajuste de mezclas normales usando diferentes valores de inicialización, usando el argument "hcUse"
 
 #"PCS"
 mclust.options(hcUse="PCS") 
 Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
-#examine results
+#examinando resultados
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #clasificación de lso especímenes
+Mcluster.phenodata.progenie$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
@@ -234,9 +261,9 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #classifiación de los especímenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
@@ -264,9 +291,9 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)#
+Mcluster.phenodata.progenie$classification #clasificación de los especíemenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
@@ -294,9 +321,9 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
@@ -324,9 +351,9 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #clasificacion de los especímenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
@@ -354,9 +381,9 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
-names(Mcluster.phenodata.progenie$classification)#the specimens included in the analysis
-Mcluster.phenodata.progenie$classification #classification of specimens
-Mcluster.phenodata.progenie$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #clasificación de os especímenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
