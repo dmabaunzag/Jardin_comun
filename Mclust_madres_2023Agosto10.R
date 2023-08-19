@@ -3,10 +3,29 @@
 ###################################################################################################################
 #
 # INTRODUCCIÓN
+# Este código  hace parte del material suplementario del artículo "Delimitación de especies de frailejones del 
+# Sumapaz: un experimento de jardín común", adaptado del código de Pineda et al. (en preparción The Nature of Espeletia
+# Species). El objetivo es hacer un análisis de delimitación de especies basado en rasgos fenotípicos de frailejones de
+# del Páramo Sumapaz, cordillera Oriental de los Andes (colombia)tomados del trabajo de Pineda et al. junto con otros
+# especímenes colectados en mustreo posterior (plantas madres).Con este último muestreo se busca probar los grupos
+# fenotípicos hallados en Pineda, así como ver la corcodancia en los grupos fenotípicos de éstos con su progenie y
+#probar si los grupos fenotípicos especies o variaciones fenotípicas. Específicamente, este código busca hacer grupos
+# fenotípicos mediante modelos de mezclas normales (paquete mclust)y asignar un grupo fenotípico al muestreo posterior
+# a los asigandos en Pineda et al.
 #
+#DATOS REQUERIDOS PARA CORRER ESTE CÓDIGO:
+#Los datos de las variables fenotípicas para el artículo de Pineda et al. acá "meanphenodata_2022Apr27_160817.csv" y
+#los datos del muestreo posterior , "meanphenodatapilot_2023Aug02_095547.csv"
 #
-#
-#
+#CONTENIDO
+# 1) Datos preliminares: Carga de librerías y lectura de datos
+# 2) Examinar  la distribución de cada rasgo fenotípico, editar los datos y transformación y rotación de los datos con
+#  análisis de componentes principales
+# 3) selección de variables para los modelos de mezclas normales
+# 4) Ajuste de los modelos de mezlas normales
+# 5) Examinar grupos fenotípicos en el mejor modelo de mezclas normales.
+
+
 ###################################################################################################################
 ###################################################################################################################
 ###################################################################################################################
@@ -14,7 +33,7 @@
 
 ###################################################################################################################
 ###################################################################################################################
-# 1) Preliminares: cargar las librerías y los datos
+# 1) Datos preliminares: Carga de librerías y lectura de datos
 ###################################################################################################################
 ###################################################################################################################
 
@@ -38,9 +57,9 @@ mean.phenodata.pineda <- read.table("meanphenodata_2022Apr27_160817.csv", header
   #et al.2020 para la formación de grupos fenotípicos: 21 variables y 1020 observaciones
 summary(mean.phenodata.pineda)
 head(mean.phenodata.pineda)
-dim(mean.phenodata.pineda)
+dim(mean.phenodata.pineda)# 1020 Especímenes y 21 variables
 
-mean.phenodata.piloto<-read.table("meanphenodatapilot_2023Jun28_173331.csv", header = T, sep = ",")# datos de las
+mean.phenodata.piloto<-read.table("meanphenodatapilot_2023Aug02_095547.csv", header = T, sep = ",")# datos de las
   #plantas madres de los con las mismas variables analizadas en Pineda et al.para la conformación de grupos
 summary(mean.phenodata.piloto)
 head(mean.phenodata.piloto)
@@ -60,7 +79,7 @@ data.frame(colnames(mean.phenodata), measurement.units)
 
 ###################################################################################################################
 ###################################################################################################################
-# 2) Examinar  ladistribución de cada rasgo fenotípico, edita los datos y transformación y rotación de los datos con
+# 2) Examinar  la distribución de cada rasgo fenotípico, editar los datos y transformación y rotación de los datos con
 #    análisis de componentes principales.
 ###################################################################################################################
 ###################################################################################################################
@@ -70,25 +89,28 @@ data.frame(colnames(mean.phenodata), measurement.units)
 
 
 colnames(mean.phenodata) # nombre de las variables
-trait.x <- 15 # número de columna/variable/rasgo fenotípico
-colnames(mean.phenodata)[trait.x] # Qué variable
-#distribución de la logintud de las filarias estériles en escala lineal.
-hist(mean.phenodata[,trait.x], breaks=100, xlab=colnames(mean.phenodata)[trait.x], main="", col="gray80")
-summary(mean.phenodata[,trait.x])
-#distribución de la logintud de las filarias estériles en escala logarítmica.
-hist(log(mean.phenodata[,trait.x]), breaks=100, xlab=colnames(mean.phenodata)[trait.x], main="", col="gray80")
-summary(log(mean.phenodata[,trait.x]))
-#distribución de la logintud de las filarias estériles en escala logarítmica agregándole uno; puede ser útil cuano 
-#hay ceros en los datos crudos 
-hist(log(mean.phenodata[,trait.x]+1), breaks=100, 
-     xlab=paste(colnames(mean.phenodata)[trait.x], "(", measurement.units[trait.x], ")"), main="", col="gray80")
-summary(log(mean.phenodata[,trait.x]+1))
+for (trait.x in 7:19) { #histogramas para cada variable
+  colnames(mean.phenodata)[trait.x] # Qué variable
+  #distribución de la logintud de las filarias estériles en escala lineal.
+  hist(mean.phenodata[,trait.x], breaks=100, xlab=colnames(mean.phenodata)[trait.x], main="", col="gray80")
+  summary(mean.phenodata[,trait.x])
+  #distribución de la logintud de las filarias estériles en escala logarítmica.
+  hist(log(mean.phenodata[,trait.x]), breaks=100, xlab=paste("log(",colnames(mean.phenodata)[trait.x],"(", 
+                                                             measurement.units[trait.x], "))"), main="", col="gray80")
+  summary(log(mean.phenodata[,trait.x]))
+  #distribución de la logintud de las filarias estériles en escala logarítmica agregándole uno; puede ser útil cuano 
+  #hay ceros en los datos crudos 
+  hist(log(mean.phenodata[,trait.x]+1), breaks=100, 
+       xlab=paste("log(",colnames(mean.phenodata)[trait.x], "+1(", measurement.units[trait.x], "))"), main="", col="gray80")
+  summary(log(mean.phenodata[,trait.x]+1))
+}
+
 
 #examinar gráficamente relaciones bivariables
 #definir dos rasgos fenotípicos a examinar:
 colnames(mean.phenodata)
-trait.x <- 9
-trait.y <- 10
+trait.x <- 17
+trait.y <- 19
 #revisar los nombres de las variables seleccionadas
 colnames(mean.phenodata)[trait.x]
 summary(mean.phenodata[,trait.x])
@@ -112,7 +134,7 @@ mean.phenodata.selected <- mean.phenodata[,7:19]
 dim(mean.phenodata.selected)
 summary(mean.phenodata.selected)
 head(mean.phenodata.selected)
-
+colnames(mean.phenodata.selected)
 ###################################################################################################################
 # 2.3) Remover los especímenes con valores NA en algún rasgo fenotípico.
 
@@ -159,13 +181,13 @@ class(mean.phenodata.selected.log)
 summary(mean.phenodata.selected.log)
 
 ###################################################################################################################
-# 2.5) Análisis de componentes principales (PCA) a la matriz de covarianza de los rasgos continuos con 
+# 2.5) Análisis de componentes principales (ACP) a la matriz de covarianza de los rasgos continuos con 
 #transformación logarítmica.
 
 #PCA para la mariz de covarianza
 mean.phenodata.selected.log.pca <- prcomp(
   mean.phenodata.selected.log, center = T, scale. = F) #PCA usando matriz de covarianza
-mean.phenodata.selected.log.pca
+View(mean.phenodata.selected.log.pca)
 
 #examinar los resultados del PCA
 attributes(mean.phenodata.selected.log.pca)
@@ -173,13 +195,13 @@ mean.phenodata.selected.log.pca$scale
 mean.phenodata.selected.log.pca$center
 summary(mean.phenodata.selected.log.pca) #varianza explicada en cada componente
 summary(mean.phenodata.selected.log.pca$x) #resumen de los principales componentes
-mean.phenodata.selected.log.pca$rotation # coeficinetes (o "loadings") de cada rasgo en cada componente
+mean.phenodata.selected.log.pca$rotation # coeficientes (o "loadings") de cada rasgo en cada componente
 
 #guardar el análisis de PCA
 save(mean.phenodata.selected.log.pca, file=paste("MeanPhenodataSelectedLogPca_", 
-                                                 format(Sys.time(), "%Y%b%d_%H%M%S"), ".RData", sep=""))
+                                                 format(Sys.time(), "%Y%B%d_%H%M%S"), ".RData", sep=""))
 #cargar el análisis de PCA
-load("MeanPhenodataSelectedLogPca_2023jul.06_115221.RData")
+load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 
 #examinar las distribuciones univariadas de los principales componentes:
 ## seleccionar un componente principal
@@ -207,7 +229,7 @@ plot(mean.phenodata.selected.log.pca$x[,PCA.x], mean.phenodata.selected.log.pca$
 
 ###################################################################################################################
 ###################################################################################################################
-# 3) selección de variables para los modelos de mezclas normales.
+# 3) Selección de variables para los modelos de mezclas normales.
 ###################################################################################################################
 ###################################################################################################################
 
@@ -293,7 +315,7 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 #éstos son los rasgos seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
 
 ###################################################################################################################
-# 3.2) selección de variables haia adelante unsando PCA de la matriz de covarianza de los rasgos fenotípicos con
+# 3.2) selección de variables hacia adelante unsando PCA de la matriz de covarianza de los rasgos fenotípicos con
 #       transformación logarítmica.
 
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
@@ -310,7 +332,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
+#éstos son los rasgos seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
 
 mclust.options(hcUse="VARS")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
@@ -322,7 +344,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#rasgos seleccionados en orden: 1,2,4,3,6,7,5,8,9,11,10
+#rasgos seleccionados en orden: 1,3,2,4,6,5,10,8,9,11,12,7
 
 mclust.options(hcUse="STD")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10,
@@ -334,7 +356,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10 
+#éstos son los rasgos seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7 
 
 mclust.options(hcUse="SPH")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
@@ -346,7 +368,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
 
 mclust.options(hcUse="PCR")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
@@ -358,7 +380,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
 
 mclust.options(hcUse="SVD")
 mean.phenodata.selected.log.pca.varsel.for <- clustvarsel(mean.phenodata.selected.log.pca$x, G=1:10, 
@@ -370,7 +392,7 @@ names(mean.phenodata.selected.log.pca.varsel.for$subset)
 mean.phenodata.selected.log.pca.varsel.for$steps.info
 mean.phenodata.selected.log.pca.varsel.for$search
 mean.phenodata.selected.log.pca.varsel.for$direction
-#Éstos son los rasgos seleccionados en orden por el modelo: 1,2,4,3,6,7,5,8,12,9,11,10
+#Éstos son los rasgos seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
 
 ##la selección de las variables tanto hacia adelante como hacia atrás, escogieron los primeros 12 rasgos fenotípicos 
 
@@ -389,7 +411,7 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 data.for.GMM <- mean.phenodata.selected.log.pca$x[,1:12]
 
 ###################################################################################################################
-# 4.2)ajuste de mezclas normales usando diferentes valores de inicialización, usando el argument "hcUse"
+# 4.2) Ajuste de mezclas normales usando diferentes valores de inicialización, usando el argument "hcUse"
 
 #"PCS"
 mclust.options(hcUse="PCS") 
@@ -402,18 +424,20 @@ names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
+
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 8 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
 #   log-likelihood   n  df       BIC       ICL
-#      186.1445     350 265   -1180.063   -1186.984
+#     295.0292      350 190     -522.9489 -526.2676
 # 
 # Clustering table:
-#   1   2   3   4   5   6   7   8 
-#   23 124  23  59  32  46  29  14 
+#   1   2   3   4   5 
+#   85 107  58  22  78 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
@@ -441,7 +465,7 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun")
 save(Mcluster.phenodata, file=paste("Mcluster.phenodata_", format(Sys.time(), "%Y%B%d"), ".RData", sep=""))
-load("Mcluster.phenodata_2023jul.26.RData")
+load("Mcluster.phenodata_2023agosto19.RData")
 
 
 #"VARS"
@@ -459,14 +483,15 @@ attributes(Mcluster.phenodata)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 8 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
 #   log-likelihood   n  df       BIC       ICL
-#     186.1445      350 265     -1180.063 -1186.984
+#   295.0292        350 190     -522.9489 -526.2676
 # 
 # Clustering table:
-#   1   2   3   4   5   6   7   8 
-#   23 124  23  59  32  46  29  14 
+#   1   2   3   4   5 
+#   85 107  58  22  78 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
@@ -488,14 +513,15 @@ attributes(Mcluster.phenodata)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
-#   log-likelihood   n  df      BIC      ICL
-# 331.3036          350 340   -1329.09 -1341.62
+#   log-likelihood   n  df       BIC       ICL
+#   160.1269        350 190   -792.7536 -798.8695
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 11 
-#   23 12 41 25 59 48 16 39 46 25 16 
+#   1   2   3   4   5 
+#   23 163  76  27  61
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
@@ -535,17 +561,19 @@ Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
 
 # ---------------------------------------------------- 
-# Gaussian finite mixture model fitted by EM algorithm 
+#   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
-#   log-likelihood   n  df      BIC      ICL
-#   331.3036        350 340   -1329.09 -1341.62
+#   log-likelihood   n  df       BIC       ICL
+#     160.1269      350 190     -792.7536 -798.8695
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 11 
-#   23 12 41 25 59 48 16 39 46 25 16 
+#   1   2   3   4   5 
+#   23 163  76  27  61 
+
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
@@ -582,18 +610,21 @@ names(Mcluster.phenodata$classification)#the specimens included in the analysis
 Mcluster.phenodata$classification #classification of specimens
 Mcluster.phenodata$uncertainty #the uncertainty of the classification
 attributes(Mcluster.phenodata)
+
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
-#   log-likelihood   n  df      BIC      ICL
-#     331.3036     350  340   -1329.09   -1341.62
+#   log-likelihood   n  df       BIC       ICL
+#       160.1269    350 190     -792.7536 -798.8695
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 11 
-#  23 12 41 25 59 48 16 39 46 25 16 
+#   1   2   3   4   5 
+#   23 163  76  27  61
+
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
@@ -630,18 +661,20 @@ names(Mcluster.phenodata$classification)#the specimens included in the analysis
 Mcluster.phenodata$classification #classification of specimens
 Mcluster.phenodata$uncertainty #the uncertainty of the classification
 attributes(Mcluster.phenodata)
+
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust VVE (ellipsoidal, equal orientation) model with 11 components: 
+#   Mclust VVE (ellipsoidal, equal orientation) model with 5
+# components: 
 #   
-#   log-likelihood   n  df      BIC      ICL
-#     331.3036      350 340   -1329.09 -1341.62
+#   log-likelihood   n  df       BIC       ICL
+#   160.1269        350 190    -792.7536 -798.8695
 # 
 # Clustering table:
-#   1  2  3  4  5  6  7  8  9 10 11 
-#  23 12 41 25 59 48 16 39 46 25 16 
+#   1   2   3   4   5 
+#   23 163  76  27  61
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what="classification", dimens=c(1,2))
@@ -676,7 +709,7 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
-load("Mcluster.phenodata_2023jul.26.RData")
+load("Mcluster.phenodata_2023agosto19.RData")
 
 ###################################################################################################################
 # 5.1)Examinar y guardar en un documento para asignación de los especímenes a los grupos fenotípicos. 
@@ -691,7 +724,7 @@ head(phenotypic.group.assignment)
 setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 write.csv(phenotypic.group.assignment, 
-          file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%b%d_%H%M%S"), ".csv", sep=""), row.names = F)
+          file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
 
 #Examinar los grupos fenotípicps de as plantas del piloto
 
