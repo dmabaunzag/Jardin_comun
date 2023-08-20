@@ -35,12 +35,12 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
 
 #leer la tabla de datos: datos de la progenie tomados en Quebradas en 20/03/2020
 
-phenodata.progenie <- read.table("PhenotypicDataProgeny_Quebradas_2020Octubre.csv", header=T, sep=",") 
+phenodata.progenie <- read.table("PhenotypicDataProgeny_Quebradas_2023Junio.csv", header=T, sep=",") 
 
 View(phenodata.progenie)
 summary(phenodata.progenie)
 head(phenodata.progenie)
-dim(phenodata.progenie)# 250 plantas del piloto con 33 variables
+dim(phenodata.progenie)# 177 plantas del piloto con 26 variables
 
 
 ###################################################################################################################
@@ -50,22 +50,22 @@ dim(phenodata.progenie)# 250 plantas del piloto con 33 variables
 ###################################################################################################################
 # 3.1) Filtrar rasgos fenotípicos a usar
 
-colnames(phenodata.progenie)#sólo se usará número de colección (1), longitud del tallo (9) y número de hojas (10)
-phenodata.progenie.selected<-phenodata.progenie[,c(1,9,10)]
+colnames(phenodata.progenie)#sólo se usará número de colección (2), longitud del tallo (9) y número de hojas (10)
+phenodata.progenie.selected<-phenodata.progenie[,c(2,9,10)]
 View(phenodata.progenie.selected)
 colnames(phenodata.progenie.selected)<-c("Número de colección plantas madres", "Longitud del tallo", "Número de hojas")
-dim(phenodata.progenie.selected) #250 plantas de la progenie y 3 variables
+dim(phenodata.progenie.selected) # 177 plantas de la progenie y 3 variables
 
 #unidades de medida de cada variables
-measurement.units <- c(NA,  "cm", "count")
+measurement.units <- c(NA,  "mm", "count")
 data.frame(colnames(phenodata.progenie.selected), measurement.units)
 
 ###################################################################################################################
 # 3.2) Remover plantas de la progenie sin madre asignada y con algún faltante en los rasgos fenotípicos
 
 # cuantas plantas madres están representadas
-unique(phenodata.progenie.selected$`Número de colección plantas madres`)## hay dos plantas sin madre
-length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## 39 plantas madres representadas
+unique(phenodata.progenie.selected$`Número de colección plantas madres`)## todos son números
+length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## 33 plantas madres representadas
 
 # excluir plantas de la progenie sin planta madre y que no tenga datos (excluir todos los NAs)
 
@@ -77,16 +77,16 @@ sapply(phenodata.progenie.selected, class)
 
 rows.with.na <- unique(which(is.na(phenodata.progenie.selected), arr.ind = T)[,1])
 rows.with.na # especímenes con valores NA
-length(rows.with.na)# 30 plantas hijas con NA
+length(rows.with.na)# 1 planta hija con NA
 
 #correr las siguietes líneas en caso de existir NAs
 phenodata.progenie.selected <- phenodata.progenie.selected[-rows.with.na,]
-dim(phenodata.progenie.selected) # 220 hijas con todos los datos
+dim(phenodata.progenie.selected) # 176 hijas con todos los datos
 class(phenodata.progenie.selected)
 summary(phenodata.progenie.selected)
 head(phenodata.progenie.selected)
 
-length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## hay representación de 35 plantas madres
+length(unique(phenodata.progenie.selected$`Número de colección plantas madres`))## hay representación de 33 plantas madres
 unique(phenodata.progenie.selected$`Número de colección plantas madres`)##cuáles
 
 ###################################################################################################################
@@ -138,7 +138,7 @@ colnames(phenodata.progenie.selected)[trait.y]
 summary(phenodata.progenie.selected[,trait.y])
 
 #graficar la relaciones bivariables
-cor(phenodata.progenie.selected[,trait.x], phenodata.progenie.selected[,trait.y])# correlación:0.6980383 (mayor que en marzo)
+cor(phenodata.progenie.selected[,trait.x], phenodata.progenie.selected[,trait.y])# correlación:0.0632134 
 regresion<-lm(phenodata.progenie.selected[,trait.y]~phenodata.progenie.selected[,trait.x])
 plot(phenodata.progenie.selected[,trait.x], phenodata.progenie.selected[,trait.y],
      xlab=paste(colnames(phenodata.progenie.selected)[trait.x], "(", measurement.units[trait.x], ")"), 
@@ -173,8 +173,9 @@ View(mean.phenodata.progenie.selected.log)
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-save(mean.phenodata.progenie.selected.log, file=paste("mean.phenodata.progenie.selected.log_ (octubre)_", format(Sys.time(),"%Y%B%d_%H%M%S"), ".RData", sep=""))
-load("mean.phenodata.progenie.selected.log_ (octubre)_2023agosto07_093044.RData")
+save(mean.phenodata.progenie.selected.log, file=paste("mean.phenodata.progenie.selected.log_ (junio)_",
+                                                      format(Sys.time(),"%Y%B%d_%H%M%S"), ".RData", sep=""))
+load("mean.phenodata.progenie.selected.log_ (junio)_2023agosto20_074711.RData")
 
 
 ###################################################################################################################
@@ -210,7 +211,7 @@ ggplot()+
   geom_point(data=mean.phenodata.progenie.selected.log, aes(x=`log Longitud del tallo`, y=`log Número de hojas`))+
   geom_text(data=mean.phenodata.progenie.selected.log, aes(x=`log Longitud del tallo`, y=`log Número de hojas`,
                                                            label=`Número de colección plantas madres`), cex=2.5, vjust=1.5)
-cor(x=phenodata.progenie.selected.log$`log Longitud del tallo`, y=phenodata.progenie.selected.log$`log Número de hojas`)# 0.6222374
+cor(x=phenodata.progenie.selected.log$`log Longitud del tallo`, y=phenodata.progenie.selected.log$`log Número de hojas`)#  0.3939574
 lm(`log Número de hojas`~`log Longitud del tallo`, data=phenodata.progenie.selected.log)
 
 
@@ -240,15 +241,15 @@ attributes(Mcluster.phenodata.progenie)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-# components: 
+#   Mclust EEE (ellipsoidal, equal volume, shape and orientation)
+# model with 2 components: 
 #   
-#   log-likelihood  n df       BIC       ICL
-# 5.562016          35 10    -24.42945 -29.66445
+#   log-likelihood  n  df       BIC      ICL
+#       8.292518    33  8     -11.38703 -11.5128
 # 
 # Clustering table:
-#   1  2 
-#   29  6 
+#    1  2 
+#   30  3 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
@@ -267,18 +268,18 @@ Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 
 # ---------------------------------------------------- 
-#   Gaussian finite mixture model fitted by EM algorithm 
+# Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-# components: 
+#   Mclust EEE (ellipsoidal, equal volume, shape and orientation)
+# model with 2 components: 
 #   
-#   log-likelihood  n df       BIC       ICL
-# 5.562016 35 10 -24.42945 -29.66445
+#   log-likelihood  n   df       BIC      ICL
+#       8.292518    33  8     -11.38703 -11.5128
 # 
 # Clustering table:
-#   1  2 
-#   29  6 
+#    1  2 
+#   30  3
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
@@ -287,7 +288,7 @@ plot(Mcluster.phenodata.progenie, what="BIC")
 #"STD"
 mclust.options(hcUse="STD") 
 Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
-#examine results
+#examinando resultados
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)#
@@ -299,15 +300,15 @@ attributes(Mcluster.phenodata.progenie)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-# components: 
+#   Mclust EEE (ellipsoidal, equal volume, shape and orientation)
+# model with 2 components: 
 #   
-#   log-likelihood  n df       BIC       ICL
-#   5.562016        35 10    -24.42945 -29.66445
+#   log-likelihood  n   df       BIC      ICL
+#      8.292518     33  8     -11.38703 -11.5128
 # 
 # Clustering table:
 #   1  2 
-#   29  6 
+#   30 3  
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
@@ -329,15 +330,15 @@ attributes(Mcluster.phenodata.progenie)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-#   components: 
+#   Mclust EVE (ellipsoidal, equal volume and orientation) model with
+# 2 components: 
 #   
 #   log-likelihood  n df       BIC       ICL
-#   5.562016        35 10     -24.42945 -29.66445
+#   9.754228       33  9      -11.96011 -12.22683
 # 
 # Clustering table:
 #   1  2 
-#   29  6 
+#   28  5  
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
@@ -359,23 +360,23 @@ attributes(Mcluster.phenodata.progenie)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-# components: 
+#   Mclust EEE (ellipsoidal, equal volume, shape and orientation)
+# model with 2 components: 
 #   
-#   log-likelihood  n df       BIC       ICL
-#   5.562016        35 10    -24.42945 -29.66445
+#   log-likelihood  n df       BIC      ICL
+#         8.292518 33  8      -11.38703 -11.5128
 # 
 # Clustering table:
 #   1  2 
-#   29  6 
+#   30  3 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata.progenie, what="BIC")
 
-#"SDV"
-mclust.options(hcUse="SDV") 
+#"SVD"
+mclust.options(hcUse="SVD") 
 Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 #examine results
 Mcluster.phenodata.progenie
@@ -389,15 +390,15 @@ attributes(Mcluster.phenodata.progenie)
 #   Gaussian finite mixture model fitted by EM algorithm 
 # ---------------------------------------------------- 
 #   
-#   Mclust EVV (ellipsoidal, equal volume) model with 2
-# components: 
+#   Mclust EEE (ellipsoidal, equal volume, shape and orientation)
+# model with 2 components: 
 #   
-#   log-likelihood  n df       BIC       ICL
-#     5.562016      35 10   -24.42945 -29.66445
+#   log-likelihood  n df       BIC      ICL
+#       8.292518    33  8   -11.38703 -11.5128
 # 
 # Clustering table:
 #   1  2 
-#   29  6 
+#  30  3 
 
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
