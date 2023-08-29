@@ -730,7 +730,7 @@ write.csv(phenotypic.group.assignment,
 
 phenotypic.group.assignment.piloto<-phenotypic.group.assignment[308:350,]
 
-phenotypic.group.assignment.piloto##Las plantas del piloto se encuentran en tres de los 11 grupos fenotípicos: 4,10 y 11
+View(phenotypic.group.assignment.piloto)##Las plantas del piloto se encuentran en cuatro de los cinco grupos fenotípicos
 
 ###################################################################################################################
 # 5.2) Examinar los parámetros de la distribución normal multivariable definiendo cada grupo fenotípico de acuerdo
@@ -738,7 +738,9 @@ phenotypic.group.assignment.piloto##Las plantas del piloto se encuentran en tres
 
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Directorio de Diana
+#Guardar las gráficas en un pdf
+#pdf("Figuras_sección_5.2.pdf")
 
 #jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
 jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
@@ -746,42 +748,41 @@ jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
 
 xy.coo <- seq(0, 1, length.out=12)
 
-#Calcular rangos de valores en la correlación de matrices de los grupos fenotípicos
-minmaxCO <- matrix(NA, nrow=11, ncol=2)
-for(i in 1:11){
+# Calcular los rangos de valor en la matriz de correlación de los grupos fenotípicos
+minmaxCO <- matrix(NA, nrow=5, ncol=2)
+for(i in 1:5){
   CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,i])
   diag(CO) <- NA
   CO[lower.tri(CO)] <- NA
   minmaxCO[i,] <- range(CO, na.rm=T) 
 }
-range(minmaxCO) #para graficar usar este rango: -0.9 to 0.6
+range(minmaxCO) # -0.8049053  0.6718863 para graficar usamos rango entre -0.9 a 0.6
 
 
-#seleccionar grupo fenotípico
-P <- 11
+#Seleccionar grupo fenotípico
+P <- 5
 
 #http://www.statistics4u.com/fundstat_eng/cc_scaling.html
-#escalando rano spara el promedio
+# escalando rango para el promedio
 M.Rmin <- 1.06
 M.Rmax <- 1.28 
 M.Dmin <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=min)
 M.Dmax <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=max)
 #M.range.scaling <- (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
-M.rs <- Mcluster.phenodata$parameters$mean * (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + 
-  (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
+M.rs <- Mcluster.phenodata$parameters$mean * (M.Rmax - M.Rmin)/(M.Dmax - M.Dmin) + (M.Rmin*M.Dmax - M.Rmax*M.Dmin)/(M.Dmax - M.Dmin)
 
-# Escalando el rango para la varianza
+#escalando rangos para la varianza
 V.Rmin <- 0.5
 V.Rmax <- 4 
 V.Dmin <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=min))
 V.Dmax <- diag(apply(Mcluster.phenodata$parameters$variance$sigma, MARGIN=c(1,2), FUN=max))
-V.raw <- matrix(NA, nrow=12, ncol=11)
-for(i in 1:11){
+V.raw <- matrix(NA, nrow=12, ncol=5)
+for(i in 1:5){
   V.raw[,i] <- diag(Mcluster.phenodata$parameters$variance$sigma[,,i])
 }
 V.rs <- V.raw * (V.Rmax - V.Rmin)/(V.Dmax - V.Dmin) + (V.Rmin*V.Dmax - V.Rmax*V.Dmin)/(V.Dmax - V.Dmin)
 
-#Obtener matriz de correlación.
+# Obtener matriz de correlación
 CO <- cov2cor(Mcluster.phenodata$parameters$variance$sigma[,,P])
 diag(CO) <- NA
 CO[lower.tri(CO)] <- NA
@@ -801,8 +802,8 @@ image(CO, col=jet.colors3(20), xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), 
 #points(xy.coo, xy.coo, pch=21, cex=V.rs[,P])
 points(xy.coo, xy.coo, pch=19, cex=V.rs[,P])
 #points(xy.coo, xy.coo-0.1, type="p", pch=as.character(1:12))
-text(xy.coo, xy.coo-0.08, labels=as.character(1:12), adj=0.5, cex=1.5)
-text(-0.1, xy.coo, labels=as.character(1:12), cex=1.5)
+text(xy.coo, xy.coo-0.08, labels=as.character(1:12), adj=0.5, cex=1.2)
+text(-0.1, xy.coo, labels=as.character(1:12), cex=1.2)
 #points(xy.coo, rep(1.1, 12), type="l", lty=1, lwd=0.5, col="gray")
 #points(xy.coo, rep(1.28, 12), type="l", lty=1, lwd=0.5, col="gray")
 #points(xy.coo, rep(1.19, 12), type="l", lty=3, lwd=0.5, col="gray")
@@ -814,23 +815,23 @@ points(xy.coo, M.rs[,P], pch=19, cex=0.6)
 segments(x0=xy.coo, y0=1.17, x1=xy.coo, y1=M.rs[,P], lty=1)
 text(xy.coo[10], xy.coo[4], paste(letters[P], ") ", "P" , P, sep=""), cex=2)
 
-#Leyenda para el promedio y la varianza.
+#leyenda para el promedio y la varianza
 par(mar=c(1,1,1,1))
 image(CO, col="transparent", xaxt="n", yaxt="n", bty="n", xlim=c(-0.15, 1.3), ylim=c(-0.15, 1.3), zlim=c(-0.9,0.6))
 rect(xleft=-0.05, ybottom=1.06, xright=0.09090909+0.05, ytop=1.28, col = "gray90", border="gray90")
 segments(x0=-0.05, y0=1.17, x1=0.09090909+0.05, y1=1.17, lwd=0.5, col="gray60", lty=3)
 points(xy.coo[1:2], c(1.06,1.28), pch=19, cex=0.6)
 segments(x0=xy.coo[1:2], y0=1.17, x1=xy.coo[1:2], y1=c(M.Rmin, M.Rmax), lty=1)
-text(mean(xy.coo[1:2]), 1, "Mean", cex=1.5)
-text(xy.coo[2]+0.3, 1.11, "minimun", cex=1.5)
-text(xy.coo[2]+0.3, 1.24, "maximum", cex=1.5)
-#leyenda para la varianza
+text(mean(xy.coo[1:2]), 1, "Promedio", cex=1.2)
+text(xy.coo[2]+0.3, 1.11, "mímino", cex=1.2)
+text(xy.coo[2]+0.3, 1.24, "máximo", cex=1.2)
+#leyenda par la varianza
 points(xy.coo[c(8,8)]+0.045, c(1.11,1.24), pch=19, cex=c(V.Rmin, V.Rmax))
-text(xy.coo[c(8,8)]+0.045, 1, "Variance", cex=1.5)
-#text(xy.coo[c(9,9)]+0.045, 1.16, "Variance", cex=1.5, srt=90)
+text(xy.coo[c(8,8)]+0.045, 1, "Varianza", cex=1.2)
+#text(xy.coo[c(9,9)]+0.045, 1.16, "Varianza", cex=1.5, srt=90)
 rect(xleft=-0.07, ybottom=0.95, xright=xy.coo[c(9,9)]+0.11, ytop=1.3, col = "transparent", border="black")
 
-# agregar leyenda para la correlación de las matrices
+#add legend for correlation matrices
 imagelegend <- function(xl, yt, width, nbox, bheight, bgap, col, border=NULL) 
 { 
   x <- c(xl,xl,xl+width,xl+width) 
@@ -844,7 +845,9 @@ imagelegend <- function(xl, yt, width, nbox, bheight, bgap, col, border=NULL)
     y <- c(yt-bottom,yt-top,yt-top,yt-bottom) 
     polygon(x,y,border=border,col=col[i]) 
   } 
-} 
+}
+
+
 #Desde R. Bivand:
 #As far as I remenber, the arguments are: 
 #xl x-location of legend panel left edge 
@@ -867,7 +870,7 @@ imagelegend(xl=0, yt=0.6, width=0.05, nbox=30, bheight=0.05, bgap=0, col=jet.col
 axis(4, line=-9, at=seq(-0.9, 0.6, 0.05), labels=F)
 axis(4, line=-9, at=seq(-0.9, 0.6, 0.1), labels=F, tcl=-1, cex.axis=1.5)
 axis(4, line=-8.5, at=seq(-0.9, 0.6, 0.1), labels=T, tcl=-1, cex.axis=1.5, lwd=0)
-mtext(side=4, "Correlation (Pearson's r)", cex=1.5, line=-5)
+mtext(side=4, "Correlación (Pearson's r)", cex=1.5, line=-5)
 #text(-0.6, -0.1, labels="I) Correlation", cex=2, srt=90)
 
 #par(mar=c(5,4.5,4,2)+0.1) #default
@@ -876,7 +879,7 @@ par(mar=c(7,1,7,1))
 #plot(rep(1:12, 2), c(M.Dmin, M.Dmax), xaxt="n", yaxt="n", bty="n", type="n")
 #plot(rep(1:12, 2), c(M.Dmin, M.Dmax), xaxt="n", xlab="", ylab="Mean", bty="n", type="n", cex.axis=1.5, cex.lab=1.5, ylim=c(-1.7,0.7))
 plot(rep(xy.coo, 2), c(M.Dmin, M.Dmax), xaxt="n", yaxt="n", xlab="", ylab="", bty="n", type="n",
-     cex.axis=1.5, cex.lab=1.5,  xlim=c(-0.15, 1.3), ylim=c(-1.7,0.7), xaxs="i")
+     cex.axis=1.5, cex.lab=1.2,  xlim=c(-0.15, 1.3), ylim=c(-1.7,0.7), xaxs="i")
 points(xy.coo, M.Dmax, type="o", pch=19)
 points(xy.coo, M.Dmin, type="o", pch=19)
 axis(2, at=round(seq(-1.7,0.7,0.1),3), labels=F, tcl=-0.5, line=-2.2)
@@ -884,33 +887,33 @@ axis(2, at=c(-1.5,-1,-0.5,0,0.5), labels=F, tcl=-0.7, line=-2.2)
 axis(2, at=c(-1.5,-1,-0.5,0, 0.5), labels=T, cex.axis=1.5, line=-2.2, lwd=0, las=2)
 #abline(h=0, lty=3)
 axis(1, at=xy.coo, labels=F, line=0, cex.axis=1.5)
-axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
-axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
-text(xy.coo[8], -1, labels="G) Mean", cex=2)
-mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
+axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.3, lwd=0)
+axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.3, lwd=0)
+text(xy.coo[8], -1, labels="G) promedio", cex=2)
+mtext(side=1, "Componentes principales", cex=1.5, line=4, at=xy.coo[6]+0.05)
 
 
 #par(mar=c(5,4.5,4,2)+0.1) #default
 par(mar=c(7,1,7,1))
 plot(rep(xy.coo, 2), c(V.Dmin, V.Dmax), xaxt="n", yaxt="n", xlab="", ylab="", bty="n", type="n",
-     cex.axis=1.5, cex.lab=1.5,  xlim=c(-0.15, 1.3), xaxs="i")
+     cex.axis=1.5, cex.lab=1.3,  xlim=c(-0.15, 1.3), xaxs="i")
 points(xy.coo, V.Dmax, type="o", pch=19)
 points(xy.coo, V.Dmin, type="o", pch=19)
 axis(2, at=round(seq(0,1.5,0.1),3), labels=F, tcl=-0.5, line=-2.2)
 axis(2, at=c(0,0.5,1,1.5), labels=F, tcl=-0.7, line=-2.2)
 axis(2, at=c(0,0.5,1,1.5), labels=T, cex.axis=1.5, lwd=0, las=2,  line=-2.2)
 axis(1, at=xy.coo, labels=F, line=0, cex.axis=1.5)
-axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.5, lwd=0)
-axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.5, lwd=0)
-text(xy.coo[8], 1, labels="H) Variance", cex=2)
-mtext(side=1, "Principal component", cex=1.5, line=4, at=xy.coo[6]+0.05)
-
+axis(1, at=xy.coo[seq(2,12,2)], labels=seq(2,12,2), line=0, cex.axis=1.3, lwd=0)
+axis(1, at=xy.coo[seq(1,12,2)], labels=seq(1,12,2), line=1, cex.axis=1.3, lwd=0)
+text(xy.coo[8], 1, labels="H) Varianza", cex=2)
+mtext(side=1, "Componentes principales", cex=1.5, line=4, at=xy.coo[6]+0.05)
+#dev.off()
 ###################################################################################################################
 # 5.3) Examinar la tabulación cruzada de las variables en los datos originales (mean.phenodata) y grupos fenotípicos 
 # particulares en el mejor modelo de mezcla normal.
 
 #seleccionar un morfogrupo en el modelo de mezla normal.
-pg.nmm <- 6
+pg.nmm <- 5
 # Seleccionar una columna en los datos originales(mean.phenodata)
 colnames(mean.phenodata)
 col.phenodata <- 11 
@@ -919,6 +922,11 @@ table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mclust
 ###################################################################################################################
 # 5.4) Graficar el soporte empírico para el mejor modelo para cada grupo fenotípico.
 
+# directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Directorio de Diana
+#Guardar las gráficas en un pdf
+#pdf("Figuras_sección_5.4.pdf")
 #graficar soportes empíricos para el mejor modelo a cada morfogrupo
 BIC.Best.Model.Per.G <- apply(Mcluster.phenodata$BIC, 1, max, na.rm=T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -933,21 +941,23 @@ points(1:12, max.BIC-BIC.Best.Model.Per.G[1:12], cex=2, pch=20, col="black", lwd
 axis(1, at=c(1,seq(2,12,1)), labels=T, tcl=-0.5, cex.axis=1.2)
 axis(2, at=seq(2000,0,-100), tcl=-0.7, cex.axis=1.2)
 abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor soporte
+#dev.off()
 
 ###################################################################################################################
-# 5.5) Graficar grupos fenotípicos en el mejr modelo de mezclas normales. 
-
+# 5.5) Graficar grupos fenotípicos en el mejor modelo de mezclas normales.
+setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
+summary(mean.phenodata.selected.log.pca)
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Diana's directory
-
-
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#pdf("Figuras_sección_5.5.pdf")
 #PC1 vs PC2
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar=c(5,5,4,2)+0.1)
 plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,2), main="", addEllipses = F,
-     xlab="PC1 (44.46% varianza)", ylab="PC2 (16.29% varianza)", cex.axis=1.5, cex.lab=1.5)
-legend("bottomleft", paste("P", 1:11), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+     xlab="PC1 (44.87% varianza)", ylab="PC2 (14.81% varianza)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:5), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
        pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
 #agregar elipses
 for (i in 1:Mcluster.phenodata$G){
@@ -955,49 +965,293 @@ for (i in 1:Mcluster.phenodata$G){
                  centre = Mcluster.phenodata$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
          type="l", col="black")
 }
-#add ellipse labels
-text(0.9, 0.79, "P1")
-text(-1.7, 0.95, "P4")
-text(0.5, -1.7, "P6")
-text(-0.82, -0.85, "P2")
-text(-1.03, -0.24, "P3")
-text(0.85, -0.4, "P5")
-arrows(x0=0.7, y0=-0.4, x1 =-0.25, y1 =-0.1, length = 0.1, angle = 20, code = 2)
+#agregar etiquetas de las elipses
+Mcluster.phenodata$parameters$mean[c(1,2),]
+# [,1]              [,2]       [,3]       [,4]       [,5]
+# PC1 1.8156484 -0.3675515 -0.4995887 -1.1710470 1.43878675
+# PC2 0.6643681 -0.3152533  0.3752883  0.2845935 0.00324688
+text(1.81, 0.66, "P1")
+text(-1.17, 0.3, "P4")
+text(-0.37, -0.31, "P2")
+text(-0.5, 0.37, "P3")
+text(1.43, 0, "P5")
 #mtext(side=2, "a)", at=2, las=2, line=2, cex=1.5)
 
 #PC1 vs PC3
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar=c(5,5,4,2)+0.1)
 plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,3), main="", addEllipses = F,
-     xlab="PC1 (44.46% variance)", ylab="PC3 (10.60% variance)", cex.axis=1.5, cex.lab=1.5)
-legend("bottomright", paste("P", 1:6), col=mclust.options("classPlotColors"),
-       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
+     xlab="PC1 (44.87% varianza)", ylab="PC3 (11.47% varianza)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:5), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+        pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
 #add ellipses
 for (i in 1:Mcluster.phenodata$G){
   points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(1,3),c(1,3),i],
                  centre = Mcluster.phenodata$parameters$mean[c(1,3),i], level = pchisq(1, 2)),
          type="l", col="black")
 }
+#agregar etiquetas de las elipses
+#Mcluster.phenodata$parameters$mean[c(1,3),]
+#         [,1]       [,2]       [,3]       [,4]       [,5]
+# PC1  1.8156484 -0.3675515 -0.4995887 -1.1710470 1.43878675
+# PC3 -0.1657277 -0.2814246  0.6479339 -0.1735923 0.08351875
+text(1.81, -0.17, "P1")
+text(-1.17, -0.17, "P4")
+text(-0.37, -0.28, "P2")
+text(-0.5, 0.65, "P3")
+text(1.43, 0.08, "P5")
+#mtext(side=2, "a)", at=2, las=2, line=2, cex=1.5)
 
 #PC3 vs PC2
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar=c(5,5,4,2)+0.1)
 plot(Mcluster.phenodata, what=c("classification"), dimens=c(3,2), main="", addEllipses = F,
-     xlab="PC3 (10.60% variance)", ylab="PC2 (16.29% variance)", cex.axis=1.5, cex.lab=1.5)
-legend("bottomleft", paste("P", 1:6), col=mclust.options("classPlotColors"),
-       pch=mclust.options("classPlotSymbols"), pt.lwd=1, pt.cex=1, cex=1.2, bty="o")
+     xlab="PC3 (11.47% varianza)", ylab="PC2 (14.81% varianza)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:5), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
 #add ellipses
 for (i in 1:Mcluster.phenodata$G){
   points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(3,2),c(3,2),i],
                  centre = Mcluster.phenodata$parameters$mean[c(3,2),i], level = pchisq(1, 2)),
          type="l", col="black")
 }
-#add ellipse labels
-text(0.13, 0.82, "P1")
-text(-0.83, 0.9, "P4")
-text(0.32, -1.72, "P6")
-text(-0.5, -0.89, "P2")
-text(0.475, -0.27, "P3")
-text(-0.76, -0.06, "P5")
+#Agregar etiquetas de las elipses
+# Mcluster.phenodata$parameters$mean[c(3,2),]
+#         [,1]       [,2]      [,3]       [,4]       [,5]
+# PC3 -0.1657277 -0.2814246 0.6479339 -0.1735923 0.08351875
+# PC2  0.6643681 -0.3152533 0.3752883  0.2845935 0.00324688
+text( -0.17, 0.66, "P1")
+text(-0.17, 0.28, "P4")
+text(-0.28, -0.31, "P2")
+text(0.65, 0.38, "P3")
+text(0.08, 0.03, "P5")
 #mtext(side=2, "b)", at=2, las=2, line=2, cex=1.5)
+#dev.off()
 
+###################################################################################################################
+# 5.6) Graficar coeficientes para diferentes rasgos fenotípicos en el espacio de los componentes principales
+#Directorio para guardar las gráficas
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#pdf("Figuras_sección_5.6.pdf")
+
+# Grafica de los coeficientes del PC1 y PC2
+#View(mean.phenodata.selected.log.pca$rotation[,c(1,2)])
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(0,0, xlim=c(-0.76,0.76), ylim=c(-0.76,0.76), asp=1, type="n", bty="n",
+     xlab = "Coeficientes PC1", ylab = "Coeficientes PC2",
+     cex.axis=1.5, cex.lab=1.5)
+for (i in c(5,6,7,10))
+{
+  arrows(0, 0, x1 = mean.phenodata.selected.log.pca$rotation[,1][i], y1 = mean.phenodata.selected.log.pca$rotation[,2][i], 
+         length = 0.1, angle = 20, code = 2, col = "black", lwd=1)
+}
+# Graficar círculo para igual contribubción de los rasgos.
+x <- seq(-(2/13)^0.5, (2/13)^0.5, 1e-4)
+x <- c(x, (2/13)^0.5)
+equal_contribution <- ((2/13)-x^2)^0.5
+points(x, equal_contribution, type="l", lty=1, col="gray70")
+points(x, -equal_contribution, type="l", lty=1, col="gray70")
+#Pairs of sterile leaves per synflorescence
+text(mean.phenodata.selected.log.pca$rotation[,1][5]*1.1+0.12, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1, "pares de hojas ")
+text(mean.phenodata.selected.log.pca$rotation[,1][5]*1.1+0.12, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1-0.06, "estériles por")
+text(mean.phenodata.selected.log.pca$rotation[,1][5]*1.1+0.12, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1-0.12, "sinflorescencia")
+#Capitula per synflorescence
+text(mean.phenodata.selected.log.pca$rotation[,1][6]*1.1-0.1, mean.phenodata.selected.log.pca$rotation[,2][6]*1.1, "Capitulo por")
+text(mean.phenodata.selected.log.pca$rotation[,1][6]*1.1-0.1, mean.phenodata.selected.log.pca$rotation[,2][6]*1.1-0.06, "sinflorescencia")
+#Terminal cyme peduncle length
+text(mean.phenodata.selected.log.pca$rotation[,1][7]*1.1+0.08, mean.phenodata.selected.log.pca$rotation[,2][7]*1.1+0.06, "longitud del")
+text(mean.phenodata.selected.log.pca$rotation[,1][7]*1.1+0.08, mean.phenodata.selected.log.pca$rotation[,2][7]*1.1, "Pedúnculo")
+text(mean.phenodata.selected.log.pca$rotation[,1][7]*1.1+0.08, mean.phenodata.selected.log.pca$rotation[,2][7]*1.1-0.06, "de la cima")
+#Sterile phyllary width
+text(mean.phenodata.selected.log.pca$rotation[,1][10]*1.1, mean.phenodata.selected.log.pca$rotation[,2][10]*1.1, "Ancho de la")
+text(mean.phenodata.selected.log.pca$rotation[,1][10]*1.1, mean.phenodata.selected.log.pca$rotation[,2][10]*1.1-0.06, "filaria estéril")
+#for (i in 1:13)
+#	{
+#	text(mean.phenodata.selected.log.pca$rotation[,1][i]*1.1, mean.phenodata.selected.log.pca$rotation[,2][i]*1.1, i, col="cyan")
+#	}
+#for (i in 1:3)
+#	{
+#	arrows(0, 0, x1 = mean.phenodata.selected.log.pca$rotation[,1][i], y1 = mean.phenodata.selected.log.pca$rotation[,2][i], 
+#	length = 0.1, angle = 20, code = 2, col = "black", lwd=1)
+#	}
+#mtext(side=2, "c)", at=1, las=2, line=2, cex=1.5)
+#mtext(side=2, "c)", at=0.8, las=2, line=2, cex=1.5)
+
+# Grafica de los coeficientes del PC1 y PC3
+#View(mean.phenodata.selected.log.pca$rotation[,c(1,3)])
+par(mar=c(5,5,4,2)+0.1)
+plot(0,0, xlim=c(-0.76,0.76), ylim=c(-0.76,0.76), asp=1, type="n", bty="n",
+     xlab="Coeficientes PC1", ylab="Coeficientes PC3", cex.axis=1.5, cex.lab=1.5)
+for (i in 1:13)
+{
+  arrows(0, 0, x1 = mean.phenodata.selected.log.pca$rotation[,1][i], y1 = mean.phenodata.selected.log.pca$rotation[,3][i], 
+         length = 0.1, angle = 20, code = 2, col = "black", lwd=1)
+}
+# Graficar círculo para igual contribubción de los rasgos.
+x <- seq(-(2/13)^0.5, (2/13)^0.5, 1e-4) 
+x <- c(x, (2/13)^0.5)
+equal_contribution<-((2/13)-x^2)^0.5
+points(x, equal_contribution, type="l", lty=1, col="gray70")
+points(x, -equal_contribution, type="l", lty=1, col="gray70")
+for (i in 1:13)
+{
+  text(mean.phenodata.selected.log.pca$rotation[,1][i]*1.1, mean.phenodata.selected.log.pca$rotation[,3][i]*1.1, i, col="cyan3")
+}
+
+# Grafica de los coeficientes del PC3 y PC2
+#View(mean.phenodata.selected.log.pca$rotation[,c(3,2)])
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+
+plot(0,0, xlim=c(-0.76,0.76), ylim=c(-0.76,0.76), asp=1, type="n", bty="n",
+     xlab="Coeficientes PC3", ylab="Coeficientes PC2", cex.axis=1.5, cex.lab=1.5)
+for (i in c(2,5,6,10))
+{
+  arrows(0, 0, x1 = mean.phenodata.selected.log.pca$rotation[,3][i], y1 = mean.phenodata.selected.log.pca$rotation[,2][i], 
+         length = 0.1, angle = 20, code = 2, col = "black", lwd=1)
+}
+# Graficar círculo para igual contribubción de los rasgos.
+x <- seq(-(2/13)^0.5, (2/13)^0.5, 1e-4)
+x <- c(x, (2/13)^0.5) 
+equal_contribution<-((2/13)-x^2)^0.5
+points(x, equal_contribution, type="l", lty=1, col="gray70")
+points(x, -equal_contribution, type="l", lty=1, col="gray70")
+#Lamina width
+text(mean.phenodata.selected.log.pca$rotation[,3][2]*1.1+0.16, mean.phenodata.selected.log.pca$rotation[,2][2]*1.1+0.02, "Ancho lámina")
+#Pairs of sterile leaves per synflorescence
+text(mean.phenodata.selected.log.pca$rotation[,3][5]*1.1+0.1, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1, "pares de hojas")
+text(mean.phenodata.selected.log.pca$rotation[,3][5]*1.1+0.1, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1-0.06, "estériles por")
+text(mean.phenodata.selected.log.pca$rotation[,3][5]*1.1+0.1, mean.phenodata.selected.log.pca$rotation[,2][5]*1.1-0.12, "sinflorescencia")
+#Capitula per synflorescence
+text(mean.phenodata.selected.log.pca$rotation[,3][6]*1.1, mean.phenodata.selected.log.pca$rotation[,2][6]*1.1, "Capítulo por")
+text(mean.phenodata.selected.log.pca$rotation[,3][6]*1.1, mean.phenodata.selected.log.pca$rotation[,2][6]*1.1-0.06, "sinflorescencia")
+#Sterile phyllary width
+text(mean.phenodata.selected.log.pca$rotation[,3][10]*1.1, mean.phenodata.selected.log.pca$rotation[,2][10]*1.1, "Ancho de filaria")
+text(mean.phenodata.selected.log.pca$rotation[,3][10]*1.1, mean.phenodata.selected.log.pca$rotation[,2][10]*1.1-0.06, "estétil")
+
+#for (i in 1:13)
+#	{
+#	arrows(0, 0, x1 = mean.phenodata.selected.log.pca$rotation[,3][i], y1 = mean.phenodata.selected.log.pca$rotation[,2][i], 
+#	length = 0.1, angle = 20, code = 2, col = "black", lwd=1)
+#	}
+#for (i in 1:13)
+#	{
+#	text(mean.phenodata.selected.log.pca$rotation[,3][i]*1.1, mean.phenodata.selected.log.pca$rotation[,2][i]*1.1, i)
+#	}
+#mtext(side=2, "d)", at=1, las=2, line=2, cex=1.5)
+#mtext(side=2, "d)", at=0.8, las=2, line=2, cex=1.5)
+
+#Character name and number legend
+rownames(mean.phenodata.selected.log.pca$rotation)
+trait.names <- c("Log (longitud de la lámina)", "Log (ancho de la lámina)", "Log (longitud del eje de sinflorescencia)",
+                 "Log (perímetro del eje de sinflorescencia)", "Log (pares de hojas estériles por sinflorescencia + 1)",
+                 "Log (capítulo por sinflorescencia)", "Log (longitud del pedúnculo de cima terminal)",
+                 "Log (diámetro del capítulo)", "Log (longitud de la filaria estéril)", "Log (ancho de la filaria estéril)",
+                 "Log (longitud de la corola de la flor del radio)", "Log (longitud de la corola de la flor del disco)",
+                 "Log (longitud del tubo de la flor del disco)") 
+#par(mar=c(5,4,4,2)+0.1) #default
+par (mfrow=c(1,1), mar=c(2,2,2,4)+0.1)
+plot(c(-0.1,1), c(-0.1,1), type="n", bty="n", xaxt="n", yaxt="n", xlab="", ylab="")
+legend(x=0, y=1, paste(1:13, ". ", trait.names, sep=""), col=("black"), cex=1)
+
+#dev.off()
+
+###################################################################################################################
+# 5.7) Examinar la incertidumbre de la clasificación.
+
+# Resumen de los valores de incertidumbre
+summary(Mcluster.phenodata$uncertainty)
+
+#De los 350 especímenes, 7 tiene valores de incertidumbre mayores a 0.1 
+#esto es el 2% de los especímenes
+sum(Mcluster.phenodata$uncertainty>0.1)
+sum(Mcluster.phenodata$uncertainty>0.1)/length(Mcluster.phenodata$uncertainty)
+# Clasificación de los especímenes  con incertidumbre mayor a  0.1
+Mcluster.phenodata$classification[Mcluster.phenodata$uncertainty>0.1]
+# 88  107  128  585  807  961 1039 
+# 4    4    2    4    4    1    2 
+
+#Directorio para guardar las gráficas
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+pdf("Figuras_sección_5.7.pdf")
+
+#Gráfica de la función de distribución acumulativa de valores de incertidumbre
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(sort(Mcluster.phenodata$uncertainty),
+     1:length(Mcluster.phenodata$uncertainty)/length(Mcluster.phenodata$uncertainty), 
+     xlim=c(0,0.5), bty="n", xlab="Incertidumbre", ylab="F (Incertidumbre)",
+     type="l", pch=19, cex=0.5, cex.axis=1.5, cex.lab=1.5)
+abline(h=c(0,1), lty=3, col="gray70")
+
+# gráfica, en PC 1 y PC2, de los especímenes con incertidumbre > 0.1 
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,2), main="", addEllipses = F,
+     xlab="PC1 (44.87% varianza)", ylab="PC2 (14.81% varianza)", cex=0, cex.lab=1.5, cex.axis=1.5)
+#Agregar elipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[1:2,1:2,i],
+                 centre = Mcluster.phenodata$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#Agregar las etiquetas de las elipses
+#Mcluster.phenodata$parameters$mean[c(1,2),]
+#       [,1]       [,2]       [,3]       [,4]       [,5]
+# PC1 1.8156484 -0.3675515 -0.4995887 -1.1710470 1.43878675
+# PC2 0.6643681 -0.3152533  0.3752883  0.2845935 0.00324688
+text(1.82, 0.66, "P1")
+text(-1.17, 0.28, "P4")
+text(-0.37, -0.32, "P2")
+text(-0.5, 0.38, "P3")
+text(1.44, 0, "P5")
+for(i in 1:Mcluster.phenodata$G){
+  points(Mcluster.phenodata$data[Mcluster.phenodata$uncertainty>0.1 & Mcluster.phenodata$classification==i,1:2], 
+         pch=mclust.options("classPlotSymbols")[i],
+         col=mclust.options("classPlotColors")[i])
+}
+legend("bottomright", paste("P", c(1,2,4)),
+       col=mclust.options("classPlotColors")[c(1,2,4)],
+       pch=mclust.options("classPlotSymbols")[c(1,2,4)], pt.lwd=1, pt.cex=1, cex=1.3, bty="o")
+
+#gráfica, en PC 2 y PC3, de los especímenes con incertidumbre > 0.1 
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(3,2), main="", addEllipses = F,
+     xlab="PC3 (11.47% varianza)", ylab="PC2 (14.81% varianza)", cex=0, cex.lab=1.5, cex.axis=1.5)
+#add ellipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(3,2),c(3,2),i],
+                 centre = Mcluster.phenodata$parameters$mean[c(3,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+
+#Agregar las etiquetas de las elipses
+# Mcluster.phenodata$parameters$mean[c(3,2),]
+#           [,1]       [,2]      [,3]       [,4]       [,5]
+# PC3 -0.1657277 -0.2814246 0.6479339 -0.1735923 0.08351875
+# PC2  0.6643681 -0.3152533 0.3752883  0.2845935 0.00324688
+text(-0.17,0.66, "P1")
+text(-0.17, 0.28, "P4")
+text(-0.28, -0.32, "P2")
+text(0.65, 0.38, "P3")
+text(0.08, 0, "P5")
+#text(0.5, 0.8, "P1")
+#text(-0.75, 1, "P4")
+#text(0.4, -1.77, "P6")
+#text(-0.55, -0.9, "P2")
+#text(0.49, -0.45, "P3")
+#text(-0.8, 0, "P5"
+#arrows(x0=-0.95, y0=0.7, x1 =-0.6, y1 =0.3, length = 0.1, angle = 20, code = 2)
+for(i in 1:Mcluster.phenodata$G){
+  points(Mcluster.phenodata$data[Mcluster.phenodata$uncertainty>0.1 & Mcluster.phenodata$classification==i,3:2], 
+         pch=mclust.options("classPlotSymbols")[i],
+         col=mclust.options("classPlotColors")[i])
+}
+legend("bottomleft", paste("P", c(1,2,4)),
+       col=mclust.options("classPlotColors")[c(1,2,4)],
+       pch=mclust.options("classPlotSymbols")[c(1,2,4)], pt.lwd=1, pt.cex=1, cex=1.3, bty="o")
+dev.off()

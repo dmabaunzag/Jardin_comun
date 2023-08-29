@@ -394,7 +394,7 @@ attributes(Mcluster.phenodata.progenie)
 # components: 
 #   
 #   log-likelihood  n df       BIC       ICL
-# 7.604768 37  9 -17.28872 -18.09609
+#      7.604768 37  9        -17.28872 -18.09609
 # 
 # Clustering table:
 #   1  2 
