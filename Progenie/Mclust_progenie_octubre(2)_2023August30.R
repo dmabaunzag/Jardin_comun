@@ -269,8 +269,8 @@ Mcluster.phenodata.progenie$classification #classifiación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
-save(Mcluster.phenodata.progenie, file="Mcluster.phenodata.progenie_2023August30.RData")
-load("Mcluster.phenodata.progenie_2023August30.RData")
+save(Mcluster.phenodata.progenie, file="Mcluster.phenodata.progenie.(octubre)_2023August30.RData")
+load("Mcluster.phenodata.progenie.(octubre)_2023August30.RData")
 
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
@@ -421,7 +421,7 @@ plot(Mcluster.phenodata.progenie, what="BIC")
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")# directorio de Diana
-load("Mcluster.phenodata.progenie_2023August30.RData")
+load("Mcluster.phenodata.progenie.(octubre)_2023August30.RData")
 load("mean.phenodata.progenie.selected.log.(octubre)_2023agosto20_095152.RData")
 ###################################################################################################################
 # 5.1)Examinar y guardar en un documento la asignación de grupos para la progenie en el segundo muestreo
