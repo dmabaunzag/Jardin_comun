@@ -764,7 +764,7 @@ P <- 5
 
 #http://www.statistics4u.com/fundstat_eng/cc_scaling.html
 # escalando rango para el promedio
-M.Rmin <- 1.06
+M.Rmin <- 1.06 
 M.Rmax <- 1.28 
 M.Dmin <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=min)
 M.Dmax <- apply(Mcluster.phenodata$parameters$mean, MARGIN=1, FUN=max)

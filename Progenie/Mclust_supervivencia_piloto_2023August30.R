@@ -270,8 +270,8 @@ attributes(Mcluster.supervivencia.piloto)
 #     221.3889      37 30   334.4502 334.31
 # 
 # Clustering table:
-#  1 1  2  3  4 
-#    2 25  4  6 
+#   1  2  3  4 
+#   2 25  4  6 
  
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.supervivencia.piloto, what="classification", dimens=c(1,2))
