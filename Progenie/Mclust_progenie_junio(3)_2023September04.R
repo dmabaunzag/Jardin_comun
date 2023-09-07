@@ -220,6 +220,10 @@ lm(`log Número de hojas`~`log Longitud del tallo`, data=phenodata.progenie.sele
 # 4) Ajuste de modelos de mezclas normales
 ###################################################################################################################
 ###################################################################################################################
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+load("mean.phenodata.progenie.selected.log_ (junio)_2023agosto20_074711.RData")
 # subset con sólo los rasgos fenotípicos
 data.for.GMM<-mean.phenodata.progenie.selected.log[,2:3]
 
@@ -266,6 +270,9 @@ names(Mcluster.phenodata.progenie$classification)
 Mcluster.phenodata.progenie$classification #classifiación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
+save(Mcluster.phenodata.progenie, file="Mcluster.phenodata.progenie.(junio).VARS_2023September04.RData")
+#load("Mcluster.phenodata.progenie.(junio).VARS_2023September04.RData")
 
 # ---------------------------------------------------- 
 # Gaussian finite mixture model fitted by EM algorithm 
@@ -325,6 +332,9 @@ names(Mcluster.phenodata.progenie$classification)
 Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
+save(Mcluster.phenodata.progenie, file="Mcluster.phenodata.progenie.(junio).SPH_2023September04.RData")
+#load("Mcluster.phenodata.progenie.(junio).SPH_2023September04.RData")
 
 # ---------------------------------------------------- 
 #   Gaussian finite mixture model fitted by EM algorithm 
@@ -405,3 +415,321 @@ plot(Mcluster.phenodata.progenie, what="classification", dimens=c(1,2))
 #gráfica del soporte empríco de los diferentess modelos
 plot(Mcluster.phenodata.progenie, what="BIC")
 
+###################################################################################################################
+###################################################################################################################
+# 5) Examinar los grupos fenotípicos en base al mejor modelo de mezclas normales, de accuerdo con las variables de 
+#inicialización
+###################################################################################################################
+###################################################################################################################
+
+###################################################################################################################
+# 5.1)VARS
+#cargar los mejores modelos de mezclas normales
+#directorio de trabajo
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")# directorio de Diana
+load("Mcluster.phenodata.progenie.(junio).VARS_2023September04.RData")#modelos VARS
+load("mean.phenodata.progenie.selected.log_ (junio)_2023agosto20_074711.RData")
+###################################################################################################################
+# 5.1.1)Examinar y guardar en un documento la asignación de grupos para la progenie en el segundo muestreo
+
+#crear y escribir documento para la asignación de los grupos fenotípicos.
+phenotypic.group.assignment.piloto <- data.frame(as.numeric(rownames(mean.phenodata.progenie.selected.log)),
+                                                 mean.phenodata.progenie.selected.log[,1], 
+                                                 Mcluster.phenodata.progenie$classification, Mcluster.phenodata.progenie$uncertainty)
+colnames(phenotypic.group.assignment.piloto) <- 
+  c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
+head(phenotypic.group.assignment.piloto)
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")# guardar en directorio de Diana
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(phenotypic.group.assignment.piloto, 
+          file=paste("PhenotypicGroupAssignment.piloto.(junio).VARS_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
+###################################################################################################################
+# 5.1.2) Graficar grupos fenotípicos en el mejor modelo de mezclas normales.
+
+# directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Figuras")# directorio de Diana
+#pdf("Figuras(junio)_sección_5.1(VARS).pdf")
+#Longitud del tallo vs número de hojas
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata.progenie, what=c("classification"), dimens=c(1,2), main="", addEllipses = F)
+legend("bottomright", paste("G", 1:2), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
+#agregar elipses
+for (i in 1:Mcluster.phenodata.progenie$G){
+  points(ellipse(x = Mcluster.phenodata.progenie$parameters$variance$sigma[1:2,1:2,i],
+                 centre = Mcluster.phenodata.progenie$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#agregar etiquetas de las elipses
+#Mcluster.phenodata.progenie$parameters$mean
+#                             [,1]       [,2]
+# log Longitud del tallo 4.064562 3.616586
+# log Número de hojas    2.812979 1.424830
+text(4.06, 2.81, "G1")
+text(3.62, 1.42, "G2")
+
+###################################################################################################################
+# 5.1.3) Examinar la incertidumbre de la clasificación.
+
+# Resumen de los valores de incertidumbre
+summary(Mcluster.phenodata.progenie$uncertainty)
+
+#De los 33 especímenes, ninguno de éstos tiene incertidumbre mayor a 0.1
+sum(Mcluster.phenodata.progenie$uncertainty>0.1)
+sum(Mcluster.phenodata.progenie$uncertainty>0.1)/length(Mcluster.phenodata.progenie$uncertainty)
+# Clasificación de los especímenes  con incertidumbre mayor a  0.1
+Mcluster.phenodata.progenie$classification[Mcluster.phenodata.progenie$uncertainty>0.1]
+ 
+
+# #Gráfica de la función de distribución acumulativa de valores de incertidumbre
+# #par(mar=c(5,4,4,2)+0.1) #default
+# par(mar=c(5,5,4,2)+0.1)
+# plot(sort(Mcluster.phenodata.progenie$uncertainty),
+#      1:length(Mcluster.phenodata.progenie$uncertainty)/length(Mcluster.phenodata.progenie$uncertainty), 
+#      xlim=c(0,0.5), bty="n", xlab="Incertidumbre", ylab="F (Incertidumbre)",
+#      type="l", pch=19, cex=0.5, cex.axis=1.5, cex.lab=1.5)
+# abline(h=c(0,1), lty=3, col="gray70")
+# 
+# # gráfica de los especímenes con incertidumbre > 0.1 
+# #par(mar=c(5,4,4,2)+0.1) #default
+# par(mar=c(5,5,4,2)+0.1)
+# plot(Mcluster.phenodata.progenie, what=c("classification"), dimens=c(1,2), main="", addEllipses = F, cex=0)
+# #Agregar elipses
+# for (i in 1:Mcluster.phenodata.progenie$G){
+#   points(ellipse(x = Mcluster.phenodata.progenie$parameters$variance$sigma[1:2,1:2,i],
+#                  centre = Mcluster.phenodata.progenie$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+#          type="l", col="black")
+# }
+# #agregar etiquetas de las elipses
+# #Mcluster.phenodata.progenie$parameters$mean
+# #                             [,1]       [,2]
+# # log Longitud del tallo -1.160206 -0.3289116
+# #log Número de hojas     1.622440  2.2946309
+# text(-1.16, 1.62, "G1")
+# text(-0.33, 2.30, "G2")
+# for(i in 1:Mcluster.phenodata.progenie$G){
+#   points(Mcluster.phenodata.progenie$data[
+#     Mcluster.phenodata.progenie$uncertainty>0.1 & Mcluster.phenodata.progenie$classification==i,1:2], 
+#     pch=mclust.options("classPlotSymbols")[i],
+#     col=mclust.options("classPlotColors")[i])
+# }
+# legend("bottomright", paste("G", c(1,2)),
+#        col=mclust.options("classPlotColors")[c(1,2)],
+#        pch=mclust.options("classPlotSymbols")[c(1,2)], pt.lwd=1, pt.cex=1, cex=1.3, bty="o")
+#dev.off()
+###################################################################################################################
+# 5.1.4) Examinar la tabulación cruzada de los grupos fenotípicos según las plantas madres del piloto y grupos fenotípicos 
+#según plantas de progenie del piloto el mejor modelo de mezcla normal de cada una.
+
+#Lectura de las tablas con los grupos asignados de las madres e hijas
+setwd("C:/Users/usuario/Documents/Jardin_comun")#directorio de los datos de las plantas madres
+#Asignación de grupos de las plantas madres del piloto junto con los datos de Pineda et al.
+phenotypic.group.assignment<-read.table("PhenotypicGroupAssignment_2023agosto19_072633.csv",header=T, sep=",")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
+#Asignación de grupos de plantas progenie con datos de crecimiento tomados en junio de 2023
+phenotypic.group.assignment.progenie<-read.table("PhenotypicGroupAssignment.piloto.(junio).VARS_2023septiembre04_083353.csv",
+                                                 header=T, sep=",")
+#Subconjunto con sólo las plantas madres del piloto
+phenotypic.group.assignment.madres<-phenotypic.group.assignment[308:350,]
+head(phenotypic.group.assignment.madres)
+head(phenotypic.group.assignment.progenie)
+
+#Extracción del número de colección de las plantas madres
+phenotypic.group.assignment.madres$Collector.Collection.Number<-as.numeric(substring(phenotypic.group.assignment.madres$Collector.Collection.Number,5))
+phenotypic.group.assignment.madres$Phenotypic.Group<-as.factor(phenotypic.group.assignment.madres$Phenotypic.Group)
+# Cantidad de plantas en cada grupo tanto de las madres como de la progenie
+tapply(phenotypic.group.assignment.madres$Collector.Collection.Number, 
+       phenotypic.group.assignment.madres$Phenotypic.Group,length)
+# 2  3  4  5 
+# 6 18  5 14  
+
+tapply(phenotypic.group.assignment.progenie$Collector.Collection.Number, 
+       phenotypic.group.assignment.progenie$Phenotypic.Group,length)
+# 1  2 
+#30  3   
+
+#unir los dos agrupamientos para las plantas madres en común que tenga representación en la progenie: 35 plantas
+phenotypic.group.assignment.madres.progenie<-merge(phenotypic.group.assignment.madres[,c(2,3)], phenotypic.group.assignment.progenie[,c(2,3)],
+                                                   by="Collector.Collection.Number", suffixes = c(".madres",".progenie"))
+
+
+phenotypic.group.crosstab<-table(phenotypic.group.assignment.madres.progenie[,c(2,3)])
+phenotypic.group.crosstab
+                          # Phenotypic.Group.progenie
+# Phenotypic.Group.madres  1  2
+                      # 2  5  0
+                      # 3 11  3
+                      # 4  5  0
+                      # 5  9  0
+###################################################################################################################
+###################################################################################################################
+# 5.2)SPH
+#cargar los mejores modelos de mezclas normales
+#directorio de trabajo
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")# directorio de Diana
+load("Mcluster.phenodata.progenie.(junio).SPH_2023September04.RData")
+
+###################################################################################################################
+# 5.2.1)Examinar y guardar en un documento la asignación de grupos para la progenie en el segundo muestreo
+
+#crear y escribir documento para la asignación de los grupos fenotípicos.
+phenotypic.group.assignment.piloto <- data.frame(as.numeric(rownames(mean.phenodata.progenie.selected.log)),
+                                                 mean.phenodata.progenie.selected.log[,1], 
+                                                 Mcluster.phenodata.progenie$classification, Mcluster.phenodata.progenie$uncertainty)
+colnames(phenotypic.group.assignment.piloto) <- 
+  c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
+head(phenotypic.group.assignment.piloto)
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")# guardar en directorio de Diana
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(phenotypic.group.assignment.piloto, 
+          file=paste("PhenotypicGroupAssignment.piloto.(junio).SPH_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
+###################################################################################################################
+# 5.2.2) Graficar grupos fenotípicos en el mejor modelo de mezclas normales.
+
+# directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Figuras")# directorio de Diana
+# pdf("Figuras(junio)_sección_5.2(SPH).pdf")
+#Longitud del tallo vs número de hojas
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata.progenie, what=c("classification"), dimens=c(1,2), main="", addEllipses = F)
+legend("bottomright", paste("G", 1:2), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
+#agregar elipses
+for (i in 1:Mcluster.phenodata.progenie$G){
+  points(ellipse(x = Mcluster.phenodata.progenie$parameters$variance$sigma[1:2,1:2,i],
+                 centre = Mcluster.phenodata.progenie$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#agregar etiquetas de las elipses
+#Mcluster.phenodata.progenie$parameters$mean
+#                             [,1]       [,2]
+# log Longitud del tallo 4.083514 3.682657
+# log Número de hojas    2.853579 1.731799
+text(4.08, 2.85, "G1")
+text(3.68, 1.73, "G2")
+
+###################################################################################################################
+# 5.2.3) Examinar la incertidumbre de la clasificación.
+
+# Resumen de los valores de incertidumbre
+summary(Mcluster.phenodata.progenie$uncertainty)
+
+#De los 33 especímenes, ninguno tiene incertidumbre mayor a 0.1
+sum(Mcluster.phenodata.progenie$uncertainty>0.1)
+sum(Mcluster.phenodata.progenie$uncertainty>0.1)/length(Mcluster.phenodata.progenie$uncertainty)
+# Clasificación de los especímenes  con incertidumbre mayor a  0.1
+Mcluster.phenodata.progenie$classification[Mcluster.phenodata.progenie$uncertainty>0.1]
+
+
+# #Gráfica de la función de distribución acumulativa de valores de incertidumbre
+# #par(mar=c(5,4,4,2)+0.1) #default
+# par(mar=c(5,5,4,2)+0.1)
+# plot(sort(Mcluster.phenodata.progenie$uncertainty),
+#      1:length(Mcluster.phenodata.progenie$uncertainty)/length(Mcluster.phenodata.progenie$uncertainty), 
+#      xlim=c(0,0.5), bty="n", xlab="Incertidumbre", ylab="F (Incertidumbre)",
+#      type="l", pch=19, cex=0.5, cex.axis=1.5, cex.lab=1.5)
+# abline(h=c(0,1), lty=3, col="gray70")
+# 
+# # gráfica de los especímenes con incertidumbre > 0.1 
+# #par(mar=c(5,4,4,2)+0.1) #default
+# par(mar=c(5,5,4,2)+0.1)
+# plot(Mcluster.phenodata.progenie, what=c("classification"), dimens=c(1,2), main="", addEllipses = F, cex=0)
+# #Agregar elipses
+# for (i in 1:Mcluster.phenodata.progenie$G){
+#   points(ellipse(x = Mcluster.phenodata.progenie$parameters$variance$sigma[1:2,1:2,i],
+#                  centre = Mcluster.phenodata.progenie$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+#          type="l", col="black")
+# }
+# #agregar etiquetas de las elipses
+# #Mcluster.phenodata.progenie$parameters$mean
+# #                             [,1]       [,2]
+# # log Longitud del tallo -0.3443826 -1.203954
+# #log Número de hojas      2.2876966  1.386369
+# text(-0.34, 2.29, "G1")
+# text(-1.2, 1.39, "G2")
+# for(i in 1:Mcluster.phenodata.progenie$G){
+#   points(Mcluster.phenodata.progenie$data[
+#     Mcluster.phenodata.progenie$uncertainty>0.1 & Mcluster.phenodata.progenie$classification==i,1:2], 
+#     pch=mclust.options("classPlotSymbols")[i],
+#     col=mclust.options("classPlotColors")[i])
+# }
+# legend("bottomright", paste("G", c(1,2)),
+#        col=mclust.options("classPlotColors")[c(1,2)],
+#        pch=mclust.options("classPlotSymbols")[c(1,2)], pt.lwd=1, pt.cex=1, cex=1.3, bty="o")
+#dev.off()
+###################################################################################################################
+# 5.2.4) Examinar la tabulación cruzada de los grupos fenotípicos según las plantas madres del piloto y grupos fenotípicos 
+#según plantas de progenie del piloto el mejor modelo de mezcla normal de cada una.
+
+#Lectura de las tablas con los grupos asignados de las madres e hijas
+setwd("C:/Users/usuario/Documents/Jardin_comun")#directorio de los datos de las plantas madres
+#Asignación de grupos de las plantas madres del piloto junto con los datos de Pineda et al.
+phenotypic.group.assignment<-read.table("PhenotypicGroupAssignment_2023agosto19_072633.csv",header=T, sep=",")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
+#Asignación de grupos de plantas progenie con datos de crecimiento tomados en marzo de 2020
+phenotypic.group.assignment.progenie<-read.table("PhenotypicGroupAssignment.piloto.(junio).SPH_2023septiembre04_090428.csv",
+                                                 header=T, sep=",")
+#Subconjunto con sólo las plantas madres del piloto
+phenotypic.group.assignment.madres<-phenotypic.group.assignment[308:350,]
+head(phenotypic.group.assignment.madres)
+head(phenotypic.group.assignment.progenie)
+
+#Extracción del número de colección de las plantas madres
+phenotypic.group.assignment.madres$Collector.Collection.Number<-as.numeric(substring(phenotypic.group.assignment.madres$Collector.Collection.Number,5))
+phenotypic.group.assignment.madres$Phenotypic.Group<-as.factor(phenotypic.group.assignment.madres$Phenotypic.Group)
+# Cantidad de plantas en cada grupo tanto de las madres como de la progenie
+tapply(phenotypic.group.assignment.madres$Collector.Collection.Number, 
+       phenotypic.group.assignment.madres$Phenotypic.Group,length)
+# 2  3  4  5 
+# 6 18  5 14  
+
+tapply(phenotypic.group.assignment.progenie$Collector.Collection.Number, 
+       phenotypic.group.assignment.progenie$Phenotypic.Group,length)
+#   1  2 
+#  28  5  
+
+#Asignación de grupos de plantas progenie con datos de crecimiento tomados en junio de 2023
+phenotypic.group.assignment.madres.progenie<-merge(phenotypic.group.assignment.madres[,c(2,3)], phenotypic.group.assignment.progenie[,c(2,3)],
+                                                   by="Collector.Collection.Number", suffixes = c(".madres",".progenie"))
+
+
+phenotypic.group.crosstab<-table(phenotypic.group.assignment.madres.progenie[,c(2,3)])
+phenotypic.group.crosstab
+#                        Phenotypic.Group.progenie
+# Phenotypic.Group.madres 1 2
+                      # 2 5 0
+                      # 3 9 5
+                      # 4 5 0
+                      # 5 9 0
+
+###################################################################################################################
+###################################################################################################################
+# 5.3) Examinar la tabulación cruzada de los grupos fenotípicos según la progenie de los modelos 
+#de mezcla normal de VARS Y SPH.
+
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")
+#Asignación de grupos de plantas progenie con datos de crecimiento tomados en marzo de 2020
+phenotypic.group.assignment.progenie.SPH<-read.table(
+  "PhenotypicGroupAssignment.piloto.(junio).SPH_2023septiembre04_090428.csv",header=T, sep=",")
+#Asignación de grupos de plantas progenie con datos de crecimiento tomados en junio de 2023
+phenotypic.group.assignment.progenie.VARS<-read.table(
+  "PhenotypicGroupAssignment.piloto.(junio).VARS_2023septiembre04_083353.csv",header=T, sep=",")
+
+phenotypic.group.assignment.progenie.VARS.SPH<-merge(phenotypic.group.assignment.progenie.VARS[,c(2,3)], 
+                                                     phenotypic.group.assignment.progenie.SPH[,c(2,3)],
+                                                   by="Collector.Collection.Number", suffixes = c(".VARS",".SPH"))
+
+phenotypic.group.crosstab<-table(phenotypic.group.assignment.progenie.VARS.SPH[,c(2,3)])
+phenotypic.group.crosstab
+#                       Phenotypic.Group.SPH
+# Phenotypic.Group.VARS  1  2
+                    # 1 28  2
+                    # 2  0  3

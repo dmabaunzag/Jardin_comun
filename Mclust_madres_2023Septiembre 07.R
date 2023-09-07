@@ -7,7 +7,7 @@
 # Sumapaz: un experimento de jardín común", adaptado del código de Pineda et al. (en preparción The Nature of Espeletia
 # Species). El objetivo es hacer un análisis de delimitación de especies basado en rasgos fenotípicos de frailejones de
 # del Páramo Sumapaz, cordillera Oriental de los Andes (colombia)tomados del trabajo de Pineda et al. junto con otros
-# especímenes colectados en mustreo posterior (plantas madres).Con este último muestreo se busca probar los grupos
+# especímenes colectados en muestreo posterior (plantas madres).Con este último muestreo se busca probar los grupos
 # fenotípicos hallados en Pineda, así como ver la corcodancia en los grupos fenotípicos de éstos con su progenie y
 #probar si los grupos fenotípicos especies o variaciones fenotípicas. Específicamente, este código busca hacer grupos
 # fenotípicos mediante modelos de mezclas normales (paquete mclust)y asignar un grupo fenotípico al muestreo posterior
@@ -60,10 +60,15 @@ head(mean.phenodata.pineda)
 dim(mean.phenodata.pineda)# 1020 Especímenes y 21 variables
 
 mean.phenodata.piloto<-read.table("meanphenodatapilot_2023Aug02_095547.csv", header = T, sep = ",")# datos de las
-  #plantas madres de los con las mismas variables analizadas en Pineda et al.para la conformación de grupos
+#plantas madres de los con las mismas variables analizadas en Pineda et al.para la conformación de grupos
 summary(mean.phenodata.piloto)
 head(mean.phenodata.piloto)
 dim(mean.phenodata.piloto)# 21 variables y 43 especímenes
+
+#Agregar coordenadas geográficas a las plantas madre del piloto
+
+coordenadas.piloto <- read.table("COORDENADAS_PLANTAS _MADRES_PILOTO.csv",header=T, sep=",")
+mean.phenodata.piloto<-merge(mean.phenodata.piloto[,c(-4,-5,-6)], coordenadas.piloto[,c(-2,-3)], by="Collector.Collection.Number")
 
 #combinar las dos tablas para correr el modelo y agrupar los 43 especímenes del piloto al modelo
 
@@ -77,6 +82,13 @@ measurement.units <- c(NA, NA, NA, "decimal.degrees", "decimal.degrees", "m", "c
                        "cm", "cm", "cm", "count", "count", "cm", "cm", "mm", "mm", "mm", "mm", "mm", NA, NA)
 data.frame(colnames(mean.phenodata), measurement.units)
 
+#guardar los la tabla combinada 
+#directorio de trabajo
+setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+save(mean.phenodata, file=paste("MeanPhenodata_", 
+                                                 format(Sys.time(), "%Y%B%d_%H%M%S"), ".RData", sep=""))
 ###################################################################################################################
 ###################################################################################################################
 # 2) Examinar  la distribución de cada rasgo fenotípico, editar los datos y transformación y rotación de los datos con
@@ -101,7 +113,7 @@ for (trait.x in 7:19) { #histogramas para cada variable
   #distribución de la logintud de las filarias estériles en escala logarítmica agregándole uno; puede ser útil cuano 
   #hay ceros en los datos crudos 
   hist(log(mean.phenodata[,trait.x]+1), breaks=100, 
-       xlab=paste("log(",colnames(mean.phenodata)[trait.x], "+1(", measurement.units[trait.x], "))"), main="", col="gray80")
+----       xlab=paste("log(",colnames(mean.phenodata)[trait.x], "+1(", measurement.units[trait.x], "))"), main="", col="gray80")
   summary(log(mean.phenodata[,trait.x]+1))
 }
 
@@ -149,12 +161,20 @@ class(mean.phenodata.selected)
 summary(mean.phenodata.selected)
 head(mean.phenodata.selected)
 
+#guardar los la tabla seleccionada y filtrada 
+#directorio de trabajo
+setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+save(mean.phenodata.selected, file=paste("MeanPhenodataSelected_", 
+                                format(Sys.time(), "%Y%B%d_%H%M%S"), ".RData", sep=""))
+
 #Tenga en cuenta que la referencia al dataframe original (mean.phenodata) se puede hacer por el nombre de fila:
 rownames(mean.phenodata.selected)
 as.numeric(rownames(mean.phenodata.selected))
 #Usando el índice numérico puede saber el número de colector  y el colector de los especímenes analizados,por ejemplo:
 mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),c(1,2)]
-#or las coordenadas y la elavción de los especímenes:
+#o las coordenadas y la elavción de los especímenes:
 mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),4:6]
 #o filas con alguna información de los especímenes:
 !is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20])
@@ -1175,8 +1195,8 @@ Mcluster.phenodata$classification[Mcluster.phenodata$uncertainty>0.1]
 
 #Directorio para guardar las gráficas
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
-pdf("Figuras_sección_5.7.pdf")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#pdf("Figuras_sección_5.7.pdf")
 
 #Gráfica de la función de distribución acumulativa de valores de incertidumbre
 #par(mar=c(5,4,4,2)+0.1) #default
@@ -1254,4 +1274,172 @@ for(i in 1:Mcluster.phenodata$G){
 legend("bottomleft", paste("P", c(1,2,4)),
        col=mclust.options("classPlotColors")[c(1,2,4)],
        pch=mclust.options("classPlotSymbols")[c(1,2,4)], pt.lwd=1, pt.cex=1, cex=1.3, bty="o")
-dev.off()
+#dev.off()
+
+###################################################################################################################
+###################################################################################################################
+# 6) Examinar la localización de los especímens citados en la monografía de Espeletiinae monograph (Cuatrecasas, 2013)
+#    en el mejor de los modelos de la mezcla normales.
+###################################################################################################################
+###################################################################################################################
+
+#cargar los datos datos fenotípicos crudos
+#directorio de trabajo
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
+setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+load("MeanPhenodata_2023septiembre07_050654.RData")
+
+#cargar el mejor modelo de mezcla normal
+load("Mcluster.phenodata_2023agosto19.RData")
+
+#cargar los datos fenotípicas seleccionados sin NA
+load("MeanPhenodataSelected_2023septiembre07_052114.RData")
+###################################################################################################################
+# 6.1)  Examinar la distribución de los tipos  entre grupos fenotípicos.
+
+colnames(mean.phenodata)
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==1],20])
+# Espeletia.summapacis 
+# 1 
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==2],20])
+# Espeletia tapirophila   Espeletia.grandiflora.fma.multiflora 
+# 1                                    1 
+# Espeletia.grandiflora.fma.reducta 
+# 1 
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==3],20])
+#< table of extent 0 >
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==4],20])
+# < table of extent 0 >
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==5],20])
+# Espeletia.killipii 
+# 1
+
+unique(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20])
+mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20])]
+table(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20])])
+
+# crear marco de datos para los especímenes tipo de acuerdo con la clasificación, incertidumbre y coordenadas de los
+# tres primeros componentes principales
+type.classification <- data.frame(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),20], 
+                                  Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty, Mcluster.phenodata$data[,1:3]) 
+type.classification <- type.classification[!is.na(type.classification[,1]),]
+colnames(type.classification)[1] <- colnames(mean.phenodata)[20]
+type.classification <- type.classification[order(type.classification[,1], type.classification[,2]),]
+
+#guardar tabla de clasificación de los especímen tipo
+setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(type.classification, file=paste("TypeClassification_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
+
+
+###################################################################################################################
+# 6.2)  Examinar la distribución de los especímenes citados en la monografía de Espeletiinae (Cuatrecasas, 2013) 
+# entre los grupos fenotípicos.
+
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==1],21])
+# Espeletia.summapacis 
+# 4 
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==2],21])
+# Espeletia.argentea.fma.phaneractis 
+# 1 
+# Espeletia.grandiflora.ssp.grandiflora.var.attenuata 
+# 2 
+# Espeletia.grandiflora.ssp.grandiflora.var.grandiflora 
+# 7
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==3],21])
+#< table of extent 0 >
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==4],21])
+# Espeletia.grandiflora.ssp.grandiflora.var.attenuata 
+# 1
+table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mcluster.phenodata$classification==5],21])
+# Espeletia.killipii   Espeletia.killipii.var.chisacana 
+# 3                                3 
+# Espeletia.killipii.var.killipii 
+# 1 
+
+unique(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21])
+mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21])]
+table(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21])])
+
+#create data frame with the following information for specimens cited in the Espeletiinae monograph:
+#classification, uncertainty and coordinates for first three principal components
+cited.specimen.classification <- data.frame(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21], Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty, Mcluster.phenodata$data[,1:3]) 
+cited.specimen.classification <- cited.specimen.classification[!is.na(cited.specimen.classification[,1]),]
+colnames(cited.specimen.classification)[1] <- colnames(mean.phenodata)[21]
+cited.specimen.classification <- cited.specimen.classification[order(cited.specimen.classification[,1], cited.specimen.classification[,2]),]
+cited.specimen.classification
+
+#guardar tabla de clasificación de los especímen citados en la monografía de Espeletiinae
+setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(type.classification, file=paste("CitedSpecimenClassification_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
+
+###################################################################################################################
+# 5.5) Graficar grupos fenotípicos en el mejor modelo de mezclas normales.
+setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
+summary(mean.phenodata.selected.log.pca)
+# directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#pdf("Figuras_sección_5.5.pdf")
+#PC1 vs PC2
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,2), main="", addEllipses = F,
+     xlab="PC1 (44.87% varianza)", ylab="PC2 (14.81% varianza)", cex=0,cex.axis=1.5, cex.lab=1.5)
+for (i in 1:5) {
+  points(cited.specimen.classification[cited.specimen.classification[,2]==i,4:5],
+         cex=1.5, col=mclust.options("classPlotColors")[i], pch=mclust.options("classPlotSymbols")[i])
+  
+}
+
+points(cited.specimen.classification$PC1,cited.specimen.classification$PC2, col=as.factor(cited.specimen.classification$Cited.Cuatrecasas.Monograph.Taxa), pch=8)
+legend("bottomleft", paste("P", 1:5), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
+#agregar elipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[1:2,1:2,i],
+                 centre = Mcluster.phenodata$parameters$mean[c(1,2),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#agregar etiquetas de las elipses
+#Mcluster.phenodata$parameters$mean[c(1,2),]
+# [,1]              [,2]       [,3]       [,4]       [,5]
+# PC1 1.8156484 -0.3675515 -0.4995887 -1.1710470 1.43878675
+# PC2 0.6643681 -0.3152533  0.3752883  0.2845935 0.00324688
+text(1.81, 0.66, "P1")
+text(-1.17, 0.3, "P4")
+text(-0.37, -0.31, "P2")
+text(-0.5, 0.37, "P3")
+text(1.43, 0, "P5")
+
+
+#agregar puntos de los especímenes citados en Cuatrecasas
+
+#PC1 vs PC3
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar=c(5,5,4,2)+0.1)
+plot(Mcluster.phenodata, what=c("classification"), dimens=c(1,3), main="", addEllipses = F,
+     xlab="PC1 (44.87% varianza)", ylab="PC3 (11.47% varianza)", cex.axis=1.5, cex.lab=1.5)
+legend("bottomleft", paste("P", 1:5), col=mclust.options("classPlotColors"),xpd=T,ncol=3,
+       pch=mclust.options("classPlotSymbols"), pt.lwd=0.8, pt.cex=0.8, cex=0.8, bty="o")
+#add ellipses
+for (i in 1:Mcluster.phenodata$G){
+  points(ellipse(x = Mcluster.phenodata$parameters$variance$sigma[c(1,3),c(1,3),i],
+                 centre = Mcluster.phenodata$parameters$mean[c(1,3),i], level = pchisq(1, 2)),
+         type="l", col="black")
+}
+#agregar etiquetas de las elipses
+#Mcluster.phenodata$parameters$mean[c(1,3),]
+#         [,1]       [,2]       [,3]       [,4]       [,5]
+# PC1  1.8156484 -0.3675515 -0.4995887 -1.1710470 1.43878675
+# PC3 -0.1657277 -0.2814246  0.6479339 -0.1735923 0.08351875
+text(1.81, -0.17, "P1")
+text(-1.17, -0.17, "P4")
+text(-0.37, -0.28, "P2")
+text(-0.5, 0.65, "P3")
+text(1.43, 0.08, "P5")
+#mtext(side=2, "a)", at=2, las=2, line=2, cex=1.5)
