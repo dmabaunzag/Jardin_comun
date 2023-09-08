@@ -6,16 +6,21 @@
 # Este código  hace parte del material suplementario del artículo "Delimitación de especies de frailejones del 
 # Sumapaz: un experimento de jardín común", adaptado del código de Pineda et al. (en preparción The Nature of Espeletia
 # Species). El objetivo es hacer un análisis de delimitación de especies basado en rasgos fenotípicos de frailejones de
-# del Páramo Sumapaz, cordillera Oriental de los Andes (colombia)tomados del trabajo de Pineda et al. junto con otros
-# especímenes colectados en muestreo posterior (plantas madres).Con este último muestreo se busca probar los grupos
-# fenotípicos hallados en Pineda, así como ver la corcodancia en los grupos fenotípicos de éstos con su progenie y
-#probar si los grupos fenotípicos especies o variaciones fenotípicas. Específicamente, este código busca hacer grupos
-# fenotípicos mediante modelos de mezclas normales (paquete mclust)y asignar un grupo fenotípico al muestreo posterior
-# a los asigandos en Pineda et al.
+# del Páramo Sumapaz, cordillera Oriental de los Andes (colombia) tomados del trabajo de Pineda et al. junto con otros
+# especímenes colectados en muestreo posterior (plantas madres).Cprimero realizamos un análisis de los grupos fenotípicos
+#de los frailejones silvestres del páramo de Sumapaz, según caracteres vegetativos y florales, basados en los datos de 
+#Pineda et al. (2020) y en datos de 43 plantas adicionales que sirvieron como plantas madre para el experimento de 
+#jardín común. Posteriormente determinamos si los grupos fenotípicos de las plantas madre corresponden a los grupos de
+#su progenie en términos de la supervivencia y tasa de crecimiento en el jardín común durante tres años. 
+#Esta correspondencia indicaría que los grupos fenotípicos de frailejones silvestres corresponden a especies que 
+#ifieren en supervivencia y tasas de crecimiento durante los primeros años de vida.Específicamente, este código busca 
+#asignar grupos fenotípicos mediante modelos de mezclas normales (paquete mclust) a las 350 plnatas, incluyendo las
+# 43 plantas madres.
 #
 #DATOS REQUERIDOS PARA CORRER ESTE CÓDIGO:
 #Los datos de las variables fenotípicas para el artículo de Pineda et al. acá "meanphenodata_2022Apr27_160817.csv" y
 #los datos del muestreo posterior , "meanphenodatapilot_2023Aug02_095547.csv"
+#los datos de las coordenadas: "COORDENADAS_PLANTAS _MADRES_PILOTO.csv"
 #
 #CONTENIDO
 # 1) Datos preliminares: Carga de librerías y lectura de datos
@@ -24,6 +29,7 @@
 # 3) selección de variables para los modelos de mezclas normales
 # 4) Ajuste de los modelos de mezlas normales
 # 5) Examinar grupos fenotípicos en el mejor modelo de mezclas normales.
+# 6)
 
 
 ###################################################################################################################
@@ -730,22 +736,44 @@ abline(v=Mcluster.phenodata$G, lty=3) #para determinar el modelo con el mejor so
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
 setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
 load("Mcluster.phenodata_2023agosto19.RData")
+load("MeanPhenodataSelected_2023septiembre07_052114.RData")
+load("MeanPhenodata_2023septiembre07_050654.RData")
 
 ###################################################################################################################
 # 5.1)Examinar y guardar en un documento para asignación de los especímenes a los grupos fenotípicos. 
 
 #crear y escribir documento para la asignación de los grupos fenotípicos.
 phenotypic.group.assignment <- data.frame(as.numeric(rownames(mean.phenodata.selected)),
-                                          mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),1], 
-                                          Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty)
+                                          mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),c(1,4,5,6)], 
+                                          Mcluster.phenodata$classification, 
+                                          Mcluster.phenodata$uncertainty,
+                                          Mcluster.phenodata$data)
 colnames(phenotypic.group.assignment) <- 
-  c("Rownames.Meanphenodata", "Collector.Collection.Number", "Phenotypic.Group", "Uncertainty")
+  c("Rownames.Meanphenodata",
+    "Collector.Collection.Number", 
+    "Longitude",                                     
+    "Latitude",                                      
+    "Altitude",
+    "Phenotypic.Group",
+    "Uncertainty",
+    "PC1",                                          
+    "PC2",
+    "PC3",                                          
+    "PC4",                                          
+    "PC5",                                         
+    "PC6",                                          
+    "PC7",                                         
+    "PC8",                                          
+    "PC9",                                          
+    "PC10",                                        
+    "PC11",                                         
+    "PC12")
 head(phenotypic.group.assignment)
 setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 write.csv(phenotypic.group.assignment, 
           file=paste("PhenotypicGroupAssignment_", format(Sys.time(), "%Y%B%d_%H%M%S"), ".csv", sep=""), row.names = F)
-
+load("PhenotypicGroupAssignment_2023septiembre08_120644.csv")
 #Examinar los grupos fenotípicps de as plantas del piloto
 
 phenotypic.group.assignment.piloto<-phenotypic.group.assignment[308:350,]
@@ -1364,7 +1392,10 @@ table(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21][!is.na(me
 
 #create data frame with the following information for specimens cited in the Espeletiinae monograph:
 #classification, uncertainty and coordinates for first three principal components
-cited.specimen.classification <- data.frame(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21], Mcluster.phenodata$classification, Mcluster.phenodata$uncertainty, Mcluster.phenodata$data[,1:3]) 
+cited.specimen.classification <- data.frame(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)),21], 
+                                            Mcluster.phenodata$classification,
+                                            Mcluster.phenodata$uncertainty, 
+                                            Mcluster.phenodata$data[,1:3]) 
 cited.specimen.classification <- cited.specimen.classification[!is.na(cited.specimen.classification[,1]),]
 colnames(cited.specimen.classification)[1] <- colnames(mean.phenodata)[21]
 cited.specimen.classification <- cited.specimen.classification[order(cited.specimen.classification[,1], cited.specimen.classification[,2]),]
