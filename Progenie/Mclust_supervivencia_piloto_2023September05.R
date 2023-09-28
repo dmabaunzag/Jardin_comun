@@ -2,13 +2,14 @@
 ###################################################################################################################
 ###################################################################################################################
 #INTRODUCCIÓN
-# A partir de proporciones de supervivencias por planta madre de las tres medidas que se han realizado a la progenie
-#del piloto, se realiza un agrupamiento de la tasa de supervivencia de la progenie de los 43 plantas sembradas en el
-#piloto
+# A partir de proporciones de supervivencias de la progenie por planta madre para tres ocasiones (marzo y octubre
+#de 2020 y junio de 2023, se realiza un agrupamiento morfológica de las plantas madre según superviviencia de su 
+#progenie
 
 #REQUERIMIENTOS
 #Tabla de datos de la supervivencia de las medidas tomadas en marzo y octubre de 202 y junio de 2023:
 #     "supervivencia_piloto_2023agosto22_082700.csv"
+#
 ###################################################################################################################
 ###################################################################################################################
 ###################################################################################################################
@@ -73,7 +74,7 @@ colnames(proporcion.supervivencia)<-c("Número.colección.planta.madre","proporc
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-save(proporcion.supervivencia, file=paste("proporcion.supervivencia_",
+#save(proporcion.supervivencia, file=paste("proporcion.supervivencia_",
                                                       format(Sys.time(),"%Y%B%d_%H%M%S"), ".RData", sep=""))
 load("proporcion.supervivencia_2023septiembre04_095936.RData")
 

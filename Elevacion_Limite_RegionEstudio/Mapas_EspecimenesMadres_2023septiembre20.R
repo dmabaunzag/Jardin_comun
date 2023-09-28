@@ -23,7 +23,7 @@
 
 
 ####################################################################################################################################
-# 1) Preliminares: caragar paquetes y leer y examinar datos.
+# 1) Preliminares: cargar paquetes y leer y examinar datos.
 ####################################################################################################################################
 
 #cargar paquetes
@@ -32,6 +32,7 @@ library(rgdal)
 
 #leer archivo con contorno del área del Sumapaz por encima de 3000 m de altitud.
 #setwd("C:/_transfer/proposals/Espeletia/Sumapaz_data/REgionEstudioLimite") #Ivan en Lehmann
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Elevacion_Limite_RegionEstudio")
 region.estudio <- vect("SumapazStudyRegion.shp")
 class(region.estudio)
 region.estudio
@@ -53,6 +54,7 @@ region.estudio.ele
 
 #leer archivo con datos de especímenes
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Data") #Ivan en Lehmann
+#setwd("C:/Users/usuario/Documents/Jardin_comun")#Diana
 datos.especimenes <- read.table("PhenotypicGroupAssignment_2023septiembre08_120644.csv", header=T, sep=",")
 class(datos.especimenes)
 dim(datos.especimenes)
@@ -70,7 +72,7 @@ sv.especimenes
 
 #directorio para guardar gráficas
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Figures") #Ivan en Lehmann
-
+setwd("C:/Users/usuario/Documents/Jardin_comun/Elevacion_Limite_RegionEstudio/Figuras")#Diana
 #mapa del norte de Sur América
 par(mar=c(5,4,1,3),mfrow=c(1,1))
 plot(NWSA_ele, col="gray90", xlim=c(-78.5,-70), ylim=c(0,12.5), legend=F, axes=F, mar=c(6,3,1,3))
@@ -85,7 +87,7 @@ text(-76.3, 11, "Mar Caribe", srt=45, cex=1.3, col="gray70")
 text(-71.6, 4, "Alto Sumapaz", cex=1.3, col="black")
 arrows(x0=-73.16, y0=4, x1 =-73.8, y1 = 4, length = 0.07, angle = 30, code = 2, col = "black")
 #text(-77.5, 12, "a)", cex=1.5, col="black") 
-mtext(side=2, "a)", cex=1.5, line=-1.6, at=12.5, las=2)
+mtext(side=2, "A)", cex=1.5, line=-1.6, at=12.5, las=2)
 
 #mapa de la región del Alto Sumapaz
 par(mar=c(5,4,1,3),mfrow=c(1,1))
