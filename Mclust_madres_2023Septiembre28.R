@@ -4021,3 +4021,128 @@ legend(
 title(expression(paste(
   "D) ", italic("E. summapacis"), " y ", italic("E. cabrerensis")
 )), adj = 0)
+
+#################################################################################################################
+#################################################################################################################
+# 8) Distribución altitudinal de los espepcímenes en relación con la asignación de su grupo morfolófico.
+#################################################################################################################
+#################################################################################################################
+#Distribución altitudinal de los especímenes
+#Directorio de figuras
+setwd(".../Jardin_comun/Figuras")
+range(phenotypic.group.assignment$Altitude,na.rm = T)# 2800 4147
+range(phenotypic.group.assignment$Altitude[308:350], na.rm=T)# 3560 3863
+#par(mar=c(5,4,4,2)+0.1) #default
+#par(mar = c(5, 5, 4, 2) + 0.1)
+hist(phenotypic.group.assignment$Altitude,
+     xlab="Altitud (m)",
+     ylab="Frecuencia",
+     main="",col="gray90",
+     ylim=c(0,80))
+hist(phenotypic.group.assignment$Altitude[308:350],add=T, breaks = 4, col="gray60")
+legend(2800,80, fill=c("gray90", "gray60"), legend=c("Todos los especímenes", "Plantas madre"), )
+title("A)", adj=0)
+
+#Distribución de altitudinal de los especímenes en relación a su asignación morfológica
+boxplot(Altitude~Phenotypic.Group, 
+        data = phenotypic.group.assignment,
+        xlab="grupos morfológicos",
+        ylab="Altitud (m)")
+title("B) Todos los especímenes", adj=0)
+
+boxplot(Altitude~Phenotypic.Group, 
+        data = phenotypic.group.assignment,
+        subset = c(308:350),
+        ylim=c(2800, 4147),
+        xlab="grupos morfológicos",
+        ylab="")
+title("C) Plantas madre", adj=0)
+#
+#Histograma de cada uno de los grupos morfológicos
+hist(phenotypic.group.assignment$Altitude,
+     xlab="Altitud (m)",
+     ylab="Frecuencia",
+     main="",col="gray90",
+     ylim=c(0,80))
+hist(phenotypic.group.assignment$Altitude[308:350],add=T, breaks = 4, col="gray60")
+legend(2800,80, fill=c("gray90", "gray60"), legend=c("Todos los especímenes", "Plantas madre"), )
+title("A)", adj=0)
+#
+#Grupo 1
+range(phenotypic.group.assignment[phenotypic.group.assignment[,6]==1,5], na.rm=T)#3877 4076
+hist(phenotypic.group.assignment[phenotypic.group.assignment[,6]==1,5],
+      ylab="Frecuencia",
+     xlab="",
+     main="",
+     col="gray90"
+     )
+title("A) Grupo morfológico 1", adj=0)
+#
+#Grupo 2
+hist(phenotypic.group.assignment[phenotypic.group.assignment[,6]==2,5],
+     xlab="",
+     ylab="",
+     main="",
+     col="gray90",
+     )
+hist(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6]==2,5],
+     add=T,
+     breaks=1,
+     col="gray60"
+     )
+title("B) Grupo morfológico 2", adj=0)
+#
+#
+#Grupo 3
+hist(phenotypic.group.assignment[phenotypic.group.assignment[,6]==3,5],
+     #breaks=6,
+     xlab="",
+     ylab="Frecuencia",
+     main="",
+     col="gray90")
+hist(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6]==3,5],
+     add=T,
+     breaks=3,
+     col="gray60"
+)
+title("C) Grupo morfológico 3", adj=0)
+#
+#
+#Grupo 4
+hist(phenotypic.group.assignment[phenotypic.group.assignment[,6]==4,5],
+     #breaks=6,
+     xlab="",
+     ylab="",
+     main="",
+     col="gray90")
+hist(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6]==4,5],
+     add=T,
+     breaks=2,
+     col="gray60"
+)
+title("D) Grupo morfológico 4", adj=0)
+#
+#
+#Grupo 5
+hist(phenotypic.group.assignment[phenotypic.group.assignment[,6]==5,5],
+     xlab="Altitud (m)",
+     ylab="Frecuecia",
+     main="",
+     col="gray90")
+hist(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6]==5,5],
+     add=T,
+     breaks=3,
+     col="gray60"
+)
+title("E) Grupo morfológico 5", adj=0)
+#
+#Todos los especímenes
+hist(phenotypic.group.assignment$Altitude,
+     xlab="Altitud (m)",
+     ylab="",
+     main="",col="gray90",
+     ylim=c(0,80))
+hist(phenotypic.group.assignment$Altitude[308:350],add=T, breaks = 4, col="gray60")
+legend(2800,80, fill=c("gray90", "gray60"), legend=c("Todos los especímenes", "Plantas madre"), )
+title("F) Todos los especímenes", adj=0)
+#
