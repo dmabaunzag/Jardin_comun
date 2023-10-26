@@ -124,7 +124,7 @@ trait.x <- 2 # Longitud del tallo
 colnames(phenodata.progenie.selected)[trait.x] # Qué variable
 #distribución del número de hojas en escala lineal.
 hist(
-  phenodata.progenie.selected[, trait.x],
+  as.numeric(phenodata.progenie.selected[, trait.x]),
   breaks = 20,
   xlab = paste(
     colnames(phenodata.progenie.selected)[trait.x],
@@ -134,9 +134,8 @@ hist(
   ),
   ylab = "Frecuencia",
   main = "",
-  col = "gray80"
-)
-summary(phenodata.progenie.selected[, trait.x])
+  col = "gray80")
+summary(as.numeric(phenodata.progenie.selected[, trait.x]))
 #distribución del número de hojas en escala logarítmica.
 hist(
   log(phenodata.progenie.selected[, trait.x]),
@@ -158,7 +157,7 @@ trait.x <- 3 # número de hojas
 colnames(phenodata.progenie.selected)[trait.x] # Qué variable
 #distribución del número de hojas en escala lineal.
 hist(
-  phenodata.progenie.selected[, trait.x],
+  as.numeric(phenodata.progenie.selected[, trait.x]),
   breaks = 10,
   xlab = paste(
     colnames(phenodata.progenie.selected)[trait.x],
@@ -170,7 +169,7 @@ hist(
   main = "",
   col = "gray80"
 )
-summary(phenodata.progenie.selected[, trait.x])
+summary(as.numeric(phenodata.progenie.selected[, trait.x]))
 #distribución del número de hojas en escala logarítmica.
 hist(
   log(phenodata.progenie.selected[, trait.x]),
@@ -341,6 +340,31 @@ cor(x = phenodata.progenie.selected.log$`log Longitud del tallo`,
 lm(`log Número de hojas` ~ `log Longitud del tallo`, data = phenodata.progenie.selected.log)
 
 
+#Histograma de la distribución de las variables de crecimento en el promedio de las plantas madre
+load("mean.phenodata.progenie.selected.log.(octubre)_2023agosto20_095152.RData")
+range(mean.phenodata.progenie.selected.log$`log Longitud del tallo`)# -0.5202159  0.6790046
+hist(mean.phenodata.progenie.selected.log$`log Longitud del tallo`,
+     breaks = seq(-1.4,2.2,0.2),
+     ylim = c(0,15),
+     main=NA,
+     xlab = NA,
+     ylab = "Número de plantas madre",
+     cex.lab=1.3)
+title(expression("B) un año y cuatro meses DDS"), adj=0)
+axis(side=1, at=seq(-1.4,2.2,0.1), labels = F, tcl=-0.3)
+axis(side=2, at=1:15, labels = F, tcl=-0.3)
+
+range(mean.phenodata.progenie.selected.log$`log Número de hojas`)#  1.791759 2.736135
+hist(mean.phenodata.progenie.selected.log$`log Número de hojas`,
+     breaks = seq(1,3.4,0.2),
+     ylim = c(0,15),
+     main=NA,
+     xlab = NA,
+     ylab = NA,
+     cex.lab=1.3)
+title(expression("E)"), adj=0)
+axis(side=1, at=seq(1,3.4,0.1), labels = F, tcl=-0.3)
+axis(side=2, at=1:15, labels = F, tcl=-0.3)
 ###################################################################################################################
 ###################################################################################################################
 # 4) Ajuste de modelos de mezclas normales
@@ -581,21 +605,24 @@ plot(
   what = c("classification"),
   dimens = c(1, 2),
   main = "",
+  xlab = NA,
   addEllipses = F,
-  asp=1
+  asp=1,
+  ylab="Promedio del log del número de hojas",
+  cex.lab=1.2
 )
-legend(
-  "bottomleft",
-  paste("M", 1:2),
-  col = mclust.options("classPlotColors"),
-  xpd = T,
-  ncol = 2,
-  pch = mclust.options("classPlotSymbols"),
-  pt.lwd = 0.8,
-  pt.cex = 0.8,
-  cex = 0.8,
-  bty = "o"
-)
+# legend(
+#   "bottomleft",
+#   paste("M", 1:2),
+#   col = mclust.options("classPlotColors"),
+#   xpd = T,
+#   ncol = 2,
+#   pch = mclust.options("classPlotSymbols"),
+#   pt.lwd = 0.8,
+#   pt.cex = 0.8,
+#   cex = 0.8,
+#   bty = "o"
+# )
 #agregar elipses
 for (i in 1:Mcluster.phenodata.progenie$G) {
   points(
@@ -613,11 +640,34 @@ for (i in 1:Mcluster.phenodata.progenie$G) {
 #                             [,1]       [,2]
 # log Longitud del tallo 0.2771821 0.06928816
 # log Número de hojas    2.3901424 2.01031928
-text(Mcluster.phenodata.progenie$parameters$mean[1,1],
-     Mcluster.phenodata.progenie$parameters$mean[2,1], "M1", cex=0.8)
-text(Mcluster.phenodata.progenie$parameters$mean[1,2],
-     Mcluster.phenodata.progenie$parameters$mean[2,2], "M2", cex=0.8)
-
+text(Mcluster.phenodata.progenie$parameters$mean[1,1]-0.15,
+     Mcluster.phenodata.progenie$parameters$mean[2,1]-0.1, "C1", cex=0.9)
+text(Mcluster.phenodata.progenie$parameters$mean[1,2]+0.1,
+     Mcluster.phenodata.progenie$parameters$mean[2,2]-0.05, "C2", cex=0.9)
+title(expression("B) un año y seis meses DDS"), adj=0)
+#identificando puntos
+# identify(
+#   mean.phenodata.progenie.selected.log$`log Longitud del tallo`,
+#   mean.phenodata.progenie.selected.log$`log Número de hojas`,
+#   labels = as.character(
+#     mean.phenodata.progenie.selected.log$`Número de colección plantas madres`
+#   ),
+#   cex=0.5
+# )
+#Plantas madre discordantes
+discordantes<- c(1004, 1022, 1006, 1013, 1032, 1037, 1040, 1030, 1038, 1039)
+muertas<- c(1029, 1025, 1001, 1026)
+text( mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% discordantes,2],
+      mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% discordantes,3],
+      labels=as.character(mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% discordantes,1]),
+      cex=0.6,
+      pos=4)
+text( mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% muertas,2],
+      mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% muertas,3],
+      labels=as.character(mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[,1]%in% muertas,1]),
+      cex=0.6,
+      pos=4,
+      col="red")
 #################################################################################################################
 # 5.3) Examinar la incertidumbre de la clasificación.
 

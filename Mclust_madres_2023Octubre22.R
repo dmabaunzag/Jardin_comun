@@ -1569,7 +1569,7 @@ title(expression("A)"), adj = 0)
 setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
 load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 load("Mcluster.phenodata_2023agosto19.RData")
-summary(mean.phenodata.selected.log.pca)
+#summary(mean.phenodata.selected.log.pca)
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
@@ -2925,7 +2925,7 @@ segments(
 )
 #
 #agregar puntos de los especímenes tipos en Cuatrecasas
-text(2.5,-0.2, "Tipo", cex = 0.9)
+text(2.5,-0.2, "tipo", cex = 0.9)
 arrows(
   2.3,-0.2,
   type.classification[type.classification[, 1] == "Espeletia.summapacis", 4],
@@ -2946,7 +2946,7 @@ arrows(
   code = 2
 )
 #
-text(2.5, 0.2, "Tipo", cex = 0.9)
+text(2.5, 0.2, "tipo", cex = 0.9)
 arrows(
   2.3,
   0.2,
@@ -3873,7 +3873,7 @@ text(
   cex = 0.9
 )
 
-text(2.2, 0.1, "Tipo", cex = 0.9)
+text(2.2, 0.1, "tipo", cex = 0.9)
 arrows(
   2,
   0.1,
@@ -3999,7 +3999,7 @@ text(
   cex = 0.9
 )
 
-text(2.1, 0.3, "Tipo", cex = 0.9)
+text(2.1, 0.3, "tipo", cex = 0.9)
 arrows(
   1.93,
   0.25,
@@ -4115,7 +4115,7 @@ text(
   cex = 0.9
 )
 
-text(-1, 0, "Tipo", cex = 0.9)
+text(-1, 0, "tipo", cex = 0.9)
 arrows(
   -0.85,
   0,
@@ -4176,7 +4176,7 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[1]
 )
-text(1.8, 0, "Tipo ", cex = 0.9)
+text(2.12, 0, "tipo ", cex = 0.9)
 text(2.12, -0.18, "E. summapacis", font = 3, cex = 0.9)
 arrows(
   2,
@@ -4298,17 +4298,6 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[1]
 )
-text(1.8, -0.68, "Tipo ", cex = 0.9)
-text(2.1, -0.86, "E. summapacis", font = 3, cex = 0.9)
-arrows(
-  1.9,-0.58,
-  type.classification[type.classification[, 1] == "Espeletia.summapacis", 4],
-  type.classification[type.classification[, 1] == "Espeletia.summapacis", 6],
-  length = 0.1,
-  angle = 20,
-  code = 2,
-  col = "black"
-)
 #agregar especímenes de Espeletia.summapacis
 points(
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.summapacis", 4],
@@ -4318,8 +4307,17 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[1]
 )
-
-
+text(2.1, -0.78, "tipo ", cex = 0.9)
+text(2.1, -0.96, "E. summapacis", font = 3, cex = 0.9)
+arrows(
+  2.1,-0.68,
+  type.classification[type.classification[, 1] == "Espeletia.summapacis", 4],
+  type.classification[type.classification[, 1] == "Espeletia.summapacis", 6],
+  length = 0.1,
+  angle = 20,
+  code = 2,
+  col = "black"
+)
 #agregar especímenes de Espeletia cabrerensis
 points(
   Mcluster.phenodata$data[o.cabrerensis[1:3], 1],
@@ -4331,7 +4329,7 @@ points(
 text(0.65, 1, "más similares al tipo", cex = 0.9)
 text(0.45, 0.82, "E. cabrerensis", font = 3, cex = 0.9)
 arrows(
-  0.15,
+  -0.15,
   0.98,-0.8,
   1 ,
   length = 0.08,
@@ -4429,18 +4427,7 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[1]
 )
-text(-0.2, 1.25, "Tipo ", cex = 0.9)
-text(-0.02, 1.07, "E. summapacis", font = 3, cex = 0.9)
-arrows(
-  -0.2,
-  1,
-  type.classification[type.classification[, 1] == "Espeletia.summapacis", 6],
-  type.classification[type.classification[, 1] == "Espeletia.summapacis", 5],
-  length = 0.1,
-  angle = 20,
-  code = 2,
-  col = "black"
-)
+
 #agregar especímenes de Espeletia.summapacis
 points(
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.summapacis", 6],
@@ -4449,7 +4436,18 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[1]
 )
-
+text(0.7, 1.07, "tipo ", cex = 0.9)
+text(0.7, 0.89, "E. summapacis", font = 3, cex = 0.9)
+arrows(
+  0.3,
+  0.83,
+  type.classification[type.classification[, 1] == "Espeletia.summapacis", 6],
+  type.classification[type.classification[, 1] == "Espeletia.summapacis", 5],
+  length = 0.1,
+  angle = 20,
+  code = 2,
+  col = "black"
+)
 
 #agregar especímenes de Espeletia cabrerensis
 points(
@@ -4459,10 +4457,10 @@ points(
   cex = 1.5,
   col = mclust.options("classPlotColors")[3]
 )
-text(0.8, -0.6, "más similares al tipo", cex = 0.9)
-text(0.7, -0.78, "E. cabrerensis", font = 3, cex = 0.9)
+text(1, -0.6, "más similares al tipo", cex = 0.9)
+text(0.9, -0.78, "E. cabrerensis", font = 3, cex = 0.9)
 arrows(
-  0.85,-0.45,
+  0.9,-0.45,
   1,
   0.1 ,
   length = 0.08,
@@ -4533,21 +4531,35 @@ hist(
   ylab = "Especímenes",
   xlab = "",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
-  breaks = seq(2800, 4200, 100)#,
-  #ylim = c(0, 80)
+  breaks = seq(2800, 4200, 100),
+  ylim = c(0, 80)
 )
+legend(
+  2800,
+  80,
+  fill = c("gray90", "gray60"),
+  legend = c("Todos los especímenes", "Plantas madre"),
+  )
 title(expression("A) M1"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #Grupo 2
+range(phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 2, 5], na.rm =
+        T)#2800 4147
+range(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6] == 2, 5], na.rm =
+        T)#  3567 3797
 hist(
   phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 2, 5],
   xlab = "",
   ylab = "",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
-  breaks = seq(2800, 4200, 100)#,
-  #ylim = c(0, 80)
+  breaks = seq(2800, 4200, 100),
+  ylim = c(0, 80)
 )
 hist(
   phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[, 6] ==
@@ -4557,18 +4569,25 @@ hist(
   col = "gray60"
 )
 title(expression("B) M2"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #
 #Grupo 3
+range(phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 3, 5], na.rm =
+        T)#3394 4062
+range(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6] == 3, 5], na.rm =
+        T)#3567 3863
 hist(
   phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 3, 5],
   #breaks=6,
   xlab = "",
   ylab = "Especímenes",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
-  breaks = seq(2800, 4200, 100)#,
-  #ylim = c(0, 80)
+  breaks = seq(2800, 4200, 100),
+  ylim = c(0, 80)
 )
 hist(
   phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[, 6] ==
@@ -4578,17 +4597,24 @@ hist(
   col = "gray60"
 )
 title(expression("C) M3"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #
 #Grupo 4
+range(phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 4, 5], na.rm =
+        T)#3394 3920
+range(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6] == 4, 5], na.rm =
+        T)#3560 3759
 hist(
   phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 4, 5],
   xlab = "",
   ylab = "",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
-  breaks = seq(2800, 4200, 100)#,
-  #ylim = c(0, 80)
+  breaks = seq(2800, 4200, 100),
+  ylim = c(0, 80)
 )
 hist(
   phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[, 6] ==
@@ -4598,17 +4624,24 @@ hist(
   col = "gray60"
 )
 title(expression("D) M4"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #
 #Grupo 5
-hist(
+range(phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 5, 5], na.rm =
+        T)#3250 4062
+range(phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[,6] == 5, 5], na.rm =
+        T)#3591 3855
+  hist(
   phenotypic.group.assignment[phenotypic.group.assignment[, 6] == 5, 5],
   xlab = "Altitud (m)",
   ylab = "Especímenes",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
-  breaks = seq(2800, 4200, 100)#,
-  #ylim = c(0, 80)
+  breaks = seq(2800, 4200, 100),
+  ylim = c(0, 80)
 )
 hist(
   phenotypic.group.assignment.piloto[phenotypic.group.assignment.piloto[, 6] ==
@@ -4618,13 +4651,20 @@ hist(
   col = "gray60"
 )
 title(expression("E) M5"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #Todos los especímenes
+range(phenotypic.group.assignment[, 5], na.rm =
+        T)#2800 4147
+range(phenotypic.group.assignment.piloto[, 5], na.rm =
+        T)#  3560 3863
 hist(
   phenotypic.group.assignment$Altitude,
   xlab = "Altitud (m)",
   ylab = "",
   main = "",
+  cex.lab=1.3,
   col = "gray90",
   breaks = seq(2800, 4200, 100),
   ylim = c(0, 80)
@@ -4635,12 +4675,7 @@ hist(
   breaks = seq(2800, 4200, 100),
   col = "gray60"
 )
-legend(
-  2800,
-  80,
-  fill = c("gray90", "gray60"),
-  legend = c("Todos los\n especímenes", "Plantas madre"),
-  
-)
 title(expression("F) Todos los grupos morfológicos"), adj = 0)
+axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
+axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
