@@ -20,16 +20,9 @@
 #################################################################################################################
 
 #################################################################################################################
-# 1.1) Librerías:
-
-library(mclust) # librería para adaptar modelos de mezclas normales
-library(clustvarsel) #librería para la selección de variables para el modelos de mexclas normales
-library(ellipse)
-library(tidyverse)
-#################################################################################################################
-# 1.2) lectura de los datos de supervivencia de las plantas de la progenie
+# 1.1) lectura de los datos de supervivencia de las plantas de la progenie
 #directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Supervivencia")#Directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Supervivencia/data")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 #
@@ -83,7 +76,7 @@ colnames(sobrevivientes) <-
     "vivas.3"
   )
 #Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
-setwd("C:/Users/usuario/Documents/Jardin_comun")#directorio de los datos de las plantas madres
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#directorio de los datos de las plantas madres
 phenotypic.group.assignment <-
   read.table(
     "PhenotypicGroupAssignment_2023septiembre08_120644.csv",
@@ -108,7 +101,7 @@ sobrevivientes.all<-
 sobrevivientes.all[is.na(sobrevivientes.all)]<-0
 sobrevivientes.all<-sobrevivientes.all[-2]
 #Guardar tabla de datos
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie")#Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Supervivencia/data")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 # save(sobrevivientes.all, file=paste("sobrevivientes_",
@@ -136,7 +129,7 @@ hist(sobrevivientes.all$vivas.1,
      cex.lab=1.3,
      ylim = c(0,10)
 )
-title(expression("A) 11 meses DDS"),adj=0)
+title(expression("A) 11.4 meses"),adj=0)
 axis(side=1, at=1:25, labels = F, tcl=-0.3)
 axis(side=2, at=1:10, labels = F, tcl=-0.3)
 
@@ -149,7 +142,7 @@ hist(sobrevivientes.all$vivas.2,
      cex.lab=1.3,
      ylim = c(0,10)
 )
-title(expression("B) un año y seis meses DDS"), adj=0)
+title(expression("B) 19.6 meses"), adj=0)
 axis(side=1, at=1:25, labels = F, tcl=-0.3)
 axis(side=2, at=1:10, labels = F, tcl=-0.3)
 
@@ -161,6 +154,6 @@ hist(sobrevivientes.all$vivas.3,
      cex.lab=1.3,
      ylim = c(0,10)
      )
-title(expression("C) Cuatro años y dos meses DDS"), adj=0)
+title(expression("C) 51.4 meses"), adj=0)
 axis(side=1, at=1:25, labels = F, tcl=-0.3)
 axis(side=2, at=1:10, labels = F, tcl=-0.3)

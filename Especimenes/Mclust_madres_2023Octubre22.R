@@ -21,9 +21,10 @@
 #
 ####DATOS REQUERIDOS PARA CORRER ESTE CÓDIGO####
 #
-#Variables morfológicas usados en Pineda et
-#al.:"meanphenodata_2022Apr27_160817.csv" Variables morfológicas de las plantas madre:
-#"meanphenodatapilot_2023Aug02_095547.csv" coordenadas plantas madres : "COORDENADAS_PLANTAS_MADRES_PILOTO.csv"
+#Variables morfológicas usados en Pineda et al.:"meanphenodata_2022Apr27_160817.csv"
+#Variables morfológicas de las plantas madre: "meanphenodatapilot_2023Aug02_095547.csv" 
+#coordenadas plantas madres : "COORDENADAS_PLANTAS_MADRES_PILOTO.csv"
+#Asignación de grupos Pineda e al: "PhenotypicGroupAssignmentPineda_2023junio01_095823".csv"
 #
 ####CONTENIDO####
 # 1) Datos preliminares: librerías y lectura de datos
@@ -36,7 +37,9 @@
 # de mezclas normales.
 # 7) Examinar la distribución de los especímens citados en la monografía de Espeletiinae (Cuatrecasas 2013)
 #    en el en el espacio morfológico.
-#
+# 8)Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfolófico.
+
+# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al.
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
@@ -58,7 +61,7 @@ library(ellipse)
 # 1.2) lectura de los datos morfológicos. Estos datos son promedios de cada variable para cada especímen.
 #
 #directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 #
@@ -126,7 +129,7 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #
 #guardar los la tabla combinada
 #directorio de trabajo
-#setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 # save(mean.phenodata,
@@ -145,7 +148,7 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #
 #################################################################################################################
 # 2.1) Examinar gráficamente la distribución de cada rasgo fenotípico en escala logarítmica y linear.
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")#Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 colnames(mean.phenodata) # nombre de las variables
@@ -246,7 +249,7 @@ head(mean.phenodata.selected)
 #
 #guardar los la tabla seleccionada y filtrada
 #directorio de trabajo
-#setwd("C:/Users/usuario/Documents/Jardin_comun")#Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data)#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 # save(
@@ -691,7 +694,7 @@ abline(v = Mcluster.phenodata$G, lty = 3) #para determinar el modelo con el mejo
 #guardar el mejor modelo en el directorio de trabajo
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
-#setwd("C:/Users/usuario/Documents/Jardin_comun")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")
 # save(Mcluster.phenodata,
 #      file = paste(
 #        "Mcluster.phenodata_",
@@ -1038,7 +1041,7 @@ abline(v = Mcluster.phenodata$G, lty = 3) #para determinar el modelo con el mejo
 #directorio de trabajo
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
-setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# directorio de Diana
 load("Mcluster.phenodata_2023agosto19.RData")
 load("MeanPhenodataSelected_2023septiembre07_052114.RData")
 load("MeanPhenodata_2023septiembre07_050654.RData")
@@ -1078,7 +1081,7 @@ colnames(phenotypic.group.assignment) <-
     "PC12"
   )
 head(phenotypic.group.assignment)
-setwd("C:/Users/usuario/Documents/Jardin_comun")# guardar en directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# guardar en directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 # write.csv(
 #   phenotypic.group.assignment,
@@ -1103,7 +1106,7 @@ View(phenotypic.group.assignment.piloto)#Las plantas madre se encuentran en cuat
 #
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
 #
 #jet.colors3 <- colorRampPalette(c("blue", "cyan", "green", "yellow", "red"))
 jet.colors3 <- colorRampPalette(c("blue", "cyan", "yellow", "red"))
@@ -1515,7 +1518,7 @@ table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mclust
 #
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# Directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
 #
 #graficar soportes empíricos para el mejor modelo a cada morfogrupo
 BIC.Best.Model.Per.G <-
@@ -1566,13 +1569,13 @@ title(expression("A)"), adj = 0)
 #
 #################################################################################################################
 # 5.5) Graficar grupos morfológicos en el mejor modelo de mezclas normales.
-setwd("C:/Users/usuario/Documents/Jardin_comun")# Diana's directory
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# Diana's directory
 load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 load("Mcluster.phenodata_2023agosto19.RData")
 #summary(mean.phenodata.selected.log.pca)
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
 #
 # 5.5.1)Todos los datos
 #CP1 vs CP2: FS_2_A
@@ -2070,7 +2073,7 @@ title(expression("B) Plantas madre"), adj = 0)
 # 5.6) Graficar coeficientes para diferentes caracteres morfológicos en el espacio de los componentes principales
 #Directorio para guardar las gráficas
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
 #
 # Grafica de los coeficientes del CP1 y CP2: FS_2_C
 #View(mean.phenodata.selected.log.pca$rotation[,c(1,2)])
@@ -2357,9 +2360,55 @@ mtext(
   line = -1,
   font = 2
 )
+
+#Examinar los caracteres morfológicon con mayor contribución
+
+cluster.mean.phenodata.selected<-
+  data.frame(mean.phenodata.selected, Mcluster.phenodata$classification)
+#longitud pedúnculo de la cima
+tapply(
+  cluster.mean.phenodata.selected$Length.Cyme.Peduncle,
+  cluster.mean.phenodata.selected$Mcluster.phenodata.classification,
+  mean
+)
+# 1         2         3         4         5 
+# 10.691522  2.603414  2.250509  2.916457  6.060317
 #
-#dev.off()
-#
+#Ancho de la filaria estéril
+tapply(
+  cluster.mean.phenodata.selected$Width.Sterile.Phyllary,
+  cluster.mean.phenodata.selected$Mcluster.phenodata.classification,
+  mean
+)
+# 1         2         3         4         5 
+# 6.458913  7.192669  4.617917  4.304815 12.867596 
+
+#número de capítulos por sinflorescencia
+tapply(
+  cluster.mean.phenodata.selected$Number.Capitula.Per.Synflorescence,
+  cluster.mean.phenodata.selected$Mcluster.phenodata.classification,
+  mean
+)
+# 1         2         3         4         5 
+# 3.123188 14.278119 16.893640 21.129630  5.663934 
+
+#pares de hojas estériles por sinflorescecia
+tapply(
+  cluster.mean.phenodata.selected$Number.Pairs.Sterile.Leaves.Per.Synflorescence,
+  cluster.mean.phenodata.selected$Mcluster.phenodata.classification,
+  mean
+)
+# 1        2        3        4        5 
+# 0.000000 1.959100 0.000000 1.858025 0.000000 
+
+#Ancho de la lámina
+tapply(
+  cluster.mean.phenodata.selected$Width.Lamina,
+  cluster.mean.phenodata.selected$Mcluster.phenodata.classification,
+  mean
+)
+# 1        2        3        4        5 
+# 3.993420 4.496927 4.679800 3.070605 3.983590 
 ###################################################################################################################
 # 5.7) Examinar la incertidumbre de la clasificación.
 #
@@ -2392,7 +2441,7 @@ Mcluster.phenodata$classification[308:350][Mcluster.phenodata$uncertainty[308:35
 #
 #Directorio para guardar las gráficas
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
 #
 #Gráfica de la función de distribución acumulativa de valores de incertidumbre
 #par(mar=c(5,4,4,2)+0.1) #default
@@ -2670,7 +2719,7 @@ Mcluster.phenodata$classification[o.miradorensis[1:15]]
 #directorio de trabajo
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #directorio de Iván: Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván: Waterman
-#setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# directorio de Diana
 #cargar los caracteres morfológicos crudos
 load("MeanPhenodata_2023septiembre07_050654.RData")
 #cargar el mejor modelo de mezcla normal
@@ -2723,7 +2772,7 @@ type.classification <-
   type.classification[order(type.classification[, 1], type.classification[, 2]),]
 #
 #guardar tabla de clasificación de los especímen tipo
-#setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 # write.csv(
 #   type.classification,
@@ -2789,7 +2838,7 @@ cited.specimen.classification <-
 cited.specimen.classification
 #
 #guardar tabla de clasificación de los especímen citados en la monografía de Espeletiinae
-#setwd("C:/Users/usuario/Documents/Jardin_comun")# directorio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# directorio de Diana
 #setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 #write.csv( cited.specimen.classification, file = paste( "CitedSpecimenClassification_", format(Sys.time(),
 #"%Y%B%d_%H%M%S"), ".csv", sep = "" ), row.names = F )
@@ -2797,10 +2846,10 @@ cited.specimen.classification
 #################################################################################################################
 #7.3)  Examinar la distribución de los especímenes tipo  y los citados en la monografía de Espeletiinae
 #(Cuatrecasas, 2013) en el mejor modelo de mezclas normales
-#setwd("C:/Users/usuario/Documents/Jardin_comun")#direcroio de Diana
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#direcroio de Diana
 # directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Figuras")# directorio de Diana
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
 #
 # coordenadas CP1 y CP3: FS_4_A
 par(mar = c(5, 5, 4, 2) + 0.1)
@@ -4679,3 +4728,46 @@ title(expression("F) Todos los grupos morfológicos"), adj = 0)
 axis(side=1, at=seq(2800, 4200, 100), labels = F, tcl=-0.3)
 axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
+#################################################################################################################
+#################################################################################################################
+# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al.####
+#################################################################################################################
+#################################################################################################################
+
+#################################################################################################################
+# 9.1) lectura de tabla de asignación de grupos morfológicos según Pineda et al.
+#
+#directorio de trabajo
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#Directorio de Diana
+#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+#setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+#
+#leer tablas de datos morfológicos: examinar y resumir los datos
+# datos usados en Pineda et al.
+phenotypic.group.pineda <-
+  read.table("PhenotypicGroupAssignmentPineda_2023junio01_095823.csv",
+             header = T,
+             sep = ",")
+head(phenotypic.group.pineda )
+colnames(phenotypic.group.pineda )
+dim(phenotypic.group.pineda )
+View(phenotypic.group.pineda )
+#################################################################################################################
+# 9.2) Tabla de clasificación cruzada
+
+morfología.Pineda.all<-merge(
+  phenotypic.group.assignment[, c(2,6)],
+  phenotypic.group.pineda[, c(2,3)],
+  by="Collector.Collection.Number",
+  suffixes = c(".pineda", ".all")
+)
+table(morfología.Pineda.all[,3],
+      morfología.Pineda.all[,2])
+
+#    1  2  3  4  5
+# 1 23  0 58  2 47
+# 2  0 46  0  2  0
+# 3  0 49  0  3  0
+# 4  0  4  0 13  0
+# 5  0 37  0  2  0
+# 6  0 21  0  0  0
