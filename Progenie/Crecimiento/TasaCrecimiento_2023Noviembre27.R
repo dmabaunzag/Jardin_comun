@@ -19,7 +19,11 @@
 #
 #
 # CONTENIDO
-# 1) 
+# 1) Datos preliminares: Carga de librerías y lectura de datos
+# 2) Seleccionar las variables a usar en cada tabla
+# 3) Crear marco de datos del crecimiento
+# 4) Examinar el crecimiento
+
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
@@ -37,7 +41,7 @@
 library(tidyverse) #limpiar y organizar datos
 
 #seleccionar directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/data")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/datos")
 
 #################################################################################################################
 # 1.2)leer las tablas
@@ -114,6 +118,7 @@ length(unique(
   datos.fenotipicos.marzo.selected$Número.colección.planta.madre
 ))## hay representación de 37 plantas madres
 unique(datos.fenotipicos.marzo.selected$Número.colección.planta.madre)##cuáles
+
 #################################################################################################################
 # 2.2) segunda medida (19.6 meses DS): octubre de 2020
 summary(datos.fenotipicos.octubre)
@@ -122,7 +127,7 @@ dim(datos.fenotipicos.octubre)# 250 plantas hijas sembradas y 33 variables
 
 
 # 2.2.1) subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
-# nombre.progenie; seleccionar las variables de crecimento
+# nombre.progenie; seleccionar las variables de crecimiento
 
 colnames(datos.fenotipicos.octubre)
 datos.fenotipicos.octubre.selected <- 
@@ -156,7 +161,9 @@ summary(datos.fenotipicos.junio)
 head(datos.fenotipicos.junio)
 dim(datos.fenotipicos.junio)# 179 plantas hijas sembradas y 26 variables
 
-# 2.3.1)subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable nombre.progenie; seleccionar las variables para analizar supervivencia
+# 2.3.1)subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
+# nombre.progenie; seleccionar las variables para analizar supervivencia
+
 colnames(datos.fenotipicos.junio)
 datos.fenotipicos.junio.selected <- datos.fenotipicos.junio %>%
   unite("nombre.progenie", c(Bandeja, Fila, Columna)) %>%
@@ -467,7 +474,14 @@ promedio.hojas.madre %>%
   group_by(tiempo) %>% 
   summarise(promedio.1=mean(promedio),
             desviacion= sd(promedio)) 
-  
+
+
+
+# 4.1.5) Histogramas de la pendiente del crecimiento en términos de número de hojas
+
+ pendiente.promedio.hojas.madre <-
+   promedio.hojas.madre %>% 
+   mutate(m.11.4=)
 
 #################################################################################################################
 # 4.2) Longitud del tallo.
@@ -687,7 +701,7 @@ tallos %>%
 # promedio mediana desviacion
 # 1 2.452221     1.3   2.328058
 
-# Longitud de tallo promedio por tiempo
+#   Longitud de tallo promedio por tiempo
 promedio.tallo.tiempo <- 
   tallos%>%
   group_by(tiempo) %>% 

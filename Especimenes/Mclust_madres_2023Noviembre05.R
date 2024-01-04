@@ -38,8 +38,8 @@
 # 7) Examinar la distribución de los especímens citados en la monografía de Espeletiinae (Cuatrecasas 2013)
 #    en el en el espacio morfológico.
 # 8)Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfolófico.
-
-# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al.
+# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al. yestadístico tau para 
+#encontrar grado de concordancia entre éstos
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
@@ -57,6 +57,7 @@
 library(mclust) # librería para adaptar modelos de mezclas normales
 library(clustvarsel) #librería para la selección de variables para el modelos de mezclas normales
 library(ellipse)
+library(GoodmanKruskal) # estadístico tau
 ###################################################################################################################
 # 1.2) lectura de los datos morfológicos. Estos datos son promedios de cada variable para cada especímen.
 #
@@ -4730,7 +4731,8 @@ axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #################################################################################################################
 #################################################################################################################
-# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al.####
+# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al. yestadístico tau ####
+#para encontrar grado de concordancia entre éstos####
 #################################################################################################################
 #################################################################################################################
 
@@ -4755,14 +4757,19 @@ View(phenotypic.group.pineda )
 #################################################################################################################
 # 9.2) Tabla de clasificación cruzada
 
-morfología.Pineda.all<-merge(
+morfologia.Pineda.all<-merge(
   phenotypic.group.assignment[, c(2,6)],
   phenotypic.group.pineda[, c(2,3)],
   by="Collector.Collection.Number",
   suffixes = c(".pineda", ".all")
 )
-table(morfología.Pineda.all[,3],
-      morfología.Pineda.all[,2])
+head(morfologia.Pineda.all )
+colnames(morfologia.Pineda.all )
+dim(morfologia.Pineda.all )
+View(morfologia.Pineda.all )
+
+table(morfologia.Pineda.all[,3],
+      morfologia.Pineda.all[,2])
 
 #    1  2  3  4  5
 # 1 23  0 58  2 47
@@ -4771,3 +4778,95 @@ table(morfología.Pineda.all[,3],
 # 4  0  4  0 13  0
 # 5  0 37  0  2  0
 # 6  0 21  0  0  0
+
+#################################################################################################################
+#9.3) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de morfológicos de los
+#especímenes con los encontrado enPIneda et al. (2020): tau(M, P) y tau(P, M)
+
+colnames(morfologia.Pineda.all)
+
+GKtau(
+  morfologia.Pineda.all$Phenotypic.Group.all,
+  morfologia.Pineda.all$Phenotypic.Group.pineda
+)
+# xName
+# 1 morfologia.Pineda.all$Phenotypic.Group.all
+# yName Nx Ny tauxy tauyx
+# 1 morfologia.Pineda.all$Phenotypic.Group.pineda  6  5 0.501 0.431
+
+#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(morfologia.Pineda.all$Phenotypic.Group.pineda)
+  GKtau.nulo <-
+    GKtau(morfologia.Pineda.all$Phenotypic.Group.all,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i, ] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+#grafica de la distribución nula de tau(M,P),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(M, P)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+#mostrar el valor observado
+abline(
+  v = GKtau(
+    morfologia.Pineda.all$Phenotypic.Group.all,
+    morfologia.Pineda.all$Phenotypic.Group.pineda
+  )[[5]],
+  col = "red"
+)
+
+#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(S,M) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    morfologia.Pineda.all$Phenotypic.Group.all,
+    morfologia.Pineda.all$Phenotypic.Group.pineda
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0
+#grafica de la distribución nula de tau(P, M),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(P,S)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+#mostrar el valor observado
+abline(
+  v = GKtau(
+    morfologia.Pineda.all$Phenotypic.Group.all,
+    morfologia.Pineda.all$Phenotypic.Group.pineda
+  )[[6]],
+  col = "red"
+)
+
+#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(M,S) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    morfologia.Pineda.all$Phenotypic.Group.all,
+    morfologia.Pineda.all$Phenotypic.Group.pineda
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0
