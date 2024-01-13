@@ -5,19 +5,17 @@
 #
 ####INTRODUCCIÓN####
 #
-#Este código  hace parte del material suplementario del artículo "La naturaleza de las especies de
-#frailejones: un experimento de jardín común en Sumapaz", adaptado del código de Pineda et al. (en preparción The
-#Nature of Espeletia Species). El objetivo es hacer un análisis de delimitación de especies basado en caracteres
-#fenotípicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes (colombia) tomados del
-#trabajo de Pineda et al. junto con otros especímenes colectados en muestreo posterior (plantas madres).Primero
-#realizamos un análisis de los grupos fenotípicos de los frailejones silvestres del páramo de Sumapaz, según
-#caracteres morfológicos, basados en los datos de Pineda et al. (2020) y en datos de 43 plantas adicionales que
-#sirvieron como plantas madre para el experimento de jardín común. Posteriormente determinamos si los grupos
-#fenotípicos de las plantas madre corresponden a los grupos de su progenie en términos de la supervivencia y tasa
-#de crecimiento en el jardín común durante tres años. Esta correspondencia indicaría que los grupos fenotípicos
-#de frailejones silvestres corresponden a especies que difieren en supervivencia y tasas de crecimiento durante
-#los primeros años de vida.Específicamente, este código busca asignar grupos fenotípicos mediante modelos de
-#mezclas normales (paquete mclust) a las 350 plantas, incluyendo las 43 plantas madres.
+#Este código  hace parte del material suplementario del artículo "La naturaleza de las especies de frailejones:
+#un experimento de jardín común en Sumapaz", adaptado del código de Pineda et al. (en prep. The Nature of
+#Espeletia Species). El objetivo es hacer un análisis de delimitación de especies basado en caracteres
+#fenotípicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes (Colombia), datos tomados del
+#trabajo de Pineda et al. junto con otros especímenes colectados en muestreo posterior que fueron usadas como
+#plantas madres dentro del experimento del jardín común. Primero realizamos grupos morfológicos de los
+#frailejones silvestres del páramo de Sumapaz sin información a priori. Posteriormente, determinamos la
+#correspondencia de los grupos morfológico de las plantas madre con los grupos de plantas madre según
+#reclutamiento y crecimiento en el jardín común durante cuatro años. Esta correspondencia indicaría que los
+#grupos morfológicos de frailejones silvestres corresponden a especies que difieren en aspectos de nicho
+#ecológico durante los primeros años de vida
 #
 ####DATOS REQUERIDOS PARA CORRER ESTE CÓDIGO####
 #
@@ -28,17 +26,17 @@
 #
 ####CONTENIDO####
 # 1) Datos preliminares: librerías y lectura de datos
-# 2) Examinar  la distribución de cada caracter mrfológico, editar los datos y transformación y rotación de los
+# 2) Examinar  la distribución de cada carácter morfológico, editar los datos y transformación y rotación de los
 #   datos con análisis de componentes principales
 # 3) selección de variables para los modelos de mezclas normales
-# 4) Ajuste de los modelos de mezlas normales
+# 4) Ajuste de los modelos de mezclas normales
 # 5)Examinar grupos morfológicos en el mejor modelo de mezclas normales
-# 6)Examinar la localización  delos especimes tipos E. cabrerensis y E. miradorensis en el mejor modelo
+# 6)Examinar la localización  delos especímenes tipos E. cabrerensis y E. miradorensis en el mejor modelo
 # de mezclas normales.
-# 7) Examinar la distribución de los especímens citados en la monografía de Espeletiinae (Cuatrecasas 2013)
+# 7) Examinar la distribución de los especímenes citados en la monografía de Espeletiinae (Cuatrecasas 2013)
 #    en el en el espacio morfológico.
-# 8)Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfolófico.
-# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al. yestadístico tau para 
+# 8)Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfológico.
+# 9) Tabla clasificación cruzada entre grupos morfológicos y resultados de Pineda et al. y estadístico tau para 
 #encontrar grado de concordancia entre éstos
 #################################################################################################################
 #################################################################################################################
@@ -2117,7 +2115,7 @@ for (i in c(5, 6, 7, 10)) {
     lwd = 1
   )
 }
-# Graficar círculo para igual contribubción de los caracteres.
+# Graficar círculo para igual contribución de los caracteres.
 x <- seq(-(2 / 13) ^ 0.5, (2 / 13) ^ 0.5, 1e-4)
 x <- c(x, (2 / 13) ^ 0.5)
 equal_contribution <- ((2 / 13) - x ^ 2) ^ 0.5
@@ -2653,7 +2651,7 @@ legend(
 #
 ###################################################################################################################
 ###################################################################################################################
-# 6) Examinar la localización  delos especimes tipos E. cabrerensis y E. miradorensis en el mejor modelo####
+# 6) Examinar la localización  delos especímenes tipos E. cabrerensis y E. miradorensis en el mejor modelo####
 # de mezclas normales.
 ###################################################################################################################
 ###################################################################################################################
@@ -3040,7 +3038,7 @@ for (i in 1:Mcluster.phenodata$G) {
   )
 }
 #
-#Agregar especíenes de E. argentea
+#Agregar especímenes de E. argentea
 points(
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.argentea.fma.phaneractis", 4],
   cited.specimen.classification[cited.specimen.classification[, 1] ==
@@ -3062,7 +3060,7 @@ arrows(
   code = 2
 )
 #
-#Agregar especímen tipo E. tapirophila
+#Agregar espécimen tipo E. tapirophila
 points(
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 4],
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 5],
@@ -4568,7 +4566,7 @@ title(expression(paste(
 #
 #################################################################################################################
 #################################################################################################################
-# 8) Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfolófico.####
+# 8) Distribución altitudinal de los especímenes en relación con la asignación de su grupo morfológico.####
 #################################################################################################################
 #################################################################################################################
 #Histograma de cada uno de los grupos morfológicos
@@ -4731,7 +4729,7 @@ axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 #
 #################################################################################################################
 #################################################################################################################
-# 9) Tabla clasificación cruzada entre grupos morfologicos y resultados de Pineda et al. yestadístico tau ####
+# 9) Tabla clasificación cruzada entre grupos morfológicos y resultados de Pineda et al. y el estadístico tau ####
 #para encontrar grado de concordancia entre éstos####
 #################################################################################################################
 #################################################################################################################
@@ -4740,7 +4738,7 @@ axis(side=2, at=seq(0,80,5), labels = F, tcl=-0.3)
 # 9.1) lectura de tabla de asignación de grupos morfológicos según Pineda et al.
 #
 #directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#Directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 #
