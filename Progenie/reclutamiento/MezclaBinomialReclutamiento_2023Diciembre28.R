@@ -382,7 +382,7 @@ head(sobrevivientes.all)
 #################################################################################################################
 
 #################################################################################################################
-# 6.1) crear marco de datos para analizar sobreviviencia
+# 6.1) crear marco de datos para analizar reclutamiento
 sobrevivientes.tiempo <-
   sobrevivientes.all
 colnames(sobrevivientes.tiempo) <-
@@ -577,7 +577,7 @@ sum(vivas1) # 237 reclutas a 11.4 meses
 Conc  <- FLXPmultinom( ~ 1)
 Mod.fam <- FLXglm( ~ 1, family = "binomial")
 siembra <-
-  100 # número de ensayos de los componenetes binomiales (máximo número de créditos)
+  100 # número de ensayos de los componentes binomiales (máximo número de créditos)
 Modelos1 <-
   stepFlexmix(
     cbind(vivas1, siembra - vivas1) ~ 1,
@@ -670,27 +670,27 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Di
 #para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
 #de la distribución binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
-  exp(parameters(MejorModelo1)[1]) / (1 + exp(parameters(MejorModelo1)[1])) #parametro p grupo 1
+  exp(parameters(MejorModelo1)[1]) / (1 + exp(parameters(MejorModelo1)[1])) #parámetro p grupo 1
 pi.comp.1 <-
-  sum(MejorModelo1@cluster == 1) / length(MejorModelo1@cluster) #parametro pi grupo 1
+  sum(MejorModelo1@cluster == 1) / length(MejorModelo1@cluster) #parámetro pi grupo 1
 pm.comp.1 <-
   pi.comp.1 * dbinom(seq(0, 24, 1),
                      size = siembra,
                      prob = p.comp.1,
                      log = FALSE) #masa de probabilidad grupo 1
 p.comp.2 <-
-  exp(parameters(MejorModelo1)[2]) / (1 + exp(parameters(MejorModelo1)[2])) #parametro p grupo 2
+  exp(parameters(MejorModelo1)[2]) / (1 + exp(parameters(MejorModelo1)[2])) #parámetro p grupo 2
 pi.comp.2 <-
-  sum(MejorModelo1@cluster == 2) / length(MejorModelo1@cluster) #parametro pi grupo 2
+  sum(MejorModelo1@cluster == 2) / length(MejorModelo1@cluster) #parámetro pi grupo 2
 pm.comp.2 <-
   pi.comp.2 * dbinom(seq(0, 24, 1),
                      size = siembra,
                      prob = p.comp.2,
                      log = FALSE) #masa de probabilidad grupo 2
 p.comp.3 <-
-  exp(parameters(MejorModelo1)[3]) / (1 + exp(parameters(MejorModelo1)[3])) #parametro p grupo 1
+  exp(parameters(MejorModelo1)[3]) / (1 + exp(parameters(MejorModelo1)[3])) #parámetro p grupo 1
 pi.comp.3 <-
-  sum(MejorModelo1@cluster == 3) / length(MejorModelo1@cluster) #parametro pi grupo 3
+  sum(MejorModelo1@cluster == 3) / length(MejorModelo1@cluster) #parámetro pi grupo 3
 pm.comp.3 <-
   pi.comp.3 * dbinom(seq(0, 24, 1),
                      size = siembra,
@@ -924,27 +924,27 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Di
 #de la distribución binomial correspondiente a cada componente del mejor modelo
 
 p.comp.1 <-
-  exp(parameters(MejorModelo2)[1]) / (1 + exp(parameters(MejorModelo2)[1])) #parametro p grupo 1
+  exp(parameters(MejorModelo2)[1]) / (1 + exp(parameters(MejorModelo2)[1])) #parámetro p grupo 1
 pi.comp.1 <-
-  sum(MejorModelo2@cluster == 1) / length(MejorModelo2@cluster) #parametro pi grupo 1
+  sum(MejorModelo2@cluster == 1) / length(MejorModelo2@cluster) #parámetro pi grupo 1
 pm.comp.1 <-
   pi.comp.1 * dbinom(seq(0, 24, 1),
                      size = siembra,
                      prob = p.comp.1,
                      log = FALSE) #masa de probabilidad grupo 1
 p.comp.2 <-
-  exp(parameters(MejorModelo2)[2]) / (1 + exp(parameters(MejorModelo2)[2])) #parametro p grupo 2
+  exp(parameters(MejorModelo2)[2]) / (1 + exp(parameters(MejorModelo2)[2])) #parámetro p grupo 2
 pi.comp.2 <-
-  sum(MejorModelo2@cluster == 2) / length(MejorModelo2@cluster) #parametro pi grupo 2
+  sum(MejorModelo2@cluster == 2) / length(MejorModelo2@cluster) #parámetro pi grupo 2
 pm.comp.2 <-
   pi.comp.2 * dbinom(seq(0, 24, 1),
                      size = siembra,
                      prob = p.comp.2,
                      log = FALSE) #masa de probabilidad grupo 2
 p.comp.3 <-
-  exp(parameters(MejorModelo2)[3]) / (1 + exp(parameters(MejorModelo2)[3])) #parametro p grupo 1
+  exp(parameters(MejorModelo2)[3]) / (1 + exp(parameters(MejorModelo2)[3])) #parámetro p grupo 1
 pi.comp.3 <-
-  sum(MejorModelo2@cluster == 3) / length(MejorModelo2@cluster) #parametro pi grupo 3
+  sum(MejorModelo2@cluster == 3) / length(MejorModelo2@cluster) #parámetro pi grupo 3
 pm.comp.3 <-
   pi.comp.3 * dbinom(seq(0, 24, 1),
                      size = siembra,
@@ -1133,18 +1133,18 @@ head(grupo.reclutamiento.3)
 #para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
 #de la distribución binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
-  exp(parameters(MejorModelo3)[1]) / (1 + exp(parameters(MejorModelo3)[1])) #parametro p grupo 1
+  exp(parameters(MejorModelo3)[1]) / (1 + exp(parameters(MejorModelo3)[1])) #parámetro p grupo 1
 pi.comp.1 <-
-  sum(MejorModelo3@cluster == 1) / length(MejorModelo3@cluster) #parametro pi grupo 1
+  sum(MejorModelo3@cluster == 1) / length(MejorModelo3@cluster) #parámetro pi grupo 1
 pm.comp.1 <-
   pi.comp.1 * dbinom(seq(0, 24, 1),
                      size = siembra,
                      prob = p.comp.1,
                      log = FALSE) #masa de probabilidad grupo 1
 p.comp.2 <-
-  exp(parameters(MejorModelo3)[2]) / (1 + exp(parameters(MejorModelo3)[2])) #parametro p grupo 2
+  exp(parameters(MejorModelo3)[2]) / (1 + exp(parameters(MejorModelo3)[2])) #parámetro p grupo 2
 pi.comp.2 <-
-  sum(MejorModelo3@cluster == 2) / length(MejorModelo3@cluster) #parametro pi grupo 2
+  sum(MejorModelo3@cluster == 2) / length(MejorModelo3@cluster) #parámetro pi grupo 2
 pm.comp.2 <-
   pi.comp.2 * dbinom(seq(0, 24, 1),
                      size = siembra,
@@ -1652,7 +1652,7 @@ sum(
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
 # 0.29771
-#grafica de la distribución nula de tau(Group.madre, 11.4),
+#gráfica de la distribución nula de tau(Group.madre, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1870,7 +1870,7 @@ sum(
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
 # 0.78066
-#grafica de la distribución nula de tau(Group.madre, 51.4),
+#gráfica de la distribución nula de tau(Group.madre, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
