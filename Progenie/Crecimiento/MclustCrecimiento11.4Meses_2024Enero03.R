@@ -11,7 +11,7 @@
 #INTRODUCCIÓN:
 #
 #Los datos de crecimiento de la progenie (cantidad de hojas y longitud del tallo) fueron usados para
-#asignar grupos de las plantas madre según e crecimieto de su progenie
+#asignar grupos de las plantas madre según e crecimiento de su progenie
 #
 
 #REQUERIMIENTOS##
@@ -22,7 +22,7 @@
 # 1) Preliminares: cargar las librerías y lectura de datos
 # 2) Examinar variables: editar los datos y transformarlos
 # 3) Ajuste de modelos de mezclas normales
-# 4) Examinar los grupos de crecimiento en base al mejor modelo de mezclas normales, de accuerdo con las variables
+# 4) Examinar los grupos de crecimiento en base al mejor modelo de mezclas normales, de acuerdo con las variables
 #de inicialización
 # 5) Tabla de clasificación cruzada entre modelos
 
@@ -377,7 +377,7 @@ cor(x = phenodata.progenie.selected.log$`log Longitud del tallo`,
     y = phenodata.progenie.selected.log$`log Número de hojas`)# 0.5605965
 lm(`log Número de hojas` ~ `log Longitud del tallo`, data = phenodata.progenie.selected.log)
 
-#Histograma de la distribución de las variables de crecimento en el promedio de las plantas madre
+#Histograma de la distribución de las variables de crecimiento en el promedio de las plantas madre
 
 range(mean.phenodata.progenie.selected.log$`log Longitud del tallo`)#-1.2039728  0.5306283
 hist(
@@ -450,7 +450,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #clasificación de lso especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 # Mclust EEE (ellipsoidal, equal volume, shape and orientation) model with 2 components: 
@@ -476,7 +476,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #classifiación de los especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
@@ -492,11 +492,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2 
 # 36  1
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"STD"####
@@ -506,7 +506,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)#
-Mcluster.phenodata.progenie$classification #clasificación de los especíemenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 #
@@ -519,11 +519,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2 
 # 36  1
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"SPH"####
@@ -546,11 +546,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2 
 # 2 35
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"PCR"####
@@ -560,7 +560,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #clasificacion de los especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
@@ -575,11 +575,11 @@ attributes(Mcluster.phenodata.progenie)
 # Clustering table:
 #   1  2 
 # 35  2
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"SVD"####
@@ -606,11 +606,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2
 #   35  2
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #################################################################################################################

@@ -8,13 +8,13 @@
 # ###############################################################################################################
 # ###############################################################################################################
 #
-# INTRODUCCIÓN#### 
+## INTRODUCCIÓN#### 
 
 #Examinar la concordancia entre muestreos de grupos de plantas madre según reclutamiento y
 # crecimiento de su progenie
 
 #
-# REQUERIMIENTOS: Tablas de asignación de grupos según crecimiento y reclutamiento para cada muestreo
+## REQUERIMIENTOS: Tablas de asignación de grupos según crecimiento y reclutamiento para cada muestreo
 # 
 #  "grupo.reclutamiento.3_2023diciembre26_150045.csv"
 #  "grupo.reclutamiento.2_2023diciembre26_143302.csv"
@@ -23,7 +23,7 @@
 #
 #
 #
-# CONTENIDO
+## CONTENIDO
 #  1) Datos preliminares
 #  2) Creación de tabla combinada con las asignación de grupos según crecimiento y reclutamiento
 #  3) Tabla de clasificación cruzada según crecimiento y reclutamiento para cada muestreo

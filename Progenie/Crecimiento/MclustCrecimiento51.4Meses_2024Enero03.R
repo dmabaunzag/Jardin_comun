@@ -433,7 +433,7 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")#Dire
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 load("mean.phenodata.progenie.selected.log_(junio)_2023diciembre28_133842.RData")
-# subset con sólo los rasgos fenotípicos
+# subconjunto con sólo los caracteres demográficos
 data.for.GMM <- mean.phenodata.progenie.selected.log[, 2:3]
 
 #################################################################################################################
@@ -473,7 +473,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #classifiación de los especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")

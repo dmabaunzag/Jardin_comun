@@ -10,7 +10,7 @@
 #INTRODUCCIÓN:
 #
 #Los datos de crecimiento de la progenie (cantidad de hojas y longitud del tallo) fueron usados para
-#asignar grupos morfológico de las plantas madre según e crecimieto de su progenie
+#asignar grupos morfológico de las plantas madre según e crecimiento de su progenie
 #
 
 #REQUERIMIENTOS##
@@ -454,17 +454,17 @@ attributes(Mcluster.phenodata.progenie)
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"VARS"####
 mclust.options(hcUse = "VARS")
 Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
-#examine results
+#examinar resultados
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #classifiación de los especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
@@ -481,11 +481,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2  3 
 # 17 15  3
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"STD"####
@@ -495,7 +495,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)#
-Mcluster.phenodata.progenie$classification #clasificación de los especíemenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 #
@@ -508,11 +508,11 @@ attributes(Mcluster.phenodata.progenie)
 # Clustering table:
 #   1  2  3 
 # 17 15  3
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"SPH"
@@ -536,11 +536,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2  3 
 # 17 15  3
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"PCR"
@@ -550,7 +550,7 @@ Mcluster.phenodata.progenie <- Mclust(data.for.GMM)
 Mcluster.phenodata.progenie
 summary(Mcluster.phenodata.progenie)
 names(Mcluster.phenodata.progenie$classification)
-Mcluster.phenodata.progenie$classification #clasificacion de los especímenes
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
 Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
 attributes(Mcluster.phenodata.progenie)
 #
@@ -564,11 +564,11 @@ attributes(Mcluster.phenodata.progenie)
 #   1  2  3 
 # 17 15  3
 
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata.progenie,
      what = "classification",
      dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #"SVD"
