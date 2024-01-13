@@ -441,7 +441,7 @@ plot(
   ylab = "Plantas vivas"
 )
 title(expression("A) "), adj = 0, cex.main = 1.5)
-
+# ejes por año
 axis(
   side = 1,
   at = seq(12, 48, 12),
@@ -807,7 +807,7 @@ mtext(side = 4,
 
 
 #################################################################################################################
-# 7.2) segunda medición: 19.6 meses después de la siembra.
+# 7.2) segundo muestreo: 19.6 meses después de la siembra.
 vivas2 <- sobrevivientes.all$vivas.2
 mode(vivas2)#moda = 0
 max(vivas2) #reclutamiento máximo = 23
@@ -1043,7 +1043,7 @@ mtext(side = 4,
       line = 2.8)
 
 #################################################################################################################
-# 7.3) Tercera medición: 51.4 meses después de la siembra.
+# 7.3) Tercer muestreo: 51.4 meses después de la siembra.
 
 vivas3 <- sobrevivientes.all$vivas.3
 mode(vivas3)#moda =  0
@@ -1266,7 +1266,7 @@ grupo.reclutamiento.1.vs.2 <-
   )
 table(grupo.reclutamiento.1.vs.2[, 3],
       grupo.reclutamiento.1.vs.2[, 2])
-# 1  2  3
+#    1  2  3
 # 1  1  0 20
 # 2 18  0  0
 # 3  0  4  0
@@ -1699,7 +1699,7 @@ grupo.reclutamiento.2.vs.morfologia <-
 
 table(grupo.reclutamiento.2.vs.morfologia[, 2],
       grupo.reclutamiento.2.vs.morfologia[, 3])
-# 2 3 4 5
+#   2 3 4 5
 # 1 2 8 3 8
 # 2 4 9 0 5
 # 3 0 1 2 1
