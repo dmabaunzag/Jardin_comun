@@ -8,7 +8,7 @@
 #Este código  hace parte del material suplementario del artículo "La naturaleza de las especies de frailejones:
 #un experimento de jardín común en Sumapaz", adaptado del código de Pineda et al. (en prep. The Nature of
 #Espeletia Species). El objetivo es hacer un análisis de delimitación de especies basado en caracteres
-#fenotípicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes (Colombia), datos tomados del
+#morfológicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes (Colombia), datos tomados del
 #trabajo de Pineda et al. junto con otros especímenes colectados en muestreo posterior que fueron usadas como
 #plantas madres dentro del experimento del jardín común. Primero realizamos grupos morfológicos de los
 #frailejones silvestres del páramo de Sumapaz sin información a priori. Posteriormente, determinamos la
@@ -140,13 +140,13 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #      ))
 #################################################################################################################
 #################################################################################################################
-# 2) Examinar  la distribución de cada rasgo fenotípico, editar los datos y transformación y rotación de####
+# 2) Examinar  la distribución de cada caracter morfológico, editar los datos y transformación y rotación de####
 #los datos con análisis de componentes principales
 #################################################################################################################
 #################################################################################################################
 #
 #################################################################################################################
-# 2.1) Examinar gráficamente la distribución de cada rasgo fenotípico en escala logarítmica y linear.
+# 2.1) Examinar gráficamente la distribución de cada caracter morfológico en escala logarítmica y linear.
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
@@ -219,10 +219,10 @@ for (trait.x in c(7:19)) {
 
 #################################################################################################################
 #2.2) realizar un subconjunto de datos sólo con los caracteres morfológicos para el análisis. La selección de los
-#caracteres fue hecha a priori en bases en ideas de importancia de carátecteres para distinguir las especies y
-#basado en la monografíade Espeletiinae (Cuatrecasas, 2013).
+#caracteres fue hecha a priori en bases en ideas de importancia de caracteres para distinguir las especies y
+#basado en la monografía de Espeletiinae (Cuatrecasas, 2013).
 #
-#seleccionar un subconjunto con los caracteres fenotípicos: de la columna 7 a 19
+#seleccionar un subconjunto con los caracteres morfológicos: de la columna 7 a 19
 colnames(mean.phenodata)
 mean.phenodata.selected <- mean.phenodata[, 7:19]
 #
@@ -232,16 +232,16 @@ summary(mean.phenodata.selected)
 head(mean.phenodata.selected)
 colnames(mean.phenodata.selected)
 #################################################################################################################
-# 2.3) Remover los especímenes con valores NA en algún rasgo fenotípico.
+# 2.3) Remover los especímenes con valores NA en algún carácter morfológico.
 #
-#determinar qué especimenes tiene  valores NA para ser excluídos del análisis
+#determinar qué especímenes tiene  valores NA para ser excluidos del análisis
 rows.with.na <-
   unique(which(is.na(mean.phenodata.selected), arr.ind = T)[, 1])
 rows.with.na # especímenes con valores NA
 length(rows.with.na) #número de especímenes con NA:713
-#correr las siguietes líneas en caso de existir NAs
+#correr las siguientes líneas en caso de existir NAs
 mean.phenodata.selected <- mean.phenodata.selected[-rows.with.na,]
-dim(mean.phenodata.selected) # 350 especímenes con datos en los 13 caracteres fenotípicos
+dim(mean.phenodata.selected) # 350 especímenes con datos en los 13 caracteres morfológicos
 class(mean.phenodata.selected)
 summary(mean.phenodata.selected)
 head(mean.phenodata.selected)
@@ -275,10 +275,10 @@ mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 20][!is.na(mean.ph
 mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21])]
 #
 #################################################################################################################
-# 2.4) Transfomación de los datos.
+# 2.4) Transformación de los datos.
 #
-#caracteres continuos transformación log, dado que los caracteres fenotípicos frecuentemenente siguen
-#distribución log-normal asegurarse agregar 1 a los caracteres que estén acotdos a la izquierda con cero.
+#caracteres continuos transformación log, dado que los caracteres morfológicos frecuentemente siguen
+#distribución log-normal asegurarse agregar 1 a los caracteres que estén acotados a la izquierda con cero.
 mean.phenodata.selected.log <-
   log(
     data.frame(
@@ -314,7 +314,7 @@ mean.phenodata.selected.log.pca$scale
 mean.phenodata.selected.log.pca$center
 summary(mean.phenodata.selected.log.pca) #varianza explicada en cada componente
 summary(mean.phenodata.selected.log.pca$x) #resumen de los principales componentes
-mean.phenodata.selected.log.pca$rotation # coeficientes (o "loadings") de cada rasgo en cada componente
+mean.phenodata.selected.log.pca$rotation # coeficientes (o "loadings") de cada caracter en cada componente
 #
 #guardar el análisis de ACP
 # save(
@@ -491,7 +491,7 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 #éstos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
 #
 #################################################################################################################
-# 3.2) selección de variables hacia adelante usando ACP de la matriz de covarianza de los caracteres fenotípicos con
+# 3.2) selección de variables hacia adelante usando ACP de la matriz de covarianza de los caracteres morfológicos con
 #       transformación logarítmica.
 #
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
@@ -600,16 +600,16 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 #Éstos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
 #
 #la selección de las variables tanto hacia adelante como hacia atrás, escogieron los primeros 12 caracteres
-#fenotípicos
+#morfológicos
 #
 ###################################################################################################################
 ###################################################################################################################
-# 4) Ajuste de los modelos de mezlas normales####
+# 4) Ajuste de los modelos de mezclas normales####
 ###################################################################################################################
 ###################################################################################################################
 #
 ###################################################################################################################
-# 4.1) Seleccionar caracteres fenotípicos (PCA) para la inclusión del método de mezclas normales basado en los resultados
+# 4.1) Seleccionar caracteres morfológicos (PCA) para la inclusión del método de mezclas normales basado en los resultados
 #     de las secciones 3.1 3.2.
 #
 data.for.GMM <- mean.phenodata.selected.log.pca$x[, 1:12]
@@ -624,7 +624,7 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados:
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+names(Mcluster.phenodata$classification)#especímenes incluidos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
@@ -639,12 +639,12 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   85 107  58  22  78
 #
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -693,7 +693,7 @@ abline(v = Mcluster.phenodata$G, lty = 3) #para determinar el modelo con el mejo
 #guardar el mejor modelo en el directorio de trabajo
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Directorio de Iván Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Directorio de Iván Waterman
-#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")
 # save(Mcluster.phenodata,
 #      file = paste(
 #        "Mcluster.phenodata_",
@@ -710,7 +710,7 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados:
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+names(Mcluster.phenodata$classification)#especímenes incluidos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
@@ -754,14 +754,14 @@ attributes(Mcluster.phenodata)
 #
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -813,7 +813,7 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados:
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+names(Mcluster.phenodata$classification)#especímenes incluidos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
@@ -904,16 +904,16 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   23 163  76  27  61
 #
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -1097,7 +1097,7 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# guardar en di
 #Examinar los grupos fenotípicps de as plantas madre
 phenotypic.group.assignment.piloto <-
   phenotypic.group.assignment[308:350,]
-View(phenotypic.group.assignment.piloto)#Las plantas madre se encuentran en cuatro de los cinco grupos fenotípicos
+View(phenotypic.group.assignment.piloto)#Las plantas madre se encuentran en cuatro de los cinco grupos morfológicos
 #
 #################################################################################################################
 #5.2) Examinar los parámetros de la distribución normal multivariable definiendo cada grupo morfológico de
@@ -1519,7 +1519,7 @@ table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mclust
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -2818,8 +2818,8 @@ unique(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21])
 mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21])]
 table(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21][!is.na(mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21])])
 #
-#crear marco de datos con esta informacón para los especímenes citado en la monografía de Espeletiinae
-#(Cuatrecasas 2013) con la clasificación, incertidumbre y coordenadeas de los tres principales componentes
+#crear marco de datos con esta información para los especímenes citado en la monografía de Espeletiinae
+#(Cuatrecasas 2013) con la clasificación, incertidumbre y coordenadas de los tres principales componentes
 cited.specimen.classification <-
   data.frame(
     mean.phenodata[as.numeric(rownames(mean.phenodata.selected)), 21],
