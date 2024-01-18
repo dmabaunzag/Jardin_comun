@@ -60,7 +60,7 @@ library(GoodmanKruskal) # estadístico tau
 # 1.2) lectura de los datos morfológicos. Estos datos son promedios de cada variable para cada especímen.
 #
 #directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")#Directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 #
