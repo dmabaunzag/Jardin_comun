@@ -70,7 +70,7 @@ mean.phenodata.pineda <-
   read.table("meanphenodata_2022Apr27_160817.csv",
              header = T,
              sep = ",")
-# et al.2020 para la formación de grupos morfológicos: 21 variables y 1020 observaciones
+
 summary(mean.phenodata.pineda)
 head(mean.phenodata.pineda)
 dim(mean.phenodata.pineda)# 1020 Especímenes y 21 variables
@@ -140,13 +140,14 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #      ))
 #################################################################################################################
 #################################################################################################################
-# 2) Examinar  la distribución de cada caracter morfológico, editar los datos y transformación y rotación de####
+# 2) Examinar  la distribución de cada carácter morfológico, editar los datos y transformación y rotación de####
 #los datos con análisis de componentes principales
 #################################################################################################################
 #################################################################################################################
 #
 #################################################################################################################
-# 2.1) Examinar gráficamente la distribución de cada caracter morfológico en escala logarítmica y linear.
+# 2.1) Examinar gráficamente la distribución de cada carácter morfológico en escala logarítmica y linear.
+
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
@@ -261,7 +262,7 @@ head(mean.phenodata.selected)
 #   )
 # )
 #
-#Tenga en cuenta que la referencia al dataframe original (mean.phenodata) se puede hacer por el nombre de fila:
+#Tenga en cuenta que la referencia al marco de datos original (mean.phenodata) se puede hacer por el nombre de fila:
 rownames(mean.phenodata.selected)
 as.numeric(rownames(mean.phenodata.selected))
 #Usando el índice numérico puede saber el número de colector  y el colector de los especímenes analizados,por
@@ -314,7 +315,7 @@ mean.phenodata.selected.log.pca$scale
 mean.phenodata.selected.log.pca$center
 summary(mean.phenodata.selected.log.pca) #varianza explicada en cada componente
 summary(mean.phenodata.selected.log.pca$x) #resumen de los principales componentes
-mean.phenodata.selected.log.pca$rotation # coeficientes (o "loadings") de cada caracter en cada componente
+mean.phenodata.selected.log.pca$rotation # coeficientes (o "loadings") de cada carácter en cada componente
 #
 #guardar el análisis de ACP
 # save(
@@ -385,7 +386,7 @@ for (PCA.x in 1:length(colnames(mean.phenodata.selected.log.pca$x))) {
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
 #argumento "hcUse"; revisar las opciones de MClust: hep("Mclust)
 #
-#principal components computed using SVD on centered variables (i.e. using the covariance matrix)
+
 mclust.options(hcUse = "PCS")
 mean.phenodata.selected.log.pca.varsel.back <-
   clustvarsel(
@@ -491,11 +492,11 @@ mean.phenodata.selected.log.pca.varsel.back$direction
 #éstos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
 #
 #################################################################################################################
-# 3.2) selección de variables hacia adelante usando ACP de la matriz de covarianza de los caracteres morfológicos con
-#       transformación logarítmica.
-#
+#3.2) selección de variables hacia adelante usando ACP de la matriz de covarianza de los caracteres morfológicos
+#con transformación logarítmica.
+
 #ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
-#argumento "hcUse"; revisar las opciones de MClust: hep("Mclust)
+#argumento "hcUse"; revisar las opciones de MClust: help("Mclust)
 #
 mclust.options(hcUse = "PCS")
 mean.phenodata.selected.log.pca.varsel.for <-
@@ -604,14 +605,14 @@ mean.phenodata.selected.log.pca.varsel.for$direction
 #
 ###################################################################################################################
 ###################################################################################################################
-# 4) Ajuste de los modelos de mezclas normales####
+#4) Ajuste de los modelos de mezclas normales####
 ###################################################################################################################
 ###################################################################################################################
 #
 ###################################################################################################################
-# 4.1) Seleccionar caracteres morfológicos (PCA) para la inclusión del método de mezclas normales basado en los resultados
-#     de las secciones 3.1 3.2.
-#
+#4.1) Seleccionar caracteres morfológicos (PCA) para la inclusión del método de mezclas normales basado en los
+#resultados de las secciones 3.1 3.2.
+
 data.for.GMM <- mean.phenodata.selected.log.pca$x[, 1:12]
 #
 ###################################################################################################################
@@ -725,9 +726,9 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   85 107  58  22  78
 #
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
 #"STD"
@@ -737,7 +738,7 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados:
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#especímenes incluídos en el análisis
+names(Mcluster.phenodata$classification)#especímenes incluidos en el análisis
 Mcluster.phenodata$classification #clasificación de los especímenes
 Mcluster.phenodata$uncertainty # incertidumbre de la clasificación
 attributes(Mcluster.phenodata)
@@ -752,7 +753,7 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   23 163  76  27  61
 #
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
 #gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
@@ -828,16 +829,16 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   23 163  76  27  61
 #
-#gráficas de los morfogrupos, de acuerdo con el mejor modelo
+#gráficas de los morfo grupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -889,9 +890,9 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#the specimens included in the analysis
-Mcluster.phenodata$classification #classification of specimens
-Mcluster.phenodata$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata$classification)# especímenes incluidos en el análisis
+Mcluster.phenodata$classification # clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre en la clasificación
 attributes(Mcluster.phenodata)
 #
 #   Mclust VVE (ellipsoidal, equal orientation) model with 5
@@ -965,9 +966,9 @@ Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:12)
 #Resultados:
 Mcluster.phenodata
 summary(Mcluster.phenodata)
-names(Mcluster.phenodata$classification)#the specimens included in the analysis
-Mcluster.phenodata$classification #classification of specimens
-Mcluster.phenodata$uncertainty #the uncertainty of the classification
+names(Mcluster.phenodata$classification)# los especímenes incluidos en el análisis
+Mcluster.phenodata$classification #clasificación de los especímenes
+Mcluster.phenodata$uncertainty # incertidumbre en la clasificación
 attributes(Mcluster.phenodata)
 #
 #   Mclust VVE (ellipsoidal, equal orientation) model with 5
@@ -982,10 +983,10 @@ attributes(Mcluster.phenodata)
 #
 #gráficas de los morfogrupos, de acuerdo con el mejor modelo
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-#gráfica del soporte empríco de los diferentess modelos
+#gráfica del soporte emipríco de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 #
-#graficar soportes empíricos para el mejor modelo a cada morfogrupo
+#graficar soportes empíricos para el mejor modelo a cada morfo grupo
 BIC.Best.Model.Per.G <-
   apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
 max.BIC <- max(BIC.Best.Model.Per.G)
@@ -1504,7 +1505,7 @@ for (col.phenodata in 7:19) {
     print(summary(x))
   }
 }
-#seleccionar un morfogrupo específico en el modelo de mezla normal.
+#seleccionar un morfo grupo específico en el modelo de mezcla normal.
 pg.nmm <- 5
 # Seleccionar una columna en los datos originales(mean.phenodata)
 colnames(mean.phenodata)[11]
@@ -1520,9 +1521,7 @@ table(mean.phenodata[as.numeric(names(Mcluster.phenodata$classification))[Mclust
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
 #
 #graficar soportes empíricos para el mejor modelo a cada morfo grupo
-BIC.Best.Model.Per.G <-
-  apply(Mcluster.phenodata$BIC, 1, max, na.rm = T)
-max.BIC <- max(BIC.Best.Model.Per.G)
+max
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar = c(5, 6, 4, 2))
 plot(
@@ -2070,6 +2069,7 @@ title(expression("B) Plantas madre"), adj = 0)
 #
 #################################################################################################################
 # 5.6) Graficar coeficientes para diferentes caracteres morfológicos en el espacio de los componentes principales
+
 #Directorio para guardar las gráficas
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
@@ -2360,7 +2360,7 @@ mtext(
   font = 2
 )
 
-#Examinar los caracteres morfológicon con mayor contribución
+#Examinar los caracteres morfológicos con mayor contribución
 
 cluster.mean.phenodata.selected<-
   data.frame(mean.phenodata.selected, Mcluster.phenodata$classification)
@@ -3188,7 +3188,7 @@ for (i in 1:Mcluster.phenodata$G) {
   )
 }
 
-#Agregar especíenes de E. argentea
+#Agregar especímenes de E. argentea
 points(
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.argentea.fma.phaneractis", 4],
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.argentea.fma.phaneractis", 6],
@@ -3209,7 +3209,7 @@ arrows(
   code = 2
 )
 #
-#Agregar especímen tipo E. tapirophila
+#Agregar espécimen tipo E. tapirophila
 points(
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 4],
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 6],
@@ -3340,7 +3340,7 @@ for (i in 1:Mcluster.phenodata$G) {
   )
 }
 
-#Agregar especíenes de E. argentea
+#Agregar especímenes de E. argentea
 points(
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.argentea.fma.phaneractis", 6],
   cited.specimen.classification[cited.specimen.classification[, 1] == "Espeletia.argentea.fma.phaneractis", 5],
@@ -3360,7 +3360,7 @@ arrows(
   code = 2
 )
 #
-#Agregar especímen tipo E. tapirophila
+#Agregar espécimen tipo E. tapirophila
 points(
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 6],
   type.classification[type.classification[, 1] == "Espeletia tapirophila", 5],
@@ -4066,7 +4066,7 @@ arrows(
 #   pch = mclust.options("classPlotSymbols")[5]
 # )
 
-#add title
+#agregar título
 title(expression(paste("C) ", italic("E. killipii"))), adj = 0)
 #
 #para coordenadas CP3 y CP2: FS_5_C
@@ -4099,7 +4099,7 @@ for (i in 1:Mcluster.phenodata$G) {
   )
 }
 
-# agregar especímen tipo de Espeletia.killipii
+# agregar espécimen tipo de Espeletia.killipii
 points(
   type.classification[type.classification[, 1] == "Espeletia.killipii", 6],
   type.classification[type.classification[, 1] == "Espeletia.killipii", 5],
@@ -4779,7 +4779,7 @@ table(morfologia.Pineda.all[,3],
 
 #################################################################################################################
 #9.3) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de morfológicos de los
-#especímenes con los encontrado enPIneda et al. (2020): tau(M, P) y tau(P, M)
+#especímenes con los encontrado en Pineda et al. (2020): tau(M, P) y tau(P, M)
 
 colnames(morfologia.Pineda.all)
 

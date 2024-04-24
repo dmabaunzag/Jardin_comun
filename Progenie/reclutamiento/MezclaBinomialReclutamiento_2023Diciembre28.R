@@ -273,7 +273,7 @@ view(reclutamiento)
 #################################################################################################################
 #################################################################################################################
 
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
 # 
 # #RData
 # save(reclutamiento,
@@ -296,7 +296,7 @@ view(reclutamiento)
 #   row.names = F
 # )
 
-# load ("reclutamiento_piloto_2023diciembre26_134304.RData")
+load ("reclutamiento_piloto_2023diciembre26_134304.RData")
 
 ################################################################################################################
 #################################################################################################################
@@ -339,6 +339,18 @@ colnames(sobrevivientes) <-
     "vivas.2",
     "vivas.3")
 
+
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+# 
+# #RData
+# save(sobrevivientes,
+#      file = paste(
+#        "sobrevivientes_piloto_",
+#        format(Sys.time(), "%Y%B%d_%H%M%S"),
+#        ".RData",
+#        sep = ""
+#      ))
+
 #Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
 setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
 #setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/MedicionesPlantasMadre") #Ivan's working directory Waterman
@@ -354,7 +366,7 @@ phenotypic.group.assignment.madres <-
   phenotypic.group.assignment[308:350,]
 head(phenotypic.group.assignment.madres)
 dim(phenotypic.group.assignment.madres)
-head(phenotypic.group.assignment.progenie)
+
 
 #Extracción del número de colección de las plantas madres
 phenotypic.group.assignment.madres$Collector.Collection.Number <-
@@ -438,7 +450,7 @@ plot(
   xaxt = "n",
   bty = "n",
   xlab = "Meses después de la siembra",
-  ylab = "Plantas vivas"
+  ylab = "Reclutamiento"
 )
 title(expression("A) "), adj = 0, cex.main = 1.5)
 # ejes por año
@@ -523,7 +535,7 @@ matplot(
   bty = "n",
   col = "gray20",
   xlab = "Meses después de la siembra",
-  ylab = "Plantas vivas"
+  ylab = "Reclutamiento"
 )
 title(expression("B)"), adj = 0, cex.main = 1.5)
 axis(

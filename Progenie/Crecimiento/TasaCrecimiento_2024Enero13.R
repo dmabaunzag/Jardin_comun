@@ -210,6 +210,18 @@ crecimiento <-
          Numero.hojas =Número.de.hojas)
 
 
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
+# 
+# # #RData
+# save(crecimiento,
+#      file = paste(
+#        "Crecimiento_piloto_",
+#        format(Sys.time(), "%Y%B%d_%H%M%S"),
+#        ".RData",
+#        sep = ""
+#      ))
+
+
 #################################################################################################################
 #################################################################################################################
 # 4) Examinar el crecimiento
