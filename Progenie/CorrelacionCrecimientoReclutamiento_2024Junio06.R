@@ -6,7 +6,7 @@
 #################################################################################################################
 # INTRODUCCIÓN
 
-# Examinar si existe correlacion entre el reclutamiento y las variables de creciemiento (eg. número de hojas y
+# Examinar la correlación entre el reclutamiento y las variables de crecimiento (eg. número de hojas y
 # longitud del tallo) en cada muestreo
 
 #REQUERIMIENTOS
@@ -15,9 +15,13 @@
 
 # "sobrevivientes_piloto_2024abril23_110334" Tabla con el reclutamiento por planta madre
 
-#
 #CONTENIDO
 
+# 1) Datos preliminares: Carga de librerías y lectura de datos
+
+# 2) Combinar tablas de crecimiento promedio y reclutamiento por planta madre por muestreo
+
+# 3) Correlación
 
 #################################################################################################################
 #################################################################################################################
@@ -32,7 +36,8 @@ library(tidyverse)
 
 #################################################################################################################
 # 1.2)leer las tablas
-# leer los datos de reclutas
+
+# Leer los datos de las plántulas vivas
 setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
 load("sobrevivientes_piloto_2024abril23_110334.RData")
 head(sobrevivientes)
@@ -48,7 +53,7 @@ dim(crecimiento)
 
 #################################################################################################################
 #################################################################################################################
-# 2) Combinar tablas de crecimento promedio y reclutamiento por planta madre por muestreo
+# 2) Combinar tablas de crecimiento promedio y reclutamiento por planta madre por muestreo
 #################################################################################################################
 #################################################################################################################
 
@@ -61,7 +66,6 @@ promedio.crecimiento <-
             promedio.longitud.tallo = list(mean(Longitud.tallo))) %>% 
   unnest(cols = c(promedio.numero.hojas,promedio.longitud.tallo))
 
-
 muestreo.1 <- 
   merge(promedio.crecimiento[promedio.crecimiento[,1]==11.4, 2:4],
       sobrevivientes[,1:2],
@@ -69,6 +73,7 @@ muestreo.1 <-
 head(muestreo.1)
 colnames(muestreo.1)
 dim(muestreo.1)
+
 muestreo.2 <- 
   merge(promedio.crecimiento[promedio.crecimiento[,1]==19.6, 2:4],
         sobrevivientes[,c(1,3)],
@@ -93,7 +98,6 @@ dim(muestreo.3)
 # 3.1) muestreo 1
 
 #Shapiro test a cada variable
-
 shapiro.test(muestreo.1$promedio.numero.hojas)
 # Shapiro-Wilk normality test
 # 
@@ -112,7 +116,7 @@ shapiro.test(muestreo.1$vivas.1)
 # data:  muestreo.1$vivas.1
 # W = 0.85316, p-value = 0.0001867
 
-#correlación entre el número de hojas y longitud del tallo a 11.4 meses después de siembra
+# Correlación entre el número de hojas y longitud del tallo a 11.4 meses después de siembra
 cor.test(muestreo.1$promedio.numero.hojas, muestreo.1$promedio.longitud.tallo)
 
 # Pearson's product-moment correlation
@@ -137,6 +141,8 @@ cor.test(muestreo.1$vivas.1, muestreo.1$promedio.numero.hojas, method = "spearma
 #       rho 
 # 0.4717706 
 
+plot(muestreo.1$vivas.1, muestreo.1$promedio.numero.hojas, pch =19)
+
 cor.test(muestreo.1$vivas.1, muestreo.1$promedio.longitud.tallo, method = "spearman")
 # Spearman's rank correlation rho
 # 
@@ -146,11 +152,12 @@ cor.test(muestreo.1$vivas.1, muestreo.1$promedio.longitud.tallo, method = "spear
 # sample estimates:
 #       rho 
 # 0.4305423
+
+plot(muestreo.1$vivas.1, muestreo.1$promedio.longitud.tallo)
 #################################################################################################################
 # 3.2) muestreo 2
 
 #Shapiro test a cada variable
-
 shapiro.test(muestreo.2$promedio.numero.hojas)
 # Shapiro-Wilk normality test
 # 
@@ -193,6 +200,7 @@ cor.test(muestreo.2$vivas.2, muestreo.2$promedio.numero.hojas, method = "spearma
 # sample estimates:
 #       rho 
 # 0.3073482 
+plot(muestreo.2$vivas.2, muestreo.2$promedio.numero.hojas)
 
 cor.test(muestreo.2$vivas.2, muestreo.2$promedio.longitud.tallo, method = "spearman")
 
@@ -204,11 +212,11 @@ cor.test(muestreo.2$vivas.2, muestreo.2$promedio.longitud.tallo, method = "spear
 # sample estimates:
 #        rho 
 # 0.09729654 
+plot(muestreo.2$vivas.2, muestreo.2$promedio.longitud.tallo)
 #################################################################################################################
 # 3.3) muestreo 3
 
 #Shapiro test a cada variable
-
 shapiro.test(muestreo.3$promedio.numero.hojas)
 # Shapiro-Wilk normality test
 # 
@@ -248,7 +256,8 @@ cor.test(muestreo.3$vivas.3, muestreo.3$promedio.numero.hojas, method = "spearma
 # alternative hypothesis: true rho is not equal to 0
 # sample estimates:
 #       rho 
-# 0.1576028  
+# 0.1576028 
+plot(muestreo.3$vivas.3, muestreo.3$promedio.numero.hojas)
 
 cor.test(muestreo.3$vivas.3, muestreo.3$promedio.longitud.tallo, method = "spearman")
 
@@ -260,3 +269,5 @@ cor.test(muestreo.3$vivas.3, muestreo.3$promedio.longitud.tallo, method = "spear
 # sample estimates:
 #       rho 
 # 0.1715569 
+
+plot(muestreo.3$vivas.3, muestreo.3$promedio.longitud.tallo)

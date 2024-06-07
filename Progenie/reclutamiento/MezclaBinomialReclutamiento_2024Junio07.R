@@ -8,28 +8,50 @@
 #################################################################################################################
 #################################################################################################################
 #
-# INTRODUCCIÓN:
-# Con los datos de las plantas que sobrevivieron en los tres muestreos se realizó modelos de mezclas
-#binomiales que agrupan a las plantas madre según el reclutamiento de la progenie
+#INTRODUCCIÓN 
+
+# Este código realiza un análisis para estimar de novo los grupos formados por las 43 plantas madre, según el
+#reclutamiento de su progenie durante cuatro años en el jardín común. El reclutamiento de cada
+#planta madre se definió como el número de plántulas hijas vivas producidas a partir de 100 semillas. Para
+#estimar de novo los grupos de las plantas madre según el reclutamiento al momento de cada muestreo, utilizamos
+#modelos de mezclas binomiales (Grilli et al., 2015). En estos modelos el número de plántulas hijas vivas por
+#planta madre se describe con una distribución binomial, B(n, p), donde el parámetro n es el número de semillas
+#sembradas y el parámetro p es la probabilidad de que una semilla produzca una plántula hija que sobrevive hasta
+#el momento del muestreo. Los modelos de mezclas binomiales permiten determinar si las plantas madre forman uno o
+#varios grupos de reclutamiento, que corresponden a distribuciones binomiales con diferentes valores del
+#parámetro p.
 #
-# REQUERIMIENTOS
-# "PhenotypicDataProgeny_Quebradas_2020Marzo.csv"
-# "PhenotypicDataProgeny_Quebradas_2020Octubre.csv"
-# "PhenotypicDataProgeny_Quebradas_2023Junio.csv"
-# "PhenotypicGroupAssignment_2023septiembre08_120644.csv"
-#
-#
-# CONTENIDO
+#REQUERIMIENTOS 
+
+#"PhenotypicDataProgeny_Quebradas_2020Marzo.csv" 
+
+#"PhenotypicDataProgeny_Quebradas_2020Octubre.csv"
+
+#"PhenotypicDataProgeny_Quebradas_2023Junio.csv" 
+
+#"PhenotypicGroupAssignment_2023septiembre08_120644.csv"
+
+
+#CONTENIDO 
+
 # 1) Datos preliminares: Carga de librerías y lectura de datos
+
 # 2) Seleccionar las variables a usar en cada tabla
+
 # 3) Crear marco de datos del reclutamiento
+
 # 4) Guardar marco de datos
+
 # 5) Crear tabla con número de sobrevivientes por planta madre
+
 # 6) Examinar el reclutamiento
+
 # 7) Ajustar modelos de mezclas binomiales
-# 8) Tablas de clasificación cruzadas entre modelos de reclutamiento y entre morfología y estadísticos
-#Goodman-Kruskal tau para la concordancia entre grupos
-#
+
+# 8) Tablas de clasificación cruzadas y estadístico Goodman-Kruskal tau para la concordancia entre grupos entre
+#modelos (11.4 meses, 19.6 meses y 51.4 meses después de la siembra) de reclutamiento y entre morfología de las
+#plantas madres
+
 #################################################################################################################
 #################################################################################################################
 #################################################################################################################
@@ -49,12 +71,11 @@ library(flexmix)# Modelos de mezclas binomiales
 library(tidyverse) #limpiar y organizar datos
 library(GoodmanKruskal)# paquete GoodmanKruskal
 
-
-#seleccionar directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/datos")
-
 #################################################################################################################
 # 1.2)leer las tablas
+
+# Seleccionar directorio de trabajo
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/datos")
 
 datos.fenotipicos.marzo <-
   read.table(
@@ -82,12 +103,12 @@ datos.fenotipicos.junio <-
 #################################################################################################################
 
 #################################################################################################################
-# 2.1)primera medida (11.4 meses DS): marzo de 2020
+# 2.1)primer muestreo (11.4 meses después de la siembra): marzo de 2020
 summary(datos.fenotipicos.marzo)
 head(datos.fenotipicos.marzo)
 dim(datos.fenotipicos.marzo)# 250 plantas hijas sembradas y 26 variables
 
-# 2.1.1)subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
+# 2.1.1) subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
 # nombre.progenie; seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.marzo)
 datos.fenotipicos.marzo.selected <- datos.fenotipicos.marzo %>%
@@ -107,7 +128,8 @@ datos.fenotipicos.marzo.selected <- datos.fenotipicos.marzo %>%
     Fecha.siembra = dmy(Fecha.siembra),
     Fecha.medición = dmy(Fecha.medición)
   )
-# 2.1.2) crear nueva variable que valide si la progenie está viva o muerta para el fecha de medida en base a si
+
+# 2.1.2) Crear nueva variable que valide si la progenie está viva o muerta para el fecha de medida en base a si
 # tiene información de número de hojas y longitud del tallo
 reclutamiento.1 <- datos.fenotipicos.marzo.selected %>%
   mutate(reclutamiento.1 = if_else(
@@ -129,13 +151,12 @@ reclutamiento.1 <- reclutamiento.1 %>%
   )
 
 #################################################################################################################
-# 2.2) segunda medida (19.6 meses DS): octubre de 2020
+# 2.2) Segundo muestreo (19.6 meses después de la siembra): octubre de 2020
 summary(datos.fenotipicos.octubre)
 head(datos.fenotipicos.marzo)
 dim(datos.fenotipicos.marzo)# 250 plantas hijas sembradas y 26 variables
 
-
-# 2.2.1) subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
+# 2.2.1) Subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
 # nombre.progenie; seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.marzo)
 datos.fenotipicos.octubre.selected <- datos.fenotipicos.octubre %>%
@@ -157,7 +178,7 @@ datos.fenotipicos.octubre.selected <- datos.fenotipicos.octubre %>%
   )
 view(datos.fenotipicos.octubre.selected)
 
-# 2.2.2) crear nueva variable que valide si la progenie está viva o muerta para el fecha de muestreo
+# 2.2.2) Crear nueva variable que valide si la progenie está viva o muerta para el fecha de muestreo
 reclutamiento.2 <- datos.fenotipicos.octubre.selected %>%
   mutate(reclutamiento.2 = if_else(is.na(Fecha.medición), "M", "V", "M"))
 view(reclutamiento.2)
@@ -172,13 +193,14 @@ reclutamiento.2 <- reclutamiento.2 %>%
     reclutamiento.2
   )
 View(reclutamiento.2)
+
 #################################################################################################################
-# 2.3) tercera medida (51.4 meses DS): junio de 2023
+# 2.3) Tercer muestreo (51.4 meses después de la siembra): junio de 2023
 summary(datos.fenotipicos.junio)
 head(datos.fenotipicos.junio)
 dim(datos.fenotipicos.junio)# 180 progenie y 29 variables
 
-# 2.3.1)subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
+# 2.3.1) Subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
 # nombre.progenie; seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.junio)
 datos.fenotipicos.junio.selected <- datos.fenotipicos.junio %>%
@@ -202,7 +224,7 @@ datos.fenotipicos.junio.selected <- datos.fenotipicos.junio %>%
   )
 view(datos.fenotipicos.junio.selected)
 
-# 2.3.2) crear nueva variable que valide si la progenie está viva o muerta para el fecha de muestreo
+# 2.3.2) Crear nueva variable que valide si la progenie está viva o muerta para el fecha de muestreo
 reclutamiento.3 <- datos.fenotipicos.junio.selected %>%
   mutate(reclutamiento.3 = if_else(is.na(Fecha.medición), "M", "V", "M"))
 view(reclutamiento.3)
@@ -217,6 +239,7 @@ reclutamiento.3 <- reclutamiento.3 %>%
     reclutamiento.3
   )
 View(reclutamiento.3)
+
 #################################################################################################################
 #################################################################################################################
 # 3) Crear marco de datos del reclutamiento
@@ -224,8 +247,7 @@ View(reclutamiento.3)
 #################################################################################################################
 
 #################################################################################################################
-# 3.1) combinar la tabla reclutamiento 1 y reclutamiento 2
-
+# 3.1) Combinar la tabla reclutamiento 1 y reclutamiento 2
 
 reclutamiento <-
   left_join(
@@ -238,8 +260,9 @@ reclutamiento <-
       Fecha.trasplante
     )
   )
+
 #################################################################################################################
-# 3.2)combinar reclutamiento con reclutamiento 3
+# 3.2) Combinar reclutamiento con reclutamiento 3
 
 reclutamiento <-
   left_join(
@@ -253,12 +276,14 @@ reclutamiento <-
     )
   )
 view(reclutamiento)
+
 #################################################################################################################
 # 3.3) Cambiar los NAS del muestreo 3 por "M"
+
 reclutamiento <-
   reclutamiento %>%  replace_na(list(reclutamiento.3 = "M"))
 #################################################################################################################
-# 3.4 )renombrar las variable
+# 3.4 ) Renombrar las variable
 
 reclutamiento <- reclutamiento %>%
   rename(
@@ -267,13 +292,14 @@ reclutamiento <- reclutamiento %>%
     Fecha.medición.3 = Fecha.medición
   )
 view(reclutamiento)
+
 #################################################################################################################
 #################################################################################################################
 # 4) Guardar marco de datos
 #################################################################################################################
 #################################################################################################################
 
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
 # 
 # #RData
 # save(reclutamiento,
@@ -296,7 +322,7 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
 #   row.names = F
 # )
 
-load ("reclutamiento_piloto_2023diciembre26_134304.RData")
+# load ("reclutamiento_piloto_2023diciembre26_134304.RData")
 
 ################################################################################################################
 #################################################################################################################
@@ -305,7 +331,7 @@ load ("reclutamiento_piloto_2023diciembre26_134304.RData")
 #################################################################################################################
 
 #################################################################################################################
-# 5.1)Remover plantas madres sin número de colección.
+# 5.1) Remover plantas madres sin número de colección.
 
 reclutamiento$Número.colección.planta.madre <-
   as.numeric(reclutamiento$Número.colección.planta.madre)
@@ -339,8 +365,8 @@ colnames(sobrevivientes) <-
     "vivas.2",
     "vivas.3")
 
-
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+# Guardar el objeto sobrevivientes
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
 # 
 # #RData
 # save(sobrevivientes,
@@ -351,9 +377,9 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
 #        sep = ""
 #      ))
 
-#Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
-setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
-#setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/MedicionesPlantasMadre") #Ivan's working directory Waterman
+# Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
+# setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/MedicionesPlantasMadre") #Ivan's working directory Waterman
 phenotypic.group.assignment <-
   read.table(
     "PhenotypicGroupAssignment_2023septiembre08_120644.csv",
@@ -361,12 +387,11 @@ phenotypic.group.assignment <-
     sep = ","
   )
 
-#Subconjunto con sólo las plantas madres del piloto
+# Subconjunto con sólo las plantas madres del piloto
 phenotypic.group.assignment.madres <-
   phenotypic.group.assignment[308:350,]
 head(phenotypic.group.assignment.madres)
 dim(phenotypic.group.assignment.madres)
-
 
 #Extracción del número de colección de las plantas madres
 phenotypic.group.assignment.madres$Collector.Collection.Number <-
@@ -403,7 +428,7 @@ sobrevivientes.tiempo <-
   sobrevivientes.tiempo %>%
   gather(time, sobrevivientes, "11.4":"51.4")
 
-# gráfica por tiempo de medida
+# Gráfica por tiempo de muestreo
 promedio.reclutamiento <-
   sobrevivientes.tiempo %>%
   group_by(time) %>%
@@ -415,7 +440,6 @@ promedio.reclutamiento <-
   ) %>%
   ungroup()
 promedio.reclutamiento  #medidas de tendencia central del reclutamiento de las plantas madre por cada muestreo
-
 # # A tibble: 3 × 5
 # time  promedio mediana    Q5   Q95
 # <chr>    <dbl>   <dbl> <dbl> <dbl>
@@ -431,13 +455,13 @@ sobrevivientes.tiempo %>%  #Cantidad de reclutas por cada tiempo de muestreo
 #   1 11.4    237
 # 2 19.6    221
 # 3 51.4    180
+
 promedio.reclutamiento$time <-
   as.numeric(promedio.reclutamiento$time)
 
-#Gráfica de las medidas de tendencia central del reclutamiento promedio por muestreo # Fig. S7A
-
-#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
-par(mar = c(5, 5, 4, 5) + 0.1)
+# Gráfica de las medidas de tendencia central del reclutamiento promedio por muestreo # Fig. S7A
+# par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+par(mar = c(5, 6, 4, 5) + 0.1)
 plot(
   promedio.reclutamiento[, 1:2],
   axes = F,
@@ -450,17 +474,16 @@ plot(
   xaxt = "n",
   bty = "n",
   xlab = "Meses después de la siembra",
-  ylab = "Reclutamiento"
+  ylab = "Reclutamiento\n(Número de plantas hijas)"
 )
 title(expression("A) "), adj = 0, cex.main = 1.5)
-# ejes por año
+# Ejes por año
 axis(
   side = 1,
   at = seq(12, 48, 12),
   labels =F,
   col = "gray60"
 )
-
 axis(
   side = 1,
   at = c(11.4, 19.6, 51.4),
@@ -481,7 +504,6 @@ axis(
   labels = F,
   tcl = -0.3
 )
-
 lines(
   promedio.reclutamiento$time,
   promedio.reclutamiento$mediana,
@@ -494,18 +516,16 @@ lines(
   lty = 3,
   col = "gray60"
 )
-
 lines(
   promedio.reclutamiento$time,
   promedio.reclutamiento$Q95,
   lty = 3,
   col = "gray60"
 )
-text(57.5, 4.07, "Promedio")
+text(57.5, 4.07, "Media")
 text(57.5, 2, "Mediana")
 text(57, 0, "Q5%")
 text(57, 11, "Q95%")
-
 
 # Gráfica del reclutamiento por planta madre: Fig. S7B
 promedio.reclutamiento.madre <-
@@ -515,12 +535,12 @@ promedio.reclutamiento.madre <-
   spread(Collector.Collection.Number, promedio) %>%
   ungroup()
 
-
 promedio.reclutamiento.madre$time <-
   as.numeric(promedio.reclutamiento.madre$time)
-#gráfica promedio en el tiempo
+
+# Gráfica promedio en el tiempo
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 6, 4, 5) + 0.1)
 matplot(
   promedio.reclutamiento.madre$time,
   promedio.reclutamiento.madre[, -1],
@@ -535,7 +555,7 @@ matplot(
   bty = "n",
   col = "gray20",
   xlab = "Meses después de la siembra",
-  ylab = "Reclutamiento"
+  ylab = "Reclutamiento\n(Número de plantas hijas)"
 )
 title(expression("B)"), adj = 0, cex.main = 1.5)
 axis(
@@ -560,11 +580,10 @@ axis(
 )
 axis(
   side = 2,
-  at = seq(0, 25, 0.5),
+  at = seq(0, 25, 1),
   labels = F,
   tcl = -0.3
 )
-
 
 #################################################################################################################
 #################################################################################################################
@@ -594,42 +613,46 @@ Modelos1 <-
   stepFlexmix(
     cbind(vivas1, siembra - vivas1) ~ 1,
     model = Mod.fam,
-    k = 1:6,
+    k = 1:9,
     concomitant = Conc,
     nrep = 5
   )
 show(Modelos1)# modelos
 # Call:
 #   stepFlexmix(cbind(vivas1, siembra - vivas1) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 1:6, nrep = 5)
+#               k = 1:9, nrep = 5)
 # 
 # iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -189.3003 380.6006 382.3618 382.3618
-# 2   18      TRUE 2  2 -128.5333 263.0665 268.3501 272.4879
-# 3   33      TRUE 3  3 -118.6317 247.2635 256.0695 261.4749
-# 4   63      TRUE 4  4 -117.7583 249.5165 261.8449 277.2500
-# 5   30      TRUE 5  5 -117.7580 253.5160 269.3668 297.8632
-# 6   55      TRUE 6  6 -117.7583 257.5165 276.8897 325.6568
+# 2   15      TRUE 2  2 -128.5333 263.0665 268.3501 272.4862
+# 3   29      TRUE 3  3 -118.6318 247.2635 256.0695 261.4749
+# 4   69      TRUE 4  4 -117.7583 249.5165 261.8449 277.2468
+# 5   44      TRUE 5  5 -117.7582 253.5164 269.3672 300.9094
+# 6   51      TRUE 6  6 -117.7582 257.5165 276.8897 326.0051
+# 7   54      TRUE 7  7 -117.7583 261.5165 284.4121 334.2765
+# 8   71      TRUE 8  8 -117.7590 265.5179 291.9359 365.3740
+# 9   51      TRUE 8  9 -117.7589 265.5178 291.9358 359.0328
 
 sort(BIC(Modelos1)) # organizar según BIC delta = 5.7
-# 3        4        2        5        6        1 
-# 256.0695 261.8449 268.3501 269.3668 276.8897 382.3618
+# 3        4        2        5        6        7        9        8        1 
+# 256.0695 261.8449 268.3501 269.3672 276.8897 284.4121 291.9358 291.9359 382.3618 
+
+sort(BIC(Modelos1))[[1]]-sort(BIC(Modelos1))[[2]]#-5.775409
 
 plot(Modelos1)
 getModel(Modelos1, which = "BIC")
-
+# 
 # Call:
 #   stepFlexmix(cbind(vivas1, siembra - vivas1) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 3, nrep = 5)
 # 
 # Cluster sizes:
 #   1  2  3 
-# 19  4 20 
+# 19 20  4 
 # 
-# convergence after 33 iterations
+# convergence after 29 iterations
 
-
-#then we keep the best model in terms of BIC
+# Entonces nos quedamos con el mejor modelo en términos de BIC
 MejorModelo1  <- getModel(Modelos1, "BIC")
 summary(MejorModelo1)
 MejorModelo1@df #número de parámetros en el modelo = 5
@@ -638,10 +661,10 @@ str(MejorModelo1)
 plot(MejorModelo1)
 BIC(MejorModelo1) # BIC = 256.0695
 
-# parámetro binomial para cada componente
+# Parámetro binomial para cada componente
 fitted(MejorModelo1)
 p.MejorModelo1 <- fitted(MejorModelo1)[1, ]
-#otra forma de obtener el parámetro binomial para cada componente
+# Otra forma de obtener el parámetro binomial para cada componente
 MejorModelo1@components ##parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo1) #parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo1, component = 1)
@@ -664,8 +687,8 @@ colnames(grupo.reclutamiento.1) <-
 
 head(grupo.reclutamiento.1)
 
-# guardar tabla de asignación de grupos
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# Guardar tabla de asignación de grupos
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -679,8 +702,8 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Di
 #       row.names = F
 #     )
 
-#para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
-#de la distribución binomial correspondiente a cada componente del mejor modelo
+#Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
+#binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
   exp(parameters(MejorModelo1)[1]) / (1 + exp(parameters(MejorModelo1)[1])) #parámetro p grupo 1
 pi.comp.1 <-
@@ -709,15 +732,14 @@ pm.comp.3 <-
                      prob = p.comp.3,
                      log = FALSE)#masa de probabilidad grupo 3
 
-#representación gráfica del mejor modelo: gráficos de barras representando
-#la asignación de cada planta madre a cada componente del mejor modelo
+#Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
+#cada componente del mejor modelo
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
-
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(6, 5, 4, 5) + 0.1)
 hist(
   vivas1[MejorModelo1@cluster == 1],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Número de plantas hijas",
+  xlab = "Reclutamiento\n(Número de plantas hijas)",
   ylab = "Número de plantas madre",
   main = NA,
   cex.lab = 1.5,
@@ -751,19 +773,19 @@ axis(
   cex.axis = 1.3
 )
 hist(
-  vivas1[MejorModelo1@cluster == 3],#R3
+  vivas1[MejorModelo1@cluster == 2],#R3
   breaks = seq(-0.5, 24.5, 1),
   add = T,
   density = 15,
   col = "black"
 )
-hist(vivas1[MejorModelo1@cluster == 2],# R1
+hist(vivas1[MejorModelo1@cluster == 3],# R1
      breaks = seq(-0.5, 24.5, 1),
      add = T,
      col = "transparent")
 #hist(vivas1[MejorModelo1@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=-45, col="black")
 #hist(vivas1[MejorModelo1@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=45, col="black")
-#leyenda
+# Leyenda
 legend(
   16,
   10,
@@ -781,12 +803,13 @@ legend(
   fill = c("transparent", "gray90", "black"),
   cex = 1.5
 )
-#representación gráfica del mejor modelo: adicionar al gráfico de barras anterior
-#la distribución binomial correspondiente a cada componente del mejor modelo
+
+#Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
+#correspondiente a cada componente del mejor modelo
 par(new = T)
 plot(
   0:24,
-  pm.comp.3,# R3
+  pm.comp.2,# R3
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 19,
@@ -805,7 +828,7 @@ points(
 )
 points(
   0:24,
-  pm.comp.2,#R1
+  pm.comp.3,#R1
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
@@ -817,9 +840,8 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
-
 #################################################################################################################
-# 7.2) segundo muestreo: 19.6 meses después de la siembra.
+# 7.2) Segundo muestreo: 19.6 meses después de la siembra.
 vivas2 <- sobrevivientes.all$vivas.2
 mode(vivas2)#moda = 0
 max(vivas2) #reclutamiento máximo = 23
@@ -829,32 +851,35 @@ sd(vivas2) # desviación = 5.466702
 Conc  <- FLXPmultinom( ~ 1)
 Mod.fam <- FLXglm( ~ 1, family = "binomial")
 siembra <-
-  100 # number of trials of the binomial components (max number of credits)
+  100 # número de ensayos de los componentes binomiales (número máximo de créditos)
 Modelos2 <-
   stepFlexmix(
     cbind(vivas2, siembra - vivas2) ~ 1,
     model = Mod.fam,
-    k = 1:6,
+    k = 1:9,
     concomitant = Conc,
     nrep = 5
   )
 show(Modelos2) #modelos
 # Call:
 #   stepFlexmix(cbind(vivas2, siembra - vivas2) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 1:6, nrep = 5)
+#               k = 1:9, nrep = 5)
 # 
 # iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -183.0510 368.1020 369.8632 369.8632
-# 2    8      TRUE 2  2 -124.4231 254.8462 260.1298 266.1241
-# 3   49      TRUE 3  3 -116.6566 243.3132 252.1192 259.0522
-# 4   43      TRUE 4  4 -115.2756 244.5511 256.8795 270.5391
-# 5   42      TRUE 5  5 -115.2756 248.5511 264.4019 299.1808
-# 6   46      TRUE 6  6 -115.2757 252.5514 271.9246 300.7972
+# 2    9      TRUE 2  2 -124.4231 254.8462 260.1298 265.8938
+# 3   52      TRUE 3  3 -116.6566 243.3132 252.1192 259.0519
+# 4   46      TRUE 4  4 -115.2755 244.5510 256.8794 270.3777
+# 5   36      TRUE 5  5 -115.2755 248.5510 264.4018 303.1777
+# 6   55      TRUE 6  6 -115.2757 252.5514 271.9246 310.0966
+# 7   52      TRUE 6  7 -115.2753 252.5505 271.9237 316.9036
+# 8   39      TRUE 8  8 -115.2758 260.5515 286.9695 355.0158
+# 9   59      TRUE 8  9 -115.2757 260.5513 286.9693 352.8664
 
 sort(BIC(Modelos2)) # delta = 4.7603
-# 3        4        2        5        6        1 
-# 252.1192 256.8795 260.1298 264.4019 271.9246 369.8632
-
+# 3        4        2        5        7        6        9        8        1 
+# 252.1192 256.8794 260.1298 264.4018 271.9237 271.9246 286.9693 286.9695 369.8632 
+sort(BIC(Modelos2))[[1]]-sort(BIC(Modelos2))[[2]] #-4.760147
 plot(Modelos2)
 getModel(Modelos2, which = "BIC")
 
@@ -868,34 +893,30 @@ getModel(Modelos2, which = "BIC")
 # 
 # convergence after 49 iterations
 
-#luego, nosotros mantenemos el mejor BIC
+# Luego, nosotros mantenemos el mejor modelos de acuerdo al BIC
 MejorModelo2  <- getModel(Modelos2, "BIC")
 summary(MejorModelo2)
-# #Call:
-# stepFlexmix(cbind(vivas2, siembra - vivas2) ~ 1, model = Mod.fam, concomitant = Conc, 
-#             k = 3, nrep = 5)
+# Call:
+#   stepFlexmix(cbind(vivas2, siembra - vivas2) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 3, nrep = 5)
 # 
 # prior size post>0 ratio
 # Comp.1 0.4677   21     30 0.700
-# Comp.2 0.4344   18     42 0.429
-# Comp.3 0.0979    4     22 0.182
-
+# Comp.2 0.0979    4     22 0.182
+# Comp.3 0.4344   18     42 0.429
+# 
 # 'log Lik.' -116.6566 (df=5)
-# AIC: 243.3132   BIC: 252.1192 
-#
-# 'log Lik.' -116.7673 (df=5)
-# AIC: 243.5346   BIC: 252.3406
-
+# AIC: 243.3132   BIC: 252.1192
 MejorModelo2@df #número de parámetros en el modelo = 5 
 str(MejorModelo2)
 
 plot(MejorModelo2)
 BIC(MejorModelo2) #252.119
 
-# parámetro binomial para cada componente
+# Parámetro binomial para cada componente
 fitted(MejorModelo2)
 p.MejorModelo2 <- fitted(MejorModelo2)[1, ]
-#otra forma de obtener el parámetro binomial para cada componente
+# Otra forma de obtener el parámetro binomial para cada componente
 MejorModelo2@components ##parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo2) #parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo2, component = 1)
@@ -918,7 +939,7 @@ colnames(grupo.reclutamiento.2) <-
 
 head(grupo.reclutamiento.2)
 
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -932,9 +953,8 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Di
 #   row.names = F
 # )
 
-#para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
+#Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
 #de la distribución binomial correspondiente a cada componente del mejor modelo
-
 p.comp.1 <-
   exp(parameters(MejorModelo2)[1]) / (1 + exp(parameters(MejorModelo2)[1])) #parámetro p grupo 1
 pi.comp.1 <-
@@ -962,14 +982,15 @@ pm.comp.3 <-
                      size = siembra,
                      prob = p.comp.3,
                      log = FALSE)#masa de probabilidad grupo 3
-#representación gráfica del mejor modelo: gráficos de barras representando
-#la asignación de cada planta madre a cada componente del mejor modelo
-#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
-par(mar = c(5, 5, 4, 5) + 0.1)
+
+#Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
+#cada componente del mejor modelo 
+# par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+par(mar = c(6, 5, 4, 5) + 0.1)
 hist(
-  vivas2[MejorModelo2@cluster == 2],#R2
+  vivas2[MejorModelo2@cluster == 3],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Número de plantas hijas",
+  xlab = "Reclutamiento (Número de plantas hijas)",
   ylab = "Número de plantas madre",
   main = NA,
   cex.lab = 1.5,
@@ -1009,7 +1030,7 @@ hist(
   density = 15,
   col = "black"
 )
-hist(vivas2[MejorModelo2@cluster == 3], #R1
+hist(vivas2[MejorModelo2@cluster == 2], #R1
      breaks = seq(-0.5, 24.5, 1),
      add = T,
      col = "transparent")
@@ -1018,8 +1039,9 @@ hist(vivas2[MejorModelo2@cluster == 3], #R1
 # #leyenda
 # legend(16, 9, c("R1", "R2", "R3"), pch=c(24,4,19), lty=1, pt.cex=c(1.5, 1, 1), cex=1.5)
 # legend(8,9, c("R1", "R2", "R3"), density=c(NA, NA, 15), fill=c("transparent", "gray90","black"), cex=1.5)
-#representación gráfica del mejor modelo: adicionar al gráfico de barras anterior
-#la distribución binomial correspondiente a cada componente del mejor modelo
+
+#Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
+#correspondiente a cada componente del mejor modelo
 par(new = T)
 plot(
   0:24,
@@ -1035,14 +1057,14 @@ plot(
 )
 points(
   0:24,
-  pm.comp.2, #R2
+  pm.comp.3, #R2
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 4
 )
 points(
   0:24,
-  pm.comp.3, #R1
+  pm.comp.2, #R1
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
@@ -1066,28 +1088,36 @@ sd(vivas3) # desviación = 4.807018
 Conc  <- FLXPmultinom( ~ 1)
 Mod.fam <- FLXglm( ~ 1, family = "binomial")
 siembra <-
-  100 # number of trials of the binomial components (max number of credits)
+  100 # número de ensayos de los componentes binomiales (número máximo de créditos)
 Modelos3 <-
   stepFlexmix(
     cbind(vivas3, siembra - vivas3) ~ 1,
     model = Mod.fam,
-    k = 1:6,
+    k = 1:9,
     concomitant = Conc,
     nrep = 5
   )
 show(Modelos3)
 plot(Modelos3)
-
+# Call:
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 1:9, nrep = 5)
+# 
 # iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -166.5155 335.0309 336.7921 336.7921
-# 2    5      TRUE 2  2 -112.1443 230.2887 235.5723 239.5691
-# 3   53      TRUE 2  3 -112.1444 230.2887 235.5723 239.5884
-# 4   99      TRUE 2  4 -112.1444 230.2887 235.5723 239.5885
-# 5   55      TRUE 3  5 -112.1444 234.2887 243.0947 283.9240
-# 6  129      TRUE 2  6 -112.1444 230.2887 235.5723 239.5886
+# 2   11      TRUE 2  2 -112.1444 230.2887 235.5723 239.5820
+# 3   72      TRUE 2  3 -112.1444 230.2887 235.5723 239.5886
+# 4   73      TRUE 2  4 -112.1444 230.2887 235.5723 239.5886
+# 5  131      TRUE 2  5 -112.1444 230.2887 235.5723 239.5884
+# 6  148      TRUE 2  6 -112.1444 230.2887 235.5723 239.5885
+# 7  178      TRUE 2  7 -112.1444 230.2887 235.5723 239.5885
+# 8  200     FALSE 3  8 -110.1140 230.2281 239.0341 254.8327
+# 9  200     FALSE 3  9 -108.4280 226.8560 235.6620 246.2714
 
-sort(BIC(Modelos3))# delta = 7.522397
-
+sort(BIC(Modelos3))# delta =  -0.0897361
+# 2        5        7        6        4        3        9        8        1 
+# 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 235.6620 239.0341 336.7921
+sort(BIC(Modelos3))[[1]]- sort(BIC(Modelos3))[[7]]
 #mantenemos el modelo con mejor BIC
 MejorModelo3  <- getModel(Modelos3, "BIC")
 
@@ -1097,10 +1127,10 @@ summary(MejorModelo3)
 #               k = 2, nrep = 5)
 # 
 # prior size post>0 ratio
-# Comp.1 0.622   28     35 0.800
-# Comp.2 0.378   15     43 0.349
+# Comp.1 0.378   15     43 0.349
+# Comp.2 0.622   28     35 0.800
 # 
-# 'log Lik.' -112.1443 (df=3)
+# 'log Lik.' -112.1444 (df=3)
 # AIC: 230.2887   BIC: 235.5723
 MejorModelo3@df #número de parámetros en el modelo: 3
 
@@ -1113,14 +1143,14 @@ getModel(Modelos3, which = "BIC")
 # 
 # Cluster sizes:
 #   1  2 
-# 28 15 
+# 15 28 
 # 
-# convergence after 5 iterations
+# convergence after 11 iterations
 
-# parámetro binomial para cada componente
+# Parámetro binomial para cada componente
 fitted(MejorModelo3)
 p.MejorModelo3 <- fitted(MejorModelo3)[1, ]
-#otra forma de obtener el parámetro binomial para cada componente
+# Otra forma de obtener el parámetro binomial para cada componente
 MejorModelo3@components ##parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo3) #parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
 parameters(MejorModelo3, component = 1)
@@ -1142,8 +1172,8 @@ colnames(grupo.reclutamiento.3) <-
 
 head(grupo.reclutamiento.3)
 
-#para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
-#de la distribución binomial correspondiente a cada componente del mejor modelo
+#Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
+#binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
   exp(parameters(MejorModelo3)[1]) / (1 + exp(parameters(MejorModelo3)[1])) #parámetro p grupo 1
 pi.comp.1 <-
@@ -1164,14 +1194,14 @@ pm.comp.2 <-
                      log = FALSE) #masa de probabilidad grupo 2
 
 
-#representación gráfica del mejor modelo: gráficos de barras representando
-#la asignación de cada planta madre a cada componente del mejor modelo
-#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+#Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
+#cada componente del mejor modelo
+# par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 par(mar = c(5, 5, 4, 5) + 0.1)
 hist(
-  vivas3[MejorModelo3@cluster == 1],#R2
+  vivas3[MejorModelo3@cluster == 2],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Número de plantas hijas",
+  xlab = "Reclutamiento (Número de plantas hijas)",
   ylab = "Número de plantas madre",
   main = NA,
   cex.lab = 1.5,
@@ -1204,21 +1234,21 @@ axis(
   tcl = -0.5,
   cex.axis = 1.5
 )
-hist(vivas3[MejorModelo3@cluster == 2],#R1
+hist(vivas3[MejorModelo3@cluster == 1],#R1
      breaks = seq(-0.5, 24.5, 1),
      add = T,
      col = "transparent")
-#
-# #leyenda
+
+# Leyenda
 # legend(16, 9, c("R1", "R2", "R3"), pch=c(24,4,19), lty=1, pt.cex=c(1.5, 1, 1), cex=1.5)
 # legend(8,9, c("R1", "R2", "R3"), density=c(NA, NA, 15), fill=c("transparent", "gray90","black"), cex=1.5)
 
-#representación gráfica del mejor modelo: adicionar al gráfico de barras anterior
-#la distribución binomial correspondiente a cada componente del mejor modelo
+#Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
+#correspondiente a cada componente del mejor modelo
 par(new = T)
 plot(
   0:24,
-  pm.comp.1,
+  pm.comp.2,
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 4,
@@ -1230,7 +1260,7 @@ plot(
 )
 points(
   0:24,
-  pm.comp.2,
+  pm.comp.1,
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
@@ -1242,12 +1272,10 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
-
-#Guardar asignació de grupos de reclutamiento a 51.4 meses
-
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
-#setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
-#setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
+#Guardar asignación de grupos de reclutamiento a 51.4 meses
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+# setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
 #   grupo.reclutamiento.3,
 #   file = paste(
@@ -1259,10 +1287,231 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Di
 #   row.names = F
 # )
 
+# 7.3.1) Grupo alternativo a 51.4 meses después de la siembra
+
+OtroModelo3  <- getModel(Modelos3, 9)
+
+summary(OtroModelo3)
+# Call:
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 9, nrep = 5)
+# 
+# prior size post>0 ratio
+# Comp.1 0.335   13     43 0.302
+# Comp.2 0.557   25     34 0.735
+# Comp.3 0.108    5     20 0.250
+# 
+# 'log Lik.' -108.428 (df=5)
+# AIC: 226.856   BIC: 235.662 
+OtroModelo3@df #número de parámetros en el modelo: 5
+
+plot(OtroModelo3)
+BIC(OtroModelo3) # 235.662
+getModel(Modelos3, 9)
+# Call:
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 9, nrep = 5)
+# 
+# Cluster sizes:
+#   1  2  3 
+# 13 25  5 
+# 
+# no convergence after 200 iterations
+
+# Parámetro binomial para cada componente
+fitted(OtroModelo3)
+p.OtroModelo3 <- fitted(OtroModelo3)[1, ]
+# Otra forma de obtener el parámetro binomial para cada componente
+OtroModelo3@components ##parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
+parameters(OtroModelo3) #parámetro binomial en escala del logaritmo del cociente de probabilidades: log(p/(1-p)
+parameters(OtroModelo3, component = 1)
+exp(parameters(OtroModelo3)[1]) / (1 + exp(parameters(OtroModelo3)[1]))
+exp(parameters(OtroModelo3)[2]) / (1 + exp(parameters(OtroModelo3)[2]))
+exp(parameters(OtroModelo3)[3]) / (1 + exp(parameters(OtroModelo3)[3]))
+
+OtroModelo3@prior #probabilidad previa
+OtroModelo3@posterior #probabilidad posterior
+OtroModelo3@cluster #asignación grupo
+
+grupo.reclutamiento.3.1 <-
+  data.frame(sobrevivientes.all[, c(1, 4)],
+             OtroModelo3@cluster)
+colnames(grupo.reclutamiento.3.1) <-
+  c("Collector.Collection.Number",
+    "Vivas.3",
+    "Phenotypic.Group")
+
+head(grupo.reclutamiento.3.1)
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
+# setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
+# write.csv(
+#   grupo.reclutamiento.3.1,
+#   file = paste(
+#     "grupo.reclutamiento.3.1_",
+#     format(Sys.time(), "%Y%B%d_%H%M%S"),
+#     ".csv",
+#     sep = ""
+#   ),
+#   row.names = F
+# )
+
+#Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
+#binomial correspondiente a cada componente del mejor modelo
+p.comp.1 <-
+  exp(parameters(OtroModelo3)[1]) / (1 + exp(parameters(OtroModelo3)[1])) #parámetro p grupo 1
+pi.comp.1 <-
+  sum(OtroModelo3@cluster == 1) / length(OtroModelo3@cluster) #parámetro pi grupo 1
+pm.comp.1 <-
+  pi.comp.1 * dbinom(seq(0, 24, 1),
+                     size = siembra,
+                     prob = p.comp.1,
+                     log = FALSE) #masa de probabilidad grupo 1
+p.comp.2 <-
+  exp(parameters(OtroModelo3)[2]) / (1 + exp(parameters(OtroModelo3)[2])) #parámetro p grupo 2
+pi.comp.2 <-
+  sum(OtroModelo3@cluster == 2) / length(OtroModelo3@cluster) #parámetro pi grupo 2
+pm.comp.2 <-
+  pi.comp.2 * dbinom(seq(0, 24, 1),
+                     size = siembra,
+                     prob = p.comp.2,
+                     log = FALSE) #masa de probabilidad grupo 2
+p.comp.3 <-
+  exp(parameters(OtroModelo3)[3]) / (1 + exp(parameters(OtroModelo3)[3])) #parámetro p grupo 1
+pi.comp.3 <-
+  sum(OtroModelo3@cluster == 3) / length(OtroModelo3@cluster) #parámetro pi grupo 3
+pm.comp.3 <-
+  pi.comp.3 * dbinom(seq(0, 24, 1),
+                     size = siembra,
+                     prob = p.comp.3,
+                     log = FALSE)#masa de probabilidad grupo 3
+
+#Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
+#cada componente del mejor modelo 
+# par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+par(mar = c(6, 5, 4, 5) + 0.1)
+hist(
+  vivas2[OtroModelo3@cluster == 1],#R2
+  breaks = seq(-0.5, 24.5, 1),
+  xlab = "Reclutamiento (Número de plantas hijas)",
+  ylab = "Número de plantas madre",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 10),
+  xaxt = "n",
+  yaxt = "n",
+  bty = "n"
+)
+title(expression("51.4 meses"),
+      adj = 0,
+      cex.main = 1.5)
+axis(
+  side = 1,
+  at = 0:24,
+  labels = F,
+  tcl = -0.5,
+  cex.axis = 1.3
+)
+axis(
+  side = 1,
+  at = seq(0, 24, 4),
+  labels = T,
+  tcl = -0.7,
+  cex.axis = 1.3
+)
+axis(
+  side = 2,
+  at = 0:10,
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+hist(
+  vivas2[OtroModelo3@cluster == 2], #R3
+  breaks = seq(-0.5, 24.5, 1),
+  add = T,
+  density = 15,
+  col = "black"
+)
+hist(vivas2[OtroModelo3@cluster == 3], #R1
+     breaks = seq(-0.5, 24.5, 1),
+     add = T,
+     col = "transparent")
+#hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=-45, col="black")
+#hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=45, col="black")
+# Leyenda
+legend(
+  16,
+  10,
+  c("R1", "R2", "R3"),
+  pch = c(24, 4, 19),
+  lty = 1,
+  pt.cex = c(1.5, 1, 1),
+  cex = 1.5
+)
+legend(
+  7,
+  10,
+  c("R1", "R2", "R3"),
+  density = c(NA, NA, 15),
+  fill = c("transparent", "gray90", "black"),
+  cex = 1.5
+)
+
+#Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
+#correspondiente a cada componente del mejor modelo
+par(new = T)
+plot(
+  0:24,
+  pm.comp.2, #R3
+  type = "o",
+  xlim = c(-0.5, 24.5),
+  pch = 19,
+  xaxt = "n",
+  yaxt = "n",
+  xlab = "",
+  ylab = "",
+  bty = "n"
+)
+points(
+  0:24,
+  pm.comp.1, #R2
+  type = "o",
+  xlim = c(-0.5, 24.5),
+  pch = 4
+)
+points(
+  0:24,
+  pm.comp.3, #R1
+  type = "o",
+  xlim = c(-0.5, 24.5),
+  pch = 24,
+  cex = 1.5
+)
+axis(side = 4, cex.axis = 1.5)
+mtext(side = 4,
+      "Probabilidad",
+      cex = 1.5,
+      line = 2.8)
+
+grupo.reclutamiento.3.vs.3.1 <- 
+  merge(
+    grupo.reclutamiento.3[, c(1,3)],
+    grupo.reclutamiento.3.1[, c(1,3)],
+    by = "Collector.Collection.Number",
+    all = T,
+    suffixes = c("51.4", "51.4(2)")
+  )
+
+table(grupo.reclutamiento.3.vs.3.1[,3],
+      grupo.reclutamiento.3.vs.3.1[, 2]
+)
+
 #################################################################################################################
 #################################################################################################################
-#8) Tablas de clasificación cruzadas entre modelos de reclutamiento y entre morfología y estadísticos
-#Goodman-Kruskal tau para la concordancia entre grupos
+#8) Tablas de clasificación cruzadas y estadístico Goodman-Kruskal tau para la concordancia entre grupos entre
+#modelos (11.4 meses, 19.6 meses y 51.4 meses después de la siembra) de reclutamiento y entre morfología de las
+#plantas madres
 #################################################################################################################
 #################################################################################################################
 
@@ -1296,7 +1545,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.1.vs.2$Phenotypic.Group.19.6  3  3 0.924 0.924
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1308,7 +1557,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(11.4, 19.6),
+# Gráfica de la distribución nula de tau(11.4, 19.6),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1322,8 +1571,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.2$Phenotypic.Group.11.4,
@@ -1332,7 +1580,7 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
 #un valor de tau(11.4, 19.6) al menos tan extremo como el observado):
 sum(
   GKtau(
@@ -1341,7 +1589,8 @@ sum(
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
 # 0
-#grafica de la distribución nula de tau(19.6, 11.4),
+
+# Gráfica de la distribución nula de tau(19.6, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1355,7 +1604,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.2$Phenotypic.Group.11.4,
@@ -1364,7 +1613,7 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
 #un valor de tau(19.6,11.4) al menos tan extremo como el observado):
 sum(
   GKtau(
@@ -1402,7 +1651,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.2.vs.3$Phenotypic.Group.51.4  3  2 0.562 0.341
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1414,7 +1663,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(19.6, 51.4),
+# Gráfica de la distribución nula de tau(19.6, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1428,8 +1677,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.2.vs.3$Phenotypic.Group.19.6,
@@ -1438,8 +1686,8 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(19.6, 51.4) al menos tan extremo como el observado):
+#Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(19.6,
+#51.4) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.2.vs.3$Phenotypic.Group.19.6 ,
@@ -1447,7 +1695,8 @@ sum(
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
 # 0
-#grafica de la distribución nula de tau(51.4, 19.6),
+
+# Gráfica de la distribución nula de tau(51.4, 19.6),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1461,7 +1710,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.2.vs.3$Phenotypic.Group.19.6,
@@ -1470,18 +1719,125 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(51.4,19.6) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(51.4,19.6) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.2.vs.3$Phenotypic.Group.19.6,
     grupo.reclutamiento.2.vs.3$Phenotypic.Group.51.4
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 3e-05
+# 0
 
 #################################################################################################################
-# 8.3) 11.4 meses después de la siembra vs. 51.4 meses después de la siembra
+# 8.3) 19.6 meses después de la siembra vs. 51.4 meses después de la siembra (grupo con igual soporte empírico)
+grupo.reclutamiento.2.vs.3.1 <-
+  merge(
+    grupo.reclutamiento.2[, c(1, 3)],
+    grupo.reclutamiento.3.1[, c(1, 3)],
+    by = "Collector.Collection.Number",
+    suffixes = c(".19.6", ".51.4")
+  )
+table(grupo.reclutamiento.2.vs.3.1[, 3],
+      grupo.reclutamiento.2.vs.3.1[, 2])
+# 1  2  3
+# 1  0  1 12
+# 2 21  0  4
+# 3  0  3  2
+
+# 8.3.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 19.6 y
+#51.4: tau(19.6, 51.4) y tau(51.4, 19.6)
+
+colnames(grupo.reclutamiento.2.vs.3.1)
+GKtau(
+  grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6,
+  grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
+)
+# xName
+# 1 grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6
+# yName Nx Ny tauxy tauyx
+# 1 grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4  3  3 0.566 0.558
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4)
+  GKtau.nulo <-
+    GKtau(grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(19.6, 51.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(19.6, 51.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6,
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(19.6,
+#51.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6 ,
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0
+
+# Gráfica de la distribución nula de tau(51.4, 19.6),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(51.4, 19.6)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6,
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(51.4,19.6) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6,
+    grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0
+
+#################################################################################################################
+# 8.4) 11.4 meses después de la siembra vs. 51.4 meses después de la siembra
 
 grupo.reclutamiento.1.vs.3 <-
   merge(
@@ -1497,7 +1853,7 @@ table(grupo.reclutamiento.1.vs.3[, 2],
 # 2  0  4
 # 3 20  0
 
-# 8.3.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
+# 8.4.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #11.4: tau(51.4, 11.4) y tau(11.4, 51.4)
 
 colnames(grupo.reclutamiento.1.vs.3)
@@ -1510,7 +1866,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4  2  3 0.306 0.526
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1522,7 +1878,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(51.4, 11.4),
+# Gráfica de la distribución nula de tau(51.4, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1536,8 +1892,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.51.4,
@@ -1546,16 +1901,17 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(51.4, 11.4) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(51.4,
+#11.4) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.51.4 ,
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 5e-05
-#grafica de la distribución nula de tau(11.4, 51.4),
+# 8e-05
+
+# Gráfica de la distribución nula de tau(11.4, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1569,7 +1925,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.51.4,
@@ -1578,18 +1934,126 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(11.4,51.4) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(11.4,51.4) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.51.4,
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
+# 1e-05
+
+#################################################################################################################
+# 8.5) 11.4 meses después de la siembra vs. 51.4 meses después de la siembra (Otro modelo)
+
+grupo.reclutamiento.1.vs.3.1 <-
+  merge(
+    grupo.reclutamiento.1[, c(1, 3)],
+    grupo.reclutamiento.3.1[, c(1, 3)],
+    by = "Collector.Collection.Number",
+    suffixes = c(".11.4", ".51.4")
+  )
+table(grupo.reclutamiento.1.vs.3.1[, 2],
+      grupo.reclutamiento.1.vs.3.1[, 3])
+# 1  2  3
+# 1 12  5  2
+# 2  0 20  0
+# 3  1  0  3
+
+# 8.5.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
+#11.4: tau(51.4, 11.4) y tau(11.4, 51.4)
+
+colnames(grupo.reclutamiento.1.vs.3.1)
+GKtau(
+  grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4,
+  grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
+)
+# xName
+# 1 grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4
+# yName Nx Ny tauxy tauyx
+# 1 grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4  3  3 0.509 0.524
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4)
+  GKtau.nulo <-
+    GKtau(grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(51.4, 11.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(51.4, 11.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4,
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau (51.4,
+#11.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4 ,
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0
+
+# Gráfica de la distribución nula de tau(11.4, 51.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(11.4, 51.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4,
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(11.4,51.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4,
+    grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
 # 0
 
 #################################################################################################################
-# 8.4) 11.4 meses después de la siembra vs. morfología
+# 8.5) 11.4 meses después de la siembra vs. morfología
 
 grupo.reclutamiento.1.vs.morfologia <-
   merge(
@@ -1606,7 +2070,7 @@ table(grupo.reclutamiento.1.vs.morfologia[, 2],
 # 2  0  1  2  1
 # 3  2  7  3  8
 
-# 8.4.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 11.4 y
+# 8.5.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 11.4 y
 #Group.madre: tau(11.4, Group.madre) y tau(Group.madre, 11.4)
 
 colnames(grupo.reclutamiento.1.vs.morfologia)
@@ -1619,7 +2083,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.madre  3  4 0.058 0.105
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1631,7 +2095,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(11.4, Group.madre),
+# Gráfica de la distribución nula de tau(11.4, Group.madre),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1645,8 +2109,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.11.4,
@@ -1655,8 +2118,8 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(11.4, Group.madre) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau (11.4,
+#Group.madre) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.11.4 ,
@@ -1664,7 +2127,8 @@ sum(
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
 # 0.29771
-#gráfica de la distribución nula de tau(Group.madre, 11.4),
+
+# Gráfica de la distribución nula de tau(Group.madre, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1678,7 +2142,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.11.4,
@@ -1687,19 +2151,18 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(Group.madre,11.4) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau
+#(Group.madre, 11.4) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.11.4,
     grupo.reclutamiento.1.vs.morfologia$Phenotypic.Group.madre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.16693
-
+# 0.19483
 
 #################################################################################################################
-# 8.5) 19.6 meses después de la siembra vs. morfología
+# 8.6) 19.6 meses después de la siembra vs. morfología
 
 grupo.reclutamiento.2.vs.morfologia <-
   merge(
@@ -1716,7 +2179,7 @@ table(grupo.reclutamiento.2.vs.morfologia[, 2],
 # 2 4 9 0 5
 # 3 0 1 2 1
 
-# 8.5.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 19.6 y
+# 8.6.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 19.6 y
 #Group.madre: tau(19.6, Group.madre) y tau(Group.madre, 19.6)
 
 colnames(grupo.reclutamiento.2.vs.morfologia)
@@ -1729,7 +2192,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.madre  3  4  0.05 0.093
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1741,7 +2204,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(19.6, Group.madre),
+# Gráfica de la distribución nula de tau(19.6, Group.madre),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1755,8 +2218,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.19.6,
@@ -1765,16 +2227,17 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(19.6, Group.madre) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(19.6,
+#Group.madre) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.19.6 ,
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.madre
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-#0.39728
-#grafica de la distribución nula de tau(Group.madre, 19.6),
+#0.4011
+
+# Gráfica de la distribución nula de tau(Group.madre, 19.6),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1788,7 +2251,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.19.6,
@@ -1797,18 +2260,18 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(Group.madre,19.6) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau
+#(Group.madre, 19.6) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.19.6,
     grupo.reclutamiento.2.vs.morfologia$Phenotypic.Group.madre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-#  0.2589
+#  0.26252
 
 #################################################################################################################
-# 8.6) 51.4 meses después de la siembra vs. morfología
+# 8.7) 51.4 meses después de la siembra vs. morfología
 
 grupo.reclutamiento.3.vs.morfologia <-
   merge(
@@ -1824,7 +2287,7 @@ table(grupo.reclutamiento.3.vs.morfologia[, 2],
 # 1  3 13  3  9
 # 2  3  5  2  5
 
-# 8.6.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
+# 8.7.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #Group.madre: tau(51.4, Group.madre) y tau(Group.madre, 51.4)
 
 colnames(grupo.reclutamiento.3.vs.morfologia)
@@ -1837,7 +2300,7 @@ GKtau(
 # yName Nx Ny tauxy tauyx
 # 1 grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre  2  4 0.009 0.025
 
-#modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
@@ -1849,7 +2312,7 @@ for (i in 1:k) {
   GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
 }
 
-#grafica de la distribución nula de tau(51.4, Group.madre),
+# Gráfica de la distribución nula de tau(51.4, Group.madre),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1863,8 +2326,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.51.4,
@@ -1873,16 +2335,17 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(51.4, Group.madre) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(51.4,
+#Group.madre) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.51.4 ,
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.78066
-#gráfica de la distribución nula de tau(Group.madre, 51.4),
+# 0.77906
+
+# Gráfica de la distribución nula de tau(Group.madre, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 hist(
@@ -1896,7 +2359,7 @@ hist(
   cex.lab = 1.5,
   cex.axis = 1.5
 )
-#mostrar el valor observado
+# Mostrar el valor observado
 abline(
   v = GKtau(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.51.4,
@@ -1905,12 +2368,120 @@ abline(
   col = "red"
 )
 
-#calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
-#un valor de tau(Group.madre,51.4) al menos tan extremo como el observado):
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(Group.madre,51.4) al menos tan extremo como el observado):
 sum(
   GKtau(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.51.4,
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.82266
+# 0.8222
+
+#################################################################################################################
+# 8.8) 51.4 meses después de la siembra (otro modelo) vs. morfología
+
+grupo.reclutamiento.3.1.vs.morfologia <-
+  merge(
+    grupo.reclutamiento.3.1[, c(1, 3)],
+    phenotypic.group.assignment.madres[, c(2, 6)],
+    by = "Collector.Collection.Number",
+    suffixes = c(".51.4", ".madre")
+  )
+
+table(grupo.reclutamiento.3.1.vs.morfologia[, 2],
+      grupo.reclutamiento.3.1.vs.morfologia[, 3])
+# 2  3  4  5
+# 1  3  6  0  4
+# 2  2 12  3  8
+# 3  1  0  2  2
+
+# 8.8.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
+#Group.madre: tau(51.4, Group.madre) y tau(Group.madre, 51.4)
+
+colnames(grupo.reclutamiento.3.1.vs.morfologia)
+GKtau(
+  grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4,
+  grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
+)
+# xName
+# 1 grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4
+# yName Nx Ny tauxy tauyx
+# 1 grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre  3  4 0.062 0.079
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre)
+  GKtau.nulo <-
+    GKtau(grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(51.4, Group.madre),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(51.4, Group.madre)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4,
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
+  )[[5]],
+  col = "red"
+)
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de tau(51.4,
+#Group.madre) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4 ,
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0.25451
+
+# Gráfica de la distribución nula de tau(Group.madre, 51.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(Group.madre, 51.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4,
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere un valor de
+#tau(Group.madre,51.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4,
+    grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0.36088

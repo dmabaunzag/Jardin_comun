@@ -2,37 +2,50 @@
 ####################################################################################################################################
 ####################################################################################################################################
 ####################################################################################################################################
-#
+
+###DISTRIBUCIÓN GEOGRÁFICA  DE LOS GRUPOS DE PLANTAS MADRES EN EL PÁRAMO DE SUMAPAZ###
+
 # INTRODUCCIÓN
 #
 # Archivos de datos requeridos:
-# "NWSA_30s_elev.tif", "SumapazElevSR.tif", "SumapazStudyRegion.shp", "PhenotypicGroupAssignment_2023septiembre08_120644.csv"
-#
+# "NWSA_30s_elev.tif", 
+
+#"SumapazElevSR.tif", 
+#"SumapazStudyRegion.shp",
+
+#"PhenotypicGroupAssignment_2023septiembre08_120644.csv"
+
+
 # Paquetes de R requeridos:
 # terra y rgdal
-#
-# Contenido:
+
+# CONTENIDO
+
 # 1) Preliminares: cargar paquetes y leer y examinar datos.
+
 # 2) Mapa de la región de estudio.
-# 3) Mapa de la región de colecta de plantas madre, con localidades de colecta de plantas madre y
-#    de todas las plantas incluidas en el análisis morfológico.
+
+# 3) Mapa de la región de colecta de plantas madre, con localidades de colecta de plantas madre y de todas las
+# plantas incluidas en el análisis morfológico.
+
 # 4) Mapas de la distribución geográfica de cada grupo morfológico.
-#
+
 ####################################################################################################################################
 ####################################################################################################################################
 ####################################################################################################################################
 
-
+####################################################################################################################################
 ####################################################################################################################################
 # 1) Preliminares: cargar paquetes, leer y examinar datos.
 ####################################################################################################################################
-
-#cargar paquetes
+####################################################################################################################################
+# cargar paquetes
 library(terra)
 library(rgdal)
 
-#leer archivo con contorno del área del Sumapaz por encima de 3000 m de altitud.
-#setwd("C:/_transfer/proposals/Espeletia/Sumapaz_data/REgionEstudioLimite") #Ivan en Lehmann
+# Leer archivo con contorno del área del Sumapaz por encima de 3000 m de altitud.
+
+# setwd("C:/_transfer/proposals/Espeletia/Sumapaz_data/REgionEstudioLimite") #Ivan en Lehmann
 setwd(
   "C:/Users/usuario/Documents/Jardin_comun/Especimenes/Elevacion_Limite_RegionEstudio/datos"
 )#Directorio de Diana
@@ -40,21 +53,20 @@ region.estudio <- vect("SumapazStudyRegion.shp")
 class(region.estudio)
 region.estudio
 
-#leer modelo digital de elevación para el noroccidente de Sur América, con resolución de 30 m,
-#obtenido de https://asterweb.jpl.nasa.gov/gdem.asp
-#setwd("C:/_transfer/SpatialData_General/DEM_NWSA")#Ivan at Lehmann
+# Leer modelo digital de elevación para el noroccidente de Sur América, con resolución de 30 m, obtenido de
+#https://asterweb.jpl.nasa.gov/gdem.asp setwd("C:/_transfer/SpatialData_General/DEM_NWSA")#Ivan at Lehmann
 NWSA_ele <- rast("NWSA_30s_elev.tif")
 class(NWSA_ele)
 NWSA_ele
 
-#leer modelo digital de elevación, con resolución de 30 m, del área del Sumapaz por encima de 3000 m de altitud,
+# Leer modelo digital de elevación, con resolución de 30 m, del área del Sumapaz por encima de 3000 m de altitud,
 #obtenido de https://asterweb.jpl.nasa.gov/gdem.asp
 #setwd("C:/_transfer/proposals/Espeletia/Sumapaz_data/REgionEstudioLimite") #Ivan en Lehmann
 region.estudio.ele <- rast("SumapazElevSR.tif")
 class(region.estudio.ele)
 region.estudio.ele
 
-#leer archivo con datos de especímenes
+# Leer archivo con datos de especímenes
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Data") #Ivan en Lehmann
 datos.especimenes <-
   read.table(
@@ -66,7 +78,7 @@ class(datos.especimenes)
 dim(datos.especimenes)
 head(datos.especimenes)
 
-#crear un objeto de clase SpaVector
+# Crear un objeto de clase SpaVector
 sv.especimenes <-
   vect(
     datos.especimenes,
@@ -76,15 +88,14 @@ sv.especimenes <-
 class(sv.especimenes)
 sv.especimenes
 
-
 ####################################################################################################################################
 # 2) Mapa de la región de estudio.
 ####################################################################################################################################
 
-#directorio para guardar gráficas
+# Directorio para guardar gráficas
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Figures") #Ivan en Lehmann
 
-#mapa del norte de Sur América
+# Mapa del norte de Sur América
 par(mar = c(5, 4, 1, 3), mfrow = c(1, 1))
 plot(
   NWSA_ele,
@@ -160,7 +171,7 @@ mtext(
   las = 2
 )
 
-#mapa de la región del Alto Sumapaz
+# Mapa de la región del Alto Sumapaz
 par(mar = c(5, 4, 1, 3), mfrow = c(1, 1))
 plot(
   region.estudio,
@@ -186,7 +197,7 @@ mtext(
   cex = 1.5,
   line = -2.5
 )
-#región de colecta de las plantas madre
+# Región de colecta de las plantas madre
 rect(-74.30,
      4.188,
      -74.24,
@@ -224,15 +235,15 @@ mtext(
   las = 2
 )
 
-
 ####################################################################################################################################
-# 3) Mapa de la región de colecta de plantas madre, con localidades de colecta de plantas madre y
-#    de todas las plantas incluidas en el análisis morfológico.
+####################################################################################################################################
+# 3) Mapa de la región de colecta de plantas madre, con localidades de colecta de plantas madre y de todas las
+#plantas incluidas en el análisis morfológico.
+####################################################################################################################################
 ####################################################################################################################################
 
-#mapa restringido al área de colecta de plantas madre del jardín común,
-#mostrando todas la localidad de colecta de todas las plantas
-#incluidas en el análisis morfológico
+# Mapa restringido al área de colecta de plantas madre del jardín común, mostrando todas la localidad de colecta
+#de todas las plantas incluidas en el análisis morfológico
 windows(14, 7)
 plot(
   region.estudio.ele,
@@ -290,7 +301,7 @@ sbar(
   adj = c(0.5, -1.5)
 )
 rect(-74.2965, 4.189,-74.2845, 4.1955)
-#adicionar localidades de colecta de las plantas madre del jardín común
+# Adicionar localidades de colecta de las plantas madre del jardín común
 ipm <-
   rep(c(F, T), times = c(307, 43)) #crea índice plantas madre del jardín común
 plot(
@@ -309,9 +320,9 @@ mtext(
   las = 2
 )
 
-#mapa de las localidades de colecta de las plantas madre del jardín común
+# Mapa de las localidades de colecta de las plantas madre del jardín común
 morfogrupo.simbolo <-
-  c(16, 0, 17, 3, 15, 4) #definir simbolos para cada grupo morfológico, de acuerdo a la figuras de Mclust
+  c(16, 0, 17, 3, 15, 4) #definir símbolos para cada grupo morfológico, de acuerdo a la figuras de Mclust
 morfogrupo.color <-
   c("dodgerblue2",
     "red3",
@@ -376,7 +387,7 @@ sbar(
   adj = c(0.5, -1.5)
 )
 rect(-74.2965, 4.189,-74.2845, 4.1955)
-#adicionar localidades de colecta de las plantas madre del jardín común
+# Adicionar localidades de colecta de las plantas madre del jardín común
 ipm <-
   rep(c(F, T), times = c(307, 43)) #crea índice plantas madre del jardín común
 plot(
@@ -394,18 +405,16 @@ mtext(
   at = 4.223,
   las = 2
 )
-
-
+####################################################################################################################################
 ####################################################################################################################################
 # 4) Mapas de la distribución geográfica de cada grupo morfológico.
 ####################################################################################################################################
-
-#directorio para guardar gráficas
+####################################################################################################################################
+# Directorio para guardar gráficas
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Figures") #Ivan en Lehmann
 
-#mapa de cada grupo morfológico en el área del Sumapaz por encima de 3000 m de altitud
-#definir simbolos y colores para cada grupo morfológico,
-#de acuerdo con figuras de Mclust
+# Mapa de cada grupo morfológico en el área del Sumapaz por encima de 3000 m de altitud definir simbolos y colores
+#para cada grupo morfológico, de acuerdo con figuras de Mclust
 morfogrupo.color <-
   c("dodgerblue2",
     "red3",
@@ -415,7 +424,7 @@ morfogrupo.color <-
     "skyblue1")
 morfogrupo.simbolo <- c(16, 0, 17, 3, 15, 4)
 par(mar = c(5, 4, 1, 3), mfrow = c(1, 1))
-#mapa del área del Sumapaz por encima de 3000 m de altitud.
+# Mapa del área del Sumapaz por encima de 3000 m de altitud.
 plot(
   region.estudio,
   asp = 1,
@@ -440,7 +449,7 @@ mtext(
   cex = 1.5,
   line = -2.5
 )
-#escala espacial
+#Escala espacial
 sbar(
   d = 30,
   xy = c(-74.6, 4.6),
@@ -462,7 +471,7 @@ sbar(
   adj = c(0.5, -1.5)
 )
 rect(-74.65, 4.52,-74.28, 4.7)
-#adicionar localidades de colecta de los especímenes de un grupo fenotípico
+# Adicionar localidades de colecta de los especímenes de un grupo fenotípico
 gm <- 5 #escoger el grupo morfológico
 igm <-
   datos.especimenes[, 6] == gm #crea índice de los especímenes del grupo morfológico escogido
@@ -480,7 +489,7 @@ mtext(
   las = 2
 )
 
-#mapa de todos los grupos morfológicos en el área del Sumapaz por encima de 3000 m de altitud
+# Mapa de todos los grupos morfológicos en el área del Sumapaz por encima de 3000 m de altitud
 par(mar = c(5, 4, 1, 3), mfrow = c(1, 1))
 plot(
   region.estudio,
