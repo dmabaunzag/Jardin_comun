@@ -10,8 +10,15 @@ El objetivo fue hacer un análisis de delimitación de especies *de novo* basado
 ## CONTENIDO
 El repositorio tiene dos carpetas principales:
 
-*  **Especímenes:** Código y datos sobre la conformación de grupos morfológicos de los frailejones silvestres y el área de colecta de estos especímenes.
-*  **Progenie:** Código y datos sobre la conformación de grupos según reclutamiento y crecimiento de la progenie de las plantas madre sembrados en el jardín común.
-    +  Datos: Datos de crecimiento de la progenie tomados a 11.4, 19.6 y 51.4 meses después de la siembra en el jardín común.
-    +  Crecimiento: Código y análisis de modelos de mezclas normales bivariados para cada muestreo y datos asociados
-    +  reclutamiento: Código y análisis de modelos mezclas binomiales del reclutamiento de la progenie para cada muestreo y datos asociados
+*  [**Especímenes**](https://github.com/dmabaunzag/Jardin_comun/tree/main/Especimenes)**:** Código y datos sobre la conformación de grupos morfológicos de los frailejones silvestres y el área de colecta de éstos:
+    + _Mclust_madres_2024Junio06.R_: Código de R para estimar _de novo_ los grupos morfológicos.
+    + [Elevacion_Limite_RegionEstudio](https://github.com/dmabaunzag/Jardin_comun/tree/main/Especimenes/Elevacion_Limite_RegionEstudio): Carpeta con los datos y código de R para realizar mapas con la distribución geográfica del muestreo de las plantas madre en el Páramo del Sumapaz.
+    +[datos](https://github.com/dmabaunzag/Jardin_comun/tree/main/Especimenes/datos): Archivos con la información de los caracteres morfológicos de plantas madre y los datos de Pineda et. al (2020).
+	
+
+*  [**Progenie**](https://github.com/dmabaunzag/Jardin_comun/tree/main/Progenie)**:** Código y datos sobre la conformación de grupos según reclutamiento y crecimiento de la progenie de las plantas madre sembrados en el jardín común.
+    +  [datos](https://github.com/dmabaunzag/Jardin_comun/tree/main/Progenie/datos): Datos de crecimiento de la progenie tomados a 11.4, 19.6 y 51.4 meses después de la siembra en el jardín común.
+    +  [Crecimiento](https://github.com/dmabaunzag/Jardin_comun/tree/main/Progenie/Crecimiento): Código y análisis de modelos de mezclas normales bivariados para cada muestreo y datos asociados
+    +  [reclutamiento](https://github.com/dmabaunzag/Jardin_comun/tree/main/Progenie/reclutamiento): Código y análisis de modelos mezclas binomiales del reclutamiento de la progenie para cada muestreo y datos asociados.
+    + _ConcordanciaCrecimientoReclutamiento_2024Junio06.R_: Código de R que examina la concordancia entre muestreos de grupos de plantas madre según reclutamiento y crecimiento de su progenie.
+    + _CorrelacionCrecimientoReclutamiento_2024Junio06.R_: Código de R que examina la correlación entre el reclutamiento y las variables de crecimiento (eg. número de hojas y longitud del tallo) en cada muestreo.
