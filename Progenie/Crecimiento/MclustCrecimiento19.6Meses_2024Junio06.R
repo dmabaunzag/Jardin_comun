@@ -474,6 +474,7 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")# dir
 load("Mcluster.phenodata.progenie.(octubre)_2023Diciembre28.RData")# Agrupación
 load("mean.phenodata.progenie.selected.log.(octubre)_2023diciembre28_091832.RData") #datos morfológicos
 
+VEI <- Mcluster.phenodata.progenie$classification
 ###################################################################################################################
 # 4.1) Examinar y guardar en un documento la asignación de grupos
 
@@ -608,8 +609,240 @@ Mcluster.phenodata.progenie$classification[Mcluster.phenodata.progenie$uncertain
                                              0.1]
 # 1 2 
 
+#################################################################################################################
+# 4.4) Graficar soporte empírico para el mejor modelo
+BIC.Best.Model.Per.G<-
+  apply(Mcluster.phenodata.progenie$BIC, 1, max, na.rm = T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(30, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 19.6 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(30, 0,-10),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+title(expression("C)"), adj = 0)
+
+#Acotando el soporte empírico 0-10
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 19.6 meses después de la siembra ",
+  ylab = "",# expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+title(expression("D)"), adj = 0)
+
+
+#Graficando modelo de Mclust con soporte empírico similar al de mejor BIC
+
+#"VARS"####
+mclust.options(hcUse = "VARS")
+Mcluster.phenodata.progenie <- Mclust(data.for.GMM, modelNames = "VII")
+# Examinar resultados
+Mcluster.phenodata.progenie
+summary(Mcluster.phenodata.progenie)
+names(Mcluster.phenodata.progenie$classification)
+Mcluster.phenodata.progenie$classification #clasificación de los especímenes
+Mcluster.phenodata.progenie$uncertainty #incertidumbre de la clasificación
+attributes(Mcluster.phenodata.progenie)
+
+# Crear y escribir archivo para la asignación de los grupos según crecimiento.
+phenotypic.group.assignment.piloto <-
+  data.frame(
+    as.numeric(rownames(mean.phenodata.progenie.selected.log)),
+    mean.phenodata.progenie.selected.log[, 1],
+    Mcluster.phenodata.progenie$classification,
+    Mcluster.phenodata.progenie$uncertainty
+  )
+colnames(phenotypic.group.assignment.piloto) <-
+  c(
+    "Rownames.Meanphenodata",
+    "Collector.Collection.Number",
+    "Phenotypic.Group",
+    "Uncertainty"
+  )
+head(phenotypic.group.assignment.piloto)
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")# guardar en directorio de Diana
+#setwd("C:/_transfer/Projects/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
+write.csv(
+  phenotypic.group.assignment.piloto,
+  file = paste(
+    "grupos.crecimiento.(octubre)_VII_",
+    format(Sys.time(), "%Y%B%d_%H%M%S"),
+    ".csv",
+    sep = ""
+  ),
+  row.names = F
+)
+
+
+#Gráfica
+#Longitud del tallo vs número de hojas
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 5, 4, 2) + 0.1)
+plot(
+  Mcluster.phenodata.progenie,
+  what = c("classification"),
+  dimens = c(1, 2),
+  main = "",
+  xlab = "Media log (longitud del tallo [cm])",
+  addEllipses = F,
+  asp = 1,
+  ylab = "Media log (número de hojas)",
+  cex.lab = 1.5
+)
+legend(
+  "bottomright",
+  paste("C", 1:2),
+  col = mclust.options("classPlotColors"),
+  xpd = T,
+  ncol = 2,
+  pch = mclust.options("classPlotSymbols"),
+  pt.lwd = 0.9,
+  pt.cex = 0.9,
+  cex = 0.9,
+  bty = "o"
+)
+# Agregar elipses
+for (i in 1:Mcluster.phenodata.progenie$G) {
+  points(
+    ellipse(
+      x = Mcluster.phenodata.progenie$parameters$variance$sigma[1:2, 1:2, i],
+      centre = Mcluster.phenodata.progenie$parameters$mean[c(1, 2), i],
+      level = pchisq(1, 2)
+    ),
+    type = "l",
+    col = "black"
+  )
+}
+# Agregar etiquetas de las elipses
+text(
+  Mcluster.phenodata.progenie$parameters$mean[1, 1] + 0.2,
+  Mcluster.phenodata.progenie$parameters$mean[2, 1] + 0.02,
+  "C1",
+  cex = 0.9
+)
+text(
+  Mcluster.phenodata.progenie$parameters$mean[1, 2] + 0.1,
+  Mcluster.phenodata.progenie$parameters$mean[2, 2] + 0.05,
+  "C2",
+  cex = 0.9
+)
+title(expression("19.6 meses"), adj = 0)
+# Identificando puntos
+# identify(
+#   mean.phenodata.progenie.selected.log$`log Longitud del tallo`,
+#   mean.phenodata.progenie.selected.log$`log Número de hojas`,
+#   labels = as.character(
+#     mean.phenodata.progenie.selected.log$`Número de colección plantas madres`
+#   ),
+#   cex=0.5
+# )
+# Plantas madre discordantes
+discordantes <-
+  c(1003, 1004, 1008, 1018, 1031, 1032, 1033, 1034, 1036, 1041, 1022, 1006, 1013, 1037, 1038, 1040, 1039, 1030)
+text(
+  muertas <- c(1029, 1025, 1001,1026),
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 2],
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 3],
+  labels = as.character(mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 1]),
+  cex = 0.6,
+  pos = 4
+)
+text(
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% muertas, 2],
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% muertas, 3],
+  labels = as.character(mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% muertas, 1]),
+  cex = 0.6,
+  pos = 4,
+  font = 2
+)
+points(
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% muertas, 2],
+  mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% muertas, 3],
+  pch = 4
+)
+
+#Tabla de calsificación cruzada entre clasificacion VII y VEI
+
+VII <- Mcluster.phenodata.progenie$classification
+
+table(VEI,VII)
+
 ###################################################################################################################
-# 4.4) Examinar tablas de clasificación cruzada de los grupos morfológicos según las plantas madre del piloto y
+# 4.5) Examinar tablas de clasificación cruzada de los grupos morfológicos según las plantas madre del piloto y
 #grupos de plantas madre según crecimiento.
 
 #Lectura de las tablas con los grupos asignados de las madres e hijas

@@ -454,7 +454,7 @@ plot(Mcluster.phenodata.progenie, what = "BIC")
 
 #################################################################################################################
 #################################################################################################################
-#4) Examinar los grupos fenotípicos en base al mejor modelo de mezclas normales, de acuerdo con las variables de
+# 4) Examinar los grupos fenotípicos en base al mejor modelo de mezclas normales, de acuerdo con las variables de
 #inicialización
 #################################################################################################################
 #################################################################################################################
@@ -607,6 +607,102 @@ sum(Mcluster.phenodata.progenie$uncertainty > 0.1) / length(Mcluster.phenodata.p
 Mcluster.phenodata.progenie$classification[Mcluster.phenodata.progenie$uncertainty >
                                              0.1]
 # 1 1
+
+#################################################################################################################
+# 4.1.4) Graficar soporte empírico para el mejor modelo
+BIC.Best.Model.Per.G<-
+  apply(Mcluster.phenodata.progenie$BIC, 1, max, na.rm = T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(40, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 51.4 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(40, 0,-10),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+title(expression("E)"), adj = 0)
+
+#Acotando el soporte empírico 0-10
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 51.4 meses después de la siembra ",
+  ylab = "",# expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+title(expression("F)"), adj = 0)
+
 
 # 4.1.4) Examinar tablas de clasificación cruzada de los grupos morfológicos según las plantas madre del piloto y
 #grupos de plantas madre según crecimiento.

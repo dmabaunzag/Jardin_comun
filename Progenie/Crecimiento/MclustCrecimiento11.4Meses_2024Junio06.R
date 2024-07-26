@@ -686,7 +686,15 @@ legend(
   bty = "o"
 )
 
-# 4.1.4) Examinar la tablas de clasificación cruzada de los grupos morfológicos según las plantas madre y grupos 
+# 4.1.4) Graficar soporte empírico para el mejor modelo (el modelo con mayor BIC fue VARS)
+BIC.Best.Model.Per.G <-
+  apply(Mcluster.phenodata.progenie$BIC, 1, max, na.rm = T)
+max.BIC <- max(BIC.Best.Model.Per.G)
+
+# ver gráfica en la sección 4.2.4
+
+
+# 4.1.5) Examinar la tablas de clasificación cruzada de los grupos morfológicos según las plantas madre y grupos 
 #según crecimiento de su progenie en el mejor modelo de mezcla normal.
 
 #Lectura de las tablas con los grupos asignados de las madres e hijas
@@ -902,8 +910,160 @@ sum(Mcluster.phenodata.progenie$uncertainty > 0.1) / length(Mcluster.phenodata.p
 Mcluster.phenodata.progenie$classification[Mcluster.phenodata.progenie$uncertainty >
                                              0.1]# grupo 2
 
+# 4.2.4) Graficar soporte empírico para el mejor modelo (el modelo con mayor BIC fue VARS)
+BIC.Best.Model.Per.G.PCR <-
+  apply(Mcluster.phenodata.progenie$BIC, 1, max, na.rm = T)
+max.BIC <- max(BIC.Best.Model.Per.G)
 
-# 4.2.4) Examinar la tabla de clasificación cruzada de los grupos fenotípicos según las plantas madres del piloto y grupos
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(40, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 11.4 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 1,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  2,
+  min(max.BIC - BIC.Best.Model.Per.G[1:9]),
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G.PCR[1:9],
+  cex = 2,
+  pch = 22,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  2,
+  min(max.BIC - BIC.Best.Model.Per.G.PCR[1:9]),
+  cex = 2,
+  pch = 15,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(40, 0,-10),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+title(expression("A)"), adj = 0)
+
+#Acotando el soporte em´ririco 0-10
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 6, 4, 2))
+plot(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el crecimiento\n a 11.4 meses después de la siembra ",
+  ylab = "",# expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G[1:9],
+  cex = 2,
+  pch = 1,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  2,
+  min(max.BIC - BIC.Best.Model.Per.G[1:9]),
+  cex = 2,
+  pch = 19,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  1:9,
+  max.BIC - BIC.Best.Model.Per.G.PCR[1:9],
+  cex = 2,
+  pch = 22,
+  col = "black",
+  lwd = 1
+)
+
+points(
+  2,
+  min(max.BIC - BIC.Best.Model.Per.G.PCR[1:9]),
+  cex = 2,
+  pch = 15,
+  col = "black",
+  lwd = 1
+)
+
+# Mostrar el mejor modelo
+# Agregar eje
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las =1)
+abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo con el mejor soporte
+
+legend("topright", c("Modelo 1", "Modelo 2"),cex= 1.5, pt.cex  =2,  pch= c(19,15))
+
+title(expression("B)"), adj = 0)
+
+
+
+# 4.2.5) Examinar la tabla de clasificación cruzada de los grupos fenotípicos según las plantas madres del piloto y grupos
 #fenotípicos según plantas de progenie del piloto el mejor modelo de mezcla normal de cada una.
 
 # Lectura de las tablas con los grupos asignados de las madres e hijas

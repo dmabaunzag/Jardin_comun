@@ -378,7 +378,7 @@ colnames(sobrevivientes) <-
 #      ))
 
 # Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
 # setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/MedicionesPlantasMadre") #Ivan's working directory Waterman
 phenotypic.group.assignment <-
   read.table(
@@ -403,7 +403,7 @@ sobrevivientes.all <-
   merge(
     x = phenotypic.group.assignment.madres[, c(2, 3)],
     y = sobrevivientes,
-    all = T,
+    all.x = T,
     row.names = NULL
   )
 sobrevivientes.all[is.na(sobrevivientes.all)] <- 0
@@ -411,7 +411,7 @@ sobrevivientes.all <- sobrevivientes.all[-2]
 class(sobrevivientes.all)
 dim(sobrevivientes.all)
 head(sobrevivientes.all)
-
+View(sobrevivientes.all)
 #################################################################################################################
 #################################################################################################################
 # 6) Examinar el reclutamiento
@@ -840,6 +840,108 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
+#Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
+# Directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
+
+# Graficar soporte empírico para el mejor modelo de mezclas binomiales
+
+models1 <- show(Modelos1)
+models1[,7] <- round(models1[,7],3)
+bic.models1 <- models1[!duplicated(models1$BIC),c(3,7)]
+bic.models1
+
+min.BIC.Bin <- min(bic.models1$BIC)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(6, 6, 4, 2))
+plot(
+  bic.models1$k,
+  min.BIC.Bin - bic.models1$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-130, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 11.4 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models1$k,
+  min.BIC.Bin - bic.models1$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-130, 0,30),
+     labels = seq(130, 0,-30),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo1@k, lty = 3) #para determinar el modelo con el mejor soporte
+title(expression("A)"), adj = 0)
+
+# Acotando soporte empírico entre 0-10
+par(mar = c(6, 5, 4, 2))
+plot(
+  bic.models1$k,
+  min.BIC.Bin - bic.models1$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 11.4 meses después de la siembra",
+  ylab = "", # expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models1$k,
+  min.BIC.Bin - bic.models1$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-10, 0,2),
+     labels = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo1@k, lty = 3) #para determinar el modelo con el mejor soporte
+title(expression("B)"), adj = 0)#para determinar el modelo con el mejor soporte
+
+
 #################################################################################################################
 # 7.2) Segundo muestreo: 19.6 meses después de la siembra.
 vivas2 <- sobrevivientes.all$vivas.2
@@ -1076,6 +1178,108 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
+#Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
+
+# Directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
+
+# Graficar soporte empírico para el mejor modelo de mezclas binomiales
+
+models2 <- show(Modelos2)
+models2[,7] <- round(models2[,7],3)
+bic.models2 <- models2[!duplicated(models2$BIC),c(3,7)]
+bic.models2
+
+min.BIC.Bin <- min(bic.models2$BIC)
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(6, 6, 4, 2))
+plot(
+  bic.models2$k,
+  min.BIC.Bin - bic.models2$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-120, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 19.6 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models2$k,
+  min.BIC.Bin - bic.models2$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-120, 0,20),
+     labels = seq(120, 0,-20),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo2@k, lty = 3) #para determinar el modelo con el mejor soporte
+title(expression("C)"), adj = 0)
+
+# Acotando soporte empírico entre 0-20
+par(mar = c(6, 5, 4, 2))
+plot(
+  bic.models2$k,
+  min.BIC.Bin - bic.models2$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 19.6 meses después de la siembra",
+  ylab = "", # expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models2$k,
+  min.BIC.Bin - bic.models2$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-10, 0,2),
+     labels = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo2@k, lty = 3) #para determinar el modelo con el mejor soporte
+title(expression("D)"), adj = 0)#para determinar el modelo con el mejor soporte
+
 #################################################################################################################
 # 7.3) Tercer muestreo: 51.4 meses después de la siembra.
 
@@ -1095,6 +1299,7 @@ Modelos3 <-
     model = Mod.fam,
     k = 1:9,
     concomitant = Conc,
+    # unique = T,
     nrep = 5
   )
 show(Modelos3)
@@ -1114,10 +1319,17 @@ plot(Modelos3)
 # 8  200     FALSE 3  8 -110.1140 230.2281 239.0341 254.8327
 # 9  200     FALSE 3  9 -108.4280 226.8560 235.6620 246.2714
 
-sort(BIC(Modelos3))# delta =  -0.0897361
-# 2        5        7        6        4        3        9        8        1 
-# 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 235.6620 239.0341 336.7921
-sort(BIC(Modelos3))[[1]]- sort(BIC(Modelos3))[[7]]
+
+sort(BIC(Modelos3))# delta =  -0.6129374
+# 2        8        3        4        7        6        5        9        1 
+# 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 236.1852 336.7921
+
+sort(BIC(unique(Modelos3)))
+# 2        3        1 
+# 235.5723 236.1852 336.7921 
+
+sort(BIC(unique(Modelos3)))[[1]]- sort(BIC(unique(Modelos3)))[[2]]# -0.6129374
+
 #mantenemos el modelo con mejor BIC
 MejorModelo3  <- getModel(Modelos3, "BIC")
 
@@ -1293,28 +1505,28 @@ OtroModelo3  <- getModel(Modelos3, 9)
 
 summary(OtroModelo3)
 # Call:
-#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 9, nrep = 5)
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, 
+#               concomitant = Conc, k = 9, nrep = 5)
 # 
 # prior size post>0 ratio
-# Comp.1 0.335   13     43 0.302
-# Comp.2 0.557   25     34 0.735
-# Comp.3 0.108    5     20 0.250
+# Comp.1 0.130    5     25 0.200
+# Comp.2 0.319   13     43 0.302
+# Comp.3 0.551   25     34 0.735
 # 
-# 'log Lik.' -108.428 (df=5)
-# AIC: 226.856   BIC: 235.662 
+# 'log Lik.' -108.6896 (df=5)
+# AIC: 227.3792   BIC: 236.1852 
 OtroModelo3@df #número de parámetros en el modelo: 5
 
 plot(OtroModelo3)
-BIC(OtroModelo3) # 235.662
+BIC(OtroModelo3) #  236.1852
 getModel(Modelos3, 9)
 # Call:
-#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 9, nrep = 5)
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, 
+#               concomitant = Conc, k = 9, nrep = 5)
 # 
 # Cluster sizes:
 #   1  2  3 
-# 13 25  5 
+# 5 13 25 
 # 
 # no convergence after 200 iterations
 
@@ -1506,6 +1718,110 @@ grupo.reclutamiento.3.vs.3.1 <-
 table(grupo.reclutamiento.3.vs.3.1[,3],
       grupo.reclutamiento.3.vs.3.1[, 2]
 )
+
+#Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
+models3 <- show(Modelos3)
+models3[,7] <- round(models3[,7],3)
+bic.models3 <- models3[!duplicated(models3$BIC),c(3,7)]
+bic.models3
+
+min.BIC.Bin <- min(bic.models3$BIC)
+# Directorio para guardar figuras
+#setwd("C:/_transfer/Review/MelissaPineda/Figures")
+#setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
+
+# Graficar soporte empírico para el mejor modelo de mezclas binomiales
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(6, 6, 4, 2))
+plot(
+  bic.models3$k,
+  min.BIC.Bin - bic.models3$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-110, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 51.4 meses después de la siembra ",
+  ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models3$k,
+  min.BIC.Bin - bic.models3$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-110, 0,10),
+     labels = seq(110, 0,-10),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
+abline(v =OtroModelo3@k, lty = 3)
+title(expression("E)"), adj = 0)
+
+# Acotando soporte empírico entre 0-10
+par(mar = c(6, 5, 4, 2))
+plot(
+  bic.models3$k,
+  min.BIC.Bin - bic.models3$BIC,
+  type = "n",
+  bty = "n",
+  xlim = c(1, 9),
+  ylim = c(-10, 0),
+  yaxt = "n",
+  xaxt = "n",
+  xlab = "Número de grupos según el reclutamiento\n a 51.4 meses después de la siembra",
+  ylab = "", # expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
+  main = "",
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  cex.main = 1.5
+)
+points(
+  bic.models3$k,
+  min.BIC.Bin - bic.models3$BIC,
+  cex = 2,
+  pch = 20,
+  col = "black",
+  lwd = 1
+)
+# Mostrar el mejor modelo
+# Agregar ejes
+axis(
+  1,
+  at = c(1, seq(2, 9, 1)),
+  labels = T,
+  tcl = -0.5,
+  cex.axis = 1.5
+)
+axis(2,
+     at = seq(-10, 0,2),
+     labels = seq(10, 0,-2),
+     tcl = -0.7,
+     cex.axis = 1.5,
+     las=1)
+abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
+abline(v =OtroModelo3@k, lty = 3)
+title(expression("F)"), adj = 0)#para determinar el modelo con el mejor soporte
+
+
 
 #################################################################################################################
 #################################################################################################################

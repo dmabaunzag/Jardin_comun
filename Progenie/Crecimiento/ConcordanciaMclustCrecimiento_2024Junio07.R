@@ -88,6 +88,7 @@ modelo.2.marzo <-
 summary(modelo.2.marzo)
 head(modelo.2.marzo)
 dim(modelo.2.marzo)
+
 modelo.octubre <-
   read.table(
     "grupos.crecimiento.(octubre)_2023diciembre28_132240.csv",
@@ -98,6 +99,15 @@ summary(modelo.octubre)
 head(modelo.octubre)
 dim(modelo.octubre)
 
+modelo.2.octubre <-
+  read.table(
+    "grupos.crecimiento.(octubre)_VII_2024julio26_101614.csv",
+    header = T,
+    sep = ","
+  )
+summary(modelo.2.octubre)
+head(modelo.2.octubre)
+dim(modelo.2.octubre)
 
 modelo.junio <-
   read.table(
@@ -131,22 +141,25 @@ head(phenotypic.group.assignment.madres)
 #################################################################################################################
 
 phenotypic.group.assignment.crecimiento <-
-  merge(    modelo.1.marzo[, c(2, 3)],
+  merge(modelo.1.marzo[, c(2, 3)],
     merge(
       modelo.2.marzo[, c(2, 3)],
       merge(
         modelo.octubre[, c(2, 3)],
+        merge(modelo.2.octubre[, c(2, 3)],
         modelo.junio[, c(2, 3)],
         by = "Collector.Collection.Number",
         all = T,
-        suffixes = c("modelo.octubre", ".modelo.junio")
+        suffixes = c("modelo.2.octubre", ".modelo.junio")
       ),
       by = "Collector.Collection.Number",
       all = T
     ),
     by = "Collector.Collection.Number",
     all = T
-  )
+  ),
+  by = "Collector.Collection.Number",
+  all = T)
 
 View(phenotypic.group.assignment.crecimiento)
 
@@ -156,6 +169,7 @@ colnames(phenotypic.group.assignment.crecimiento) <-
     "modelo.1.marzo",
     "modelo.2.marzo",
     "modelo.octubre",
+    "modelo.2.octubre",
     "modelo.junio"
   )
 
@@ -235,6 +249,7 @@ table(
   # MOdelo 1 marzo
   exclude = NULL
 )
+
 # 1  2
 # 1    28  0
 # 2     5  0
@@ -522,11 +537,11 @@ sum(
 # NA
 
 ###################################################################################################################
-# 4.2) 11.4 meses vs. 19.6 meses (modelo 2)
+# 4.2) 11.4 meses(modelos2) vs. 19.6 meses (modelo 2)
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(3, 4)]
+  phenotypic.group.assignment.crecimiento[, c(3, 5)]
 head(grupos.crecimiento)# 37 plantas madre
 dim(grupos.crecimiento)
 
@@ -546,16 +561,18 @@ head(grupos.crecimiento)
 # Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento a 11.4 meses y
 #19.6 meses y grupos morfológicos: tau(11.4,19.6) y tau(19.6,11.4)
 GKtau(grupos.crecimiento$modelo.2.marzo,
-      grupos.crecimiento$modelo.octubre)
-# xName                             yName Nx Ny tauxy tauyx
-# 1 grupos.crecimiento$modelo.2.marzo grupos.crecimiento$modelo.octubre  2  3 0.029 0.039
+      grupos.crecimiento$modelo.2.octubre)
+# xName                               yName Nx Ny
+# 1 grupos.crecimiento$modelo.2.marzo grupos.crecimiento$modelo.2.octubre  2  2
+# tauxy tauyx
+# 1 0.015 0.015
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
 GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
 for (i in 1:k) {
   morfo.aleatorio <-
-    sample(grupos.crecimiento$modelo.octubre)
+    sample(grupos.crecimiento$modelo.2.octubre)
   GKtau.nulo <-
     GKtau(grupos.crecimiento$modelo.2.marzo,
           morfo.aleatorio)
@@ -580,7 +597,7 @@ hist(
 abline(
   v = GKtau(
     grupos.crecimiento$modelo.2.marzo,
-    grupos.crecimiento$modelo.octubre
+    grupos.crecimiento$modelo.2.octubre
     
   )[[5]],
   col = "red"
@@ -591,10 +608,10 @@ abline(
 sum(
   GKtau(
     grupos.crecimiento$modelo.2.marzo,
-    grupos.crecimiento$modelo.octubre
+    grupos.crecimiento$modelo.2.octubre
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.51579
+# 1
 
 # Gráfica de la distribución nula de tau(19.6, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -614,7 +631,7 @@ hist(
 abline(
   v = GKtau(
     grupos.crecimiento$modelo.2.marzo,
-    grupos.crecimiento$modelo.octubre
+    grupos.crecimiento$modelo.2.octubre
   )[[6]],
   col = "red"
 )
@@ -624,10 +641,10 @@ abline(
 sum(
   GKtau(
     grupos.crecimiento$modelo.2.marzo,
-    grupos.crecimiento$modelo.octubre
+    grupos.crecimiento$modelo.2.octubre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.51579
+# 1
 
 ###################################################################################################################
 # 4.3) 19.6 meses vs. 51.4 meses
@@ -732,6 +749,114 @@ abline(
 sum(
   GKtau(
     grupos.crecimiento$modelo.octubre,
+    grupos.crecimiento$modelo.junio
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0.36162
+
+###################################################################################################################
+# 4.4) 19.6 meses (modelo 2) vs. 51.4 meses
+
+#  Filtrar filas y columnas con NA
+grupos.crecimiento <-
+  phenotypic.group.assignment.crecimiento[, c(5, 6)]
+head(grupos.crecimiento)# 37 filas
+dim(grupos.crecimiento)
+
+rows.with.na <-
+  unique(which(is.na(grupos.crecimiento), arr.ind = T)[, 1])
+rows.with.na #
+length(rows.with.na)# 4 con NA
+
+# Correr las siguientes líneas en caso de existir NAs
+grupos.crecimiento <-
+  grupos.crecimiento[-rows.with.na, ]
+dim(grupos.crecimiento) # 33 filas completas
+class(grupos.crecimiento)
+summary(grupos.crecimiento)
+head(grupos.crecimiento)
+
+# Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento a 19.6 meses y
+#51.4 meses y grupos morfológicos: tau(19.6, 51.4) y tau(51.4, 19.6)
+GKtau(grupos.crecimiento$modelo.2.octubre,
+      grupos.crecimiento$modelo.junio)
+
+# xName                           yName Nx Ny tauxy tauyx
+# 1 grupos.crecimiento$modelo.2.octubre grupos.crecimiento$modelo.junio  3  2 0.066 0.038
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupos.crecimiento$modelo.junio)
+  GKtau.nulo <-
+    GKtau(grupos.crecimiento$modelo.2.octubre,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(19.6, 51.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(19.6, 51.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$modelo.junio
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(19.6, 51.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$modelo.junio
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0.36162
+
+# Gráfica de la distribución nula de tau(51.4, 19.6),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(51.4, 19.6)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$modelo.junio
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(51.4, 19.6) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.octubre,
     grupos.crecimiento$modelo.junio
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
