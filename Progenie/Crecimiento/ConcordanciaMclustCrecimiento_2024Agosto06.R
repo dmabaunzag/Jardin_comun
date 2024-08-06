@@ -35,6 +35,9 @@
 # "grupos.crecimiento.(junio).VARS_2023diciembre28_140052.csv", asignación de grupos de plantas madre en el
 # tercer muestreo (51.4 meses después de la siembra)
 
+# "grupos.crecimiento.(octubre)_VII_2024julio26_101614.csv", asignación de grupos de plantas madre en el
+# segundo muestreo (19.6 meses después de la siembra, modelo VII)
+
 # "PhenotypicGroupAssignment_2023septiembre08_120644.csv", asignación de grupo morfológico de los especímens de
 # plantas madre.
 
@@ -212,8 +215,10 @@ head(phenotypic.group.assignment.crecimiento)
 # 3.1) 11.4 meses
 # 3.1.1) modelo1 (filas) vs modelo2 (columnas) marzo (11.4 meses)
 colnames(phenotypic.group.assignment.crecimiento)
-# [1] "Collector.Collection.Number" "modelo.1.marzo"              "modelo.2.marzo"
-# [4] "modelo.octubre"              "modelo.junio"                "Phenotypic.Group"
+# [1] "Collector.Collection.Number" "modelo.1.marzo"             
+# [3] "modelo.2.marzo"              "modelo.octubre"             
+# [5] "modelo.2.octubre"            "modelo.junio"               
+# [7] "Phenotypic.Group" 
 
 # Tabla de clasificación cruzada entre los dos modelos a 11.4 meses después de la siembra
 table(
@@ -241,7 +246,20 @@ table(
 # 3     3  0
 # <NA>  1  1
 
-# 3.1.3) Modelo junio (51.4 meses) vs modelo1 (columnas) marzo (11.4 meses)
+#3.1.3) Modelo 2 octubre (19.6 meses) vs modelo1 (columnas) marzo (11.4 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo octubre 2
+  phenotypic.group.assignment.crecimiento[, 2],
+  # Modelo 1 marzo
+  exclude = NULL
+)
+#       1  2
+# 1    12  0
+# 2    23  0
+# <NA>  1  1
+
+# 3.1.4) Modelo junio (51.4 meses) vs modelo1 (columnas) marzo (11.4 meses)
 table(
   phenotypic.group.assignment.crecimiento[, 5],
   #Modelo junio
@@ -255,7 +273,7 @@ table(
 # 2     5  0
 # <NA>  3  1
 
-# 3.1.4) Morfología (columnas) vs modelo1 (filas) marzo (11.4 meses)
+# 3.1.5) Morfología (columnas) vs modelo1 (filas) marzo (11.4 meses)
 table(
   phenotypic.group.assignment.crecimiento[, 2],
   #modelo 1 marzo
@@ -267,10 +285,75 @@ table(
 # 1  6 15  5 10
 # 2  0  0  0  1
 
+# 3.1.6) Modelo 1 octubre (19.6 meses) vs modelo2 (columnas) marzo (11.4 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 4],
+  # Modelo octubre 
+  phenotypic.group.assignment.crecimiento[, 3],
+  # Modelo 2 marzo
+  exclude = NULL
+)
+# 1  2
+# 1    17  0
+# 2    14  1
+# 3     3  0
+# <NA>  1  1
+
+# 3.1.7) Modelo 2 octubre (19.6 meses) vs modelo2 (columnas) marzo (11.4 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo octubre 2
+  phenotypic.group.assignment.crecimiento[, 3],
+  # Modelo 2 marzo
+  exclude = NULL
+)
+# 1  2
+# 1    12  0
+# 2    22  1
+# <NA>  1  1
+
+# 3.1.8) Modelo junio (51.4 meses) vs modelo2 (columnas) marzo (11.4 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 6],
+  #Modelo junio
+  phenotypic.group.assignment.crecimiento[, 3],
+  # MOdelo 2 marzo
+  exclude = NULL
+)
+# 
+# 1  2
+# 1    27  1
+# 2     5  0
+# <NA>  3  1
+
+# 3.1.5) Morfología (columnas) vs modelo2 (filas) marzo (11.4 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 3],
+  #modelo 2 marzo
+  phenotypic.group.assignment.crecimiento[, 7],
+  # modelo morfología
+  exclude = NULL
+)
+# 2  3  4  5
+# 1  6 15  4 10
+# 2  0  0  1  1
 ###################################################################################################################
 # 3.2) 19.6 meses
 
-# 3.2.1) Modelo1 (filas) marzo (11.4 meses) vs modelo octubre (19.6 meses)
+# 3.2.1) Modelo1 (filas) octubre (19.6 meses) vs modelo2 octubre (19.6 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 5],
+  #  Modelo 2 octubre
+  phenotypic.group.assignment.crecimiento[, 4],
+  # Modelo octubre
+  exclude = NULL
+)
+#       1  2  3 <NA>
+# 1    12  0  0    0
+# 2     5 15  3    0
+# <NA>  0  0  0    2
+
+# 3.2.2) Modelo1 (filas) marzo (11.4 meses) vs modelo octubre (19.6 meses)
 table(
   phenotypic.group.assignment.crecimiento[, 2],
   #  Modelo 1 marzo
@@ -282,7 +365,7 @@ table(
 #   1 17 15  3    1
 #   2  0  0  0    1
 
-# 3.2.2) Modelo2 (filas) marzo (11.4 meses) vs modelo octubre (19.6 meses)
+# 3.2.3) Modelo2 (filas) marzo (11.4 meses) vs modelo octubre (19.6 meses)
 table(
   phenotypic.group.assignment.crecimiento[, 3],
   # Modelo 2 marzo
@@ -294,9 +377,9 @@ table(
 #   1 17 14  3    1
 #   2  0  1  0    1
 
-# 3.2.3) Modelo (filas) junio (51.4) vs modelo octubre (19.6)
+# 3.2.4) Modelo (filas) junio (51.4) vs modelo octubre (19.6)
 table(
-  phenotypic.group.assignment.crecimiento[, 5],
+  phenotypic.group.assignment.crecimiento[, 6],
   # Modelo junio
   phenotypic.group.assignment.crecimiento[, 4],
   # Modelo octubre
@@ -307,11 +390,11 @@ table(
 #   2   1  3  1    0
 # <NA>  1  1  0    2
 
-# 3.2.4) Morfología (columnas)  vs modelo octubre (19.6meses)
+# 3.2.5) Morfología (columnas)  vs modelo octubre (19.6meses)
 table(
   phenotypic.group.assignment.crecimiento[, 4],
   # Modelo octubre
-  phenotypic.group.assignment.crecimiento[, 6],
+  phenotypic.group.assignment.crecimiento[, 7],
   # Modelo morfología
   exclude = NULL
 )
@@ -321,14 +404,63 @@ table(
 # 3     0  1  0  2
 # <NA>  1  0  0
 
+#3.2.6) Modelo1 (filas) marzo (11.4 meses) vs modelo 2octubre (19.6 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 2],
+  #  Modelo 1 marzo
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo 2 octubre
+  exclude = NULL
+)
+#   1  2 <NA>
+# 1 12 23    1
+# 2  0  0    1
+
+# 3.2.7) Modelo2 (filas) marzo (11.4 meses) vs modelo 2 octubre (19.6 meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 3],
+  # Modelo 2 marzo
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo 2 octubre
+  exclude = NULL
+)
+#     1  2 <NA>
+# 1 12 22    1
+# 2  0  1    11
+
+# 3.2.8) Modelo (filas) junio (51.4) vs modelo 2 octubre (19.6)
+table(
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo junio
+  phenotypic.group.assignment.crecimiento[, 6],
+  # Modelo 2 octubre
+  exclude = NULL
+)
+#       1  2 <NA>
+# 1    11 17    0
+# 2     0  5    0
+# <NA>  1  1    2
+
+# 3.2.5) Morfología (columnas)  vs modelo 2 octubre (19.6meses)
+table(
+  phenotypic.group.assignment.crecimiento[, 5],
+  # Modelo octubre
+  phenotypic.group.assignment.crecimiento[, 7],
+  # Modelo morfología
+  exclude = NULL
+)
+#       2  3  4  5
+# 1     4  1  1  6
+# 2     1 14  4  4
+# <NA>  1  0  0  1
 #################################################################################################################
 # 3.3) 51.4 meses
 
-# 3.3.1) Modelo1 (filas) marzo (11.4 meses) vs modelo junio (51.4 meses)
+# 3.3.1) Modelo1 (columnas) marzo (11.4 meses) vs modelo junio (51.4 meses)
 table(
-  phenotypic.group.assignment.crecimiento[, 2],
+  phenotypic.group.assignment.crecimiento[, 6],
   # Modelo 1 marzo
-  phenotypic.group.assignment.crecimiento[, 5],
+  phenotypic.group.assignment.crecimiento[, 2],
   # Modelo junio
   exclude = NULL
 )
@@ -340,7 +472,7 @@ table(
 table(
   phenotypic.group.assignment.crecimiento[, 3],
   # Modelo 2 marzo
-  phenotypic.group.assignment.crecimiento[, 5],
+  phenotypic.group.assignment.crecimiento[, 6],
   # Modelo junio
   exclude = NULL
 )
@@ -352,7 +484,7 @@ table(
 table(
   phenotypic.group.assignment.crecimiento[, 4],
   # Modelo octubre
-  phenotypic.group.assignment.crecimiento[, 5],
+  phenotypic.group.assignment.crecimiento[, 6],
   # Modelo junio
   exclude = NULL
 )
@@ -364,9 +496,9 @@ table(
 
 # 3.3.4) Morfología vs modelo junio (51.4 meses)
 table(
-  phenotypic.group.assignment.crecimiento[, 5],
-  # Modelo junio
   phenotypic.group.assignment.crecimiento[, 6],
+  # Modelo junio
+  phenotypic.group.assignment.crecimiento[, 7],
   # Modelo morfología
   exclude = NULL
 )
@@ -380,7 +512,7 @@ table(
 # 3.3.1) Modelo1 (filas) marzo (11.4 meses) vs morfología (columnas)
 table(
   phenotypic.group.assignment.crecimiento[, 2],
-  phenotypic.group.assignment.crecimiento[, 6],
+  phenotypic.group.assignment.crecimiento[, 7],
   exclude = NULL
 )
 # 2  3  4  5
@@ -390,7 +522,7 @@ table(
 # 3.3.2) Modelo2 (filas) marzo (11.4 meses) vs morfología (columnas)
 table(
   phenotypic.group.assignment.crecimiento[, 3],
-  phenotypic.group.assignment.crecimiento[, 6],
+  phenotypic.group.assignment.crecimiento[, 7],
   exclude = NULL
 )
 # 2  3  4  5
@@ -400,7 +532,7 @@ table(
 # 3.3.3) Modelo octubre (19.6) vs morfología (columnas)
 table(
   phenotypic.group.assignment.crecimiento[, 4],
-  phenotypic.group.assignment.crecimiento[, 6],
+  phenotypic.group.assignment.crecimiento[, 7],
   exclude = NULL
 )
 #       2  3  4  5
@@ -409,10 +541,21 @@ table(
 # 3     0  1  0  2
 # <NA>  1  0  0  1
 
-# 3.3.4) Modelo junio (51.4 meses) vs morfología (columnas)
+# 3.3.4) Modelo 2 octubre (19.6) vs morfología (columnas)
 table(
   phenotypic.group.assignment.crecimiento[, 5],
+  phenotypic.group.assignment.crecimiento[, 7],
+  exclude = NULL
+)
+#       2  3  4  5
+# 1     4  1  1  6
+# 2     1 14  4  4
+# <NA>  1  0  0  1
+
+# 3.3.5) Modelo junio (51.4 meses) vs morfología (columnas)
+table(
   phenotypic.group.assignment.crecimiento[, 6],
+  phenotypic.group.assignment.crecimiento[, 7],
   exclude = NULL
 )
 #      2 3 4 5
@@ -537,7 +680,225 @@ sum(
 # NA
 
 ###################################################################################################################
-# 4.2) 11.4 meses(modelos2) vs. 19.6 meses (modelo 2)
+# 4.2) 11.4 meses(modelos1) vs. 19.6 meses (modelo 2)
+
+# Filtrar filas y columnas con NA
+grupos.crecimiento <-
+  phenotypic.group.assignment.crecimiento[, c(2, 5)]
+head(grupos.crecimiento)# 37 plantas madre
+dim(grupos.crecimiento)
+
+rows.with.na <-
+  unique(which(is.na(grupos.crecimiento), arr.ind = T)[, 1])
+rows.with.na #
+length(rows.with.na)# 2 filas con NA
+
+# Correr las siguientes líneas en caso de existir NAs
+grupos.crecimiento <-
+  grupos.crecimiento[-rows.with.na, ]
+dim(grupos.crecimiento) # 35 filas con datos completos (plantas madre asignadas)
+class(grupos.crecimiento)
+summary(grupos.crecimiento)
+head(grupos.crecimiento)
+
+# Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento a 11.4 meses y
+#19.6 meses y grupos morfológicos: tau(11.4,19.6) y tau(19.6,11.4)
+GKtau(grupos.crecimiento$modelo.1.marzo,
+      grupos.crecimiento$modelo.2.octubre)
+
+# 1 grupos.crecimiento$modelo.1.marzo grupos.crecimiento$modelo.2.octubre  1  2
+#     tauxy tauyx
+# 1     0   NaN
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupos.crecimiento$modelo.2.octubre)
+  GKtau.nulo <-
+    GKtau(grupos.crecimiento$modelo.1.marzo,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(11.4, 19.6),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(11.4, 19.6)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.1.marzo,
+    grupos.crecimiento$modelo.2.octubre
+    
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(11.4, 19.6) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.1.marzo,
+    grupos.crecimiento$modelo.2.octubre
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 1
+
+# Gráfica de la distribución nula de tau(19.6, 11.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(19.6, 11.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.1.marzo,
+    grupos.crecimiento$modelo.2.octubre
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(19.6, 11.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.1.marzo,
+    grupos.crecimiento$modelo.2.octubre
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# NA
+
+###################################################################################################################
+# 4.3) 11.4 meses(modelos2) vs. 19.6 meses (modelo 1)
+
+# Filtrar filas y columnas con NA
+grupos.crecimiento <-
+  phenotypic.group.assignment.crecimiento[, c(3, 4)]
+head(grupos.crecimiento)# 37 plantas madre
+dim(grupos.crecimiento)
+
+rows.with.na <-
+  unique(which(is.na(grupos.crecimiento), arr.ind = T)[, 1])
+rows.with.na #
+length(rows.with.na)# 2 filas con NA
+
+# Correr las siguientes líneas en caso de existir NAs
+grupos.crecimiento <-
+  grupos.crecimiento[-rows.with.na, ]
+dim(grupos.crecimiento) # 35 filas con datos completos (plantas madre asignadas)
+class(grupos.crecimiento)
+summary(grupos.crecimiento)
+head(grupos.crecimiento)
+
+# Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento a 11.4 meses y
+#19.6 meses y grupos morfológicos: tau(11.4,19.6) y tau(19.6,11.4)
+GKtau(grupos.crecimiento$modelo.2.marzo,
+      grupos.crecimiento$modelo.octubre)
+# 1 grupos.crecimiento$modelo.2.marzo grupos.crecimiento$modelo.octubre  2  3
+# tauxy tauyx
+# 1 0.029 0.039
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupos.crecimiento$modelo.octubre)
+  GKtau.nulo <-
+    GKtau(grupos.crecimiento$modelo.2.marzo,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(11.4, 19.6),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(11.4, 19.6)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.marzo,
+    grupos.crecimiento$modelo.octubre
+    
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(11.4, 19.6) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.marzo,
+    grupos.crecimiento$modelo.octubre
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# .51332
+
+# Gráfica de la distribución nula de tau(19.6, 11.4),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(19.6, 11.4)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.marzo,
+    grupos.crecimiento$modelo.octubre
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(19.6, 11.4) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.marzo,
+    grupos.crecimiento$modelo.octubre
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0.51332
+###################################################################################################################
+# 4.4) 11.4 meses(modelos2) vs. 19.6 meses (modelo 2)
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
@@ -645,13 +1006,12 @@ sum(
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
 # 1
-
 ###################################################################################################################
-# 4.3) 19.6 meses vs. 51.4 meses
+# 4.5) 19.6 meses (1) vs. 51.4 meses
 
 #  Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(4, 5)]
+  phenotypic.group.assignment.crecimiento[, c(4, 6)]
 head(grupos.crecimiento)# 37 filas
 dim(grupos.crecimiento)
 
@@ -719,7 +1079,7 @@ sum(
     grupos.crecimiento$modelo.junio
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.36162
+# 0.36423
 
 # Gráfica de la distribución nula de tau(51.4, 19.6),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -752,10 +1112,10 @@ sum(
     grupos.crecimiento$modelo.junio
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.36162
+# 0.36423
 
 ###################################################################################################################
-# 4.4) 19.6 meses (modelo 2) vs. 51.4 meses
+# 4.6) 19.6 meses (2) vs. 51.4 meses
 
 #  Filtrar filas y columnas con NA
 grupos.crecimiento <-
@@ -781,8 +1141,9 @@ head(grupos.crecimiento)
 GKtau(grupos.crecimiento$modelo.2.octubre,
       grupos.crecimiento$modelo.junio)
 
-# xName                           yName Nx Ny tauxy tauyx
-# 1 grupos.crecimiento$modelo.2.octubre grupos.crecimiento$modelo.junio  3  2 0.066 0.038
+# 1 grupos.crecimiento$modelo.2.octubre grupos.crecimiento$modelo.junio  2  2
+# tauxy tauyx
+# 1 0.089 0.089
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -827,7 +1188,7 @@ sum(
     grupos.crecimiento$modelo.junio
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.36162
+# 0.14188
 
 # Gráfica de la distribución nula de tau(51.4, 19.6),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -860,14 +1221,14 @@ sum(
     grupos.crecimiento$modelo.junio
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.36162
+# 0.14188
 
 ###################################################################################################################
-# 4.4) 51.4 meses vs. 11.4 meses (modelo 1)
+# 4.7) 51.4 meses vs. 11.4 meses (modelo 1)
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(5, 2)]
+  phenotypic.group.assignment.crecimiento[, c(6, 2)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)
 
@@ -971,11 +1332,11 @@ sum(
 #1
 
 ###################################################################################################################
-# 4.5) 51.4 meses vs. 11.4 meses (modelo 2)
+# 4.8) 51.4 meses vs. 11.4 meses (modelo 2)
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(5, 3)]
+  phenotypic.group.assignment.crecimiento[, c(6, 3)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)
 
@@ -1079,11 +1440,11 @@ sum(
 #1
 
 ###################################################################################################################
-# 4.6) 11.4 meses (modelo 1) vs. morfología
+# 4.9) 11.4 meses (modelo 1) vs. morfología
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(2, 6)]
+  phenotypic.group.assignment.crecimiento[, c(2, 7)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)# 37 filas
 
@@ -1186,11 +1547,11 @@ sum(
 # 0.59266
 
 ###################################################################################################################
-# 4.6) 11.4 meses (modelo 2) vs. morfología
+# 4.10) 11.4 meses (modelo 2) vs. morfología
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(3, 6)]
+  phenotypic.group.assignment.crecimiento[, c(3, 7)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)# 37 filas
 
@@ -1214,7 +1575,7 @@ GKtau(grupos.crecimiento$modelo.2.marzo,
 # xName                               yName Nx Ny
 # 1 grupos.crecimiento$modelo.2.marzo grupos.crecimiento$Phenotypic.Group  2  4
 # tauxy tauyx
-# 1 0.028 0.066
+# 1  0.03 0.097
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -1259,7 +1620,7 @@ sum(
     grupos.crecimiento$Phenotypic.Group
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.40511
+# 0.40554
 
 # Gráfica de la distribución nula de tau(M, 11.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -1292,14 +1653,14 @@ sum(
     grupos.crecimiento$Phenotypic.Group
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.24785
+# 0.24772
 
 ###################################################################################################################
-# 4.7) 19.6 meses vs. morfología
+# 4.11) 19.6 meses vs. morfología
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(4, 6)]
+  phenotypic.group.assignment.crecimiento[, c(4, 7)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)
 
@@ -1402,11 +1763,121 @@ sum(
 # 0.098
 
 ###################################################################################################################
-# 4.8) 51.4 meses vs. morfología
+# 4.12) 19.6 meses (modelo 2) vs. morfología
 
 # Filtrar filas y columnas con NA
 grupos.crecimiento <-
-  phenotypic.group.assignment.crecimiento[, c(5, 6)]
+  phenotypic.group.assignment.crecimiento[, c(5, 7)]
+head(grupos.crecimiento)
+dim(grupos.crecimiento)
+
+rows.with.na <-
+  unique(which(is.na(grupos.crecimiento), arr.ind = T)[, 1])
+rows.with.na #
+length(rows.with.na)# 2 filas
+
+# Correr las siguientes líneas en caso de existir NAs
+grupos.crecimiento <-
+  grupos.crecimiento[-rows.with.na, ]
+dim(grupos.crecimiento) # 170 hijas con todos los datos
+class(grupos.crecimiento)
+summary(grupos.crecimiento)
+head(grupos.crecimiento)
+
+# Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento a 11.4 meses y 19.6 meses
+#y grupos morfológicos: tau(19.6, M) y tau(M, 19.6)
+GKtau(grupos.crecimiento$modelo.2.octubre,
+      grupos.crecimiento$Phenotypic.Group)
+# xName                               yName Nx Ny
+# 1 grupos.crecimiento$modelo.2.octubre grupos.crecimiento$Phenotypic.Group  2  4
+# tauxy tauyx
+# 1 0.154 0.374
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupos.crecimiento$Phenotypic.Group)
+  GKtau.nulo <-
+    GKtau(grupos.crecimiento$modelo.2.octubre,
+          morfo.aleatorio)
+  GKtau.nulo.mat[i,] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(19.6,M),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(19.6, M)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$Phenotypic.Group
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(19.6,M) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$Phenotypic.Group
+  )[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0.00202
+
+# Gráfica de la distribución nula de tau(M,S),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(M, 19.6)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$Phenotypic.Group
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(M,19.6) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento$modelo.2.octubre,
+    grupos.crecimiento$Phenotypic.Group
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+# 0.00381
+
+
+###################################################################################################################
+# 4.11) 51.4 meses vs. morfología
+
+# Filtrar filas y columnas con NA
+grupos.crecimiento <-
+  phenotypic.group.assignment.crecimiento[, c(6, 7)]
 head(grupos.crecimiento)
 dim(grupos.crecimiento)
 

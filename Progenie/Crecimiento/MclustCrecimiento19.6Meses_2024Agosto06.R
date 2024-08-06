@@ -705,7 +705,7 @@ abline(v = Mcluster.phenodata.progenie$G, lty = 3)# para determinar el modelo co
 title(expression("D)"), adj = 0)
 
 
-#Graficando modelo de Mclust con soporte empírico similar al de mejor BIC
+#Graficar modelo de Mclust con soporte empírico similar al de mejor BIC
 
 #"VARS"####
 mclust.options(hcUse = "VARS")
@@ -813,8 +813,8 @@ title(expression("19.6 meses"), adj = 0)
 # Plantas madre discordantes
 discordantes <-
   c(1003, 1004, 1008, 1018, 1031, 1032, 1033, 1034, 1036, 1041, 1022, 1006, 1013, 1037, 1038, 1040, 1039, 1030)
+muertas <- c(1029, 1025, 1001,1026)
 text(
-  muertas <- c(1029, 1025, 1001,1026),
   mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 2],
   mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 3],
   labels = as.character(mean.phenodata.progenie.selected.log[mean.phenodata.progenie.selected.log[, 1] %in% discordantes, 1]),

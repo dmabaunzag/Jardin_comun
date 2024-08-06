@@ -24,7 +24,8 @@
 #  "grupo.reclutamiento.3_2023diciembre26_150045.csv"
 #  "grupo.reclutamiento.2_2023diciembre26_143302.csv"
 #  "grupo.reclutamiento.1_2023diciembre26_141927.csv"
-#  "grupos.crecimiento.morfologicos_2024enero03_081847.csv"
+
+#  "grupos.crecimiento.morfologicos_2024agosto01_092331.csv"
 
 # CONTENIDO
 
@@ -53,7 +54,7 @@ library(GoodmanKruskal)
 #################################################################################################################
 # 1.2) lectura de las asignaciones de grupos según reclutamiento
 
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
 grupo.reclutamiento.1 <- 
   read.table(
     "grupo.reclutamiento.1_2023diciembre26_141927.csv",
@@ -97,10 +98,10 @@ dim(grupo.reclutamiento.3.1)
 #################################################################################################################
 # 1.3) lectura de las asignaciones de grupos según crecimiento
 
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
 grupo.crecimiento <- 
   read.table(
-    "grupos.crecimiento.morfologicos_2024enero03_081847.csv",
+    "grupos.crecimiento.morfologicos_2024agosto01_092331.csv",
     header = T,
     sep = ","
   )
@@ -181,10 +182,20 @@ table(grupo.crecimiento.reclutamiento[,4],
 # 3     3  0  0
 # <NA>  8  0  0
   
-# 3.4) 51.4 meses (modelo1)
+# 3.4) 19.6 meses (2)
 
 table(grupo.crecimiento.reclutamiento[,5],
       grupo.crecimiento.reclutamiento[,9],
+      exclude= NULL)
+      # 1  2  3
+# 1     3  8  1
+# 2    10 10  3
+# <NA>  8  0  0
+
+# 3.4) 51.4 meses (modelo1)
+
+table(grupo.crecimiento.reclutamiento[,6],
+      grupo.crecimiento.reclutamiento[,0],
       exclude= NULL)
 # 1  2
 # 1    13 15
@@ -192,8 +203,8 @@ table(grupo.crecimiento.reclutamiento[,5],
 # <NA> 10  0
 
 # 3.5) 51.4 meses (modelo2)
-table(grupo.crecimiento.reclutamiento[,5],
-      grupo.crecimiento.reclutamiento[,10],
+table(grupo.crecimiento.reclutamiento[,6],
+      grupo.crecimiento.reclutamiento[,11],
       exclude= NULL)
 
       # 1  2  3
@@ -423,7 +434,7 @@ sum(
 # 0.34357
 
 #################################################################################################################
-# 4.3) 19.6 meses
+# 4.3) 19.6 meses (1)
 
 grupos.crecimiento.reclutamiento<- 
   grupo.crecimiento.reclutamiento[, c(4,8)]
@@ -531,10 +542,118 @@ sum(
 #  0.38234
 
 #################################################################################################################
+# 4.4) 19.6 meses (2)
+
+grupos.crecimiento.reclutamiento<- 
+  grupo.crecimiento.reclutamiento[, c(5,9)]
+head(grupos.crecimiento.reclutamiento)
+dim(grupos.crecimiento.reclutamiento)
+# Eliminar NAs
+rows.with.na <-
+  unique(which(is.na(grupos.crecimiento.reclutamiento), arr.ind = T)[, 1])
+rows.with.na # 
+length(rows.with.na)# 8 filas con NAs
+
+# Correr las siguientes líneas en caso de existir NAs
+grupos.crecimiento.reclutamiento <-
+  grupos.crecimiento.reclutamiento[-rows.with.na,]
+dim(grupos.crecimiento.reclutamiento) #
+class(grupos.crecimiento.reclutamiento)
+summary(grupos.crecimiento.reclutamiento)
+head(grupos.crecimiento.reclutamiento)
+
+# Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de crecimiento con grupos de
+#reclutamiento a 19.6 meses: tau(C, R) y tau(R, C)
+GKtau(grupos.crecimiento.reclutamiento[,1],
+      grupos.crecimiento.reclutamiento[,2]) 
+# xName                                 yName
+# 1 grupos.crecimiento.reclutamiento[, 1] grupos.crecimiento.reclutamiento[, 2]
+# Nx Ny tauxy tauyx
+# 1  2  3 0.035 0.049
+
+# Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
+k <- 100000 #numero de iteraciones del modelo nulo
+GKtau.nulo.mat <- matrix(NA, ncol = 2, nrow = k)
+for (i in 1:k) {
+  morfo.aleatorio <-
+    sample(grupos.crecimiento.reclutamiento[,2])
+  GKtau.nulo <-
+    GKtau(grupos.crecimiento.reclutamiento[,1],
+          morfo.aleatorio)
+  GKtau.nulo.mat[i, ] <- c(GKtau.nulo[[5]], GKtau.nulo[[6]])
+}
+
+# Gráfica de la distribución nula de tau(R, C),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(R, C)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento.reclutamiento[,1],
+    grupos.crecimiento.reclutamiento[,2]
+    
+  )[[5]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(R, C) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento.reclutamiento[,1],
+    grupos.crecimiento.reclutamiento[,2])[[5]] <= GKtau.nulo.mat[, 1]
+) / k
+# 0.28605
+
+# Gráfica de la distribución nula de tau(C, R),
+par(mar = c(5, 5, 2, 2) + 0.1)
+#par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
+hist(
+  GKtau.nulo.mat[, 1],
+  xlim = c(0, 1),
+  col = "gray90",
+  main = "",
+  xlab = expression(tau(C, R)),
+  ylab = "Iteraciones del modelo nulo",
+  cex.main = 1,
+  cex.lab = 1.5,
+  cex.axis = 1.5
+)
+# Mostrar el valor observado
+abline(
+  v = GKtau(
+    grupos.crecimiento.reclutamiento[,1],
+    grupos.crecimiento.reclutamiento[,2]
+  )[[6]],
+  col = "red"
+)
+
+# Calcular la significancia estadística (i.e., la probabilidad de que el modelo nulo genere
+#un valor de tau(C, R) al menos tan extremo como el observado):
+sum(
+  GKtau(
+    grupos.crecimiento.reclutamiento[,1],
+    grupos.crecimiento.reclutamiento[,2]
+  )[[6]] <= GKtau.nulo.mat[, 2]
+) / k
+#  0.4657
+
+#################################################################################################################
 # 4.4) 51.4 meses
 
 grupos.crecimiento.reclutamiento<- 
-  grupo.crecimiento.reclutamiento[, c(5, 9)]
+  grupo.crecimiento.reclutamiento[, c(6, 10)]
 head(grupos.crecimiento.reclutamiento)
 dim(grupos.crecimiento.reclutamiento)
 # Eliminar NAs
@@ -642,7 +761,7 @@ sum(
 # 4.5) 51.4 meses (modelo 2)
 
 grupos.crecimiento.reclutamiento<- 
-  grupo.crecimiento.reclutamiento[, c(5, 10)]
+  grupo.crecimiento.reclutamiento[, c(6, 11)]
 head(grupos.crecimiento.reclutamiento)
 dim(grupos.crecimiento.reclutamiento)
 # Eliminar NAs

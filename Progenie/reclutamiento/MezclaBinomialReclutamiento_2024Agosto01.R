@@ -20,7 +20,7 @@
 #el momento del muestreo. Los modelos de mezclas binomiales permiten determinar si las plantas madre forman uno o
 #varios grupos de reclutamiento, que corresponden a distribuciones binomiales con diferentes valores del
 #parámetro p.
-#
+
 #REQUERIMIENTOS 
 
 #"PhenotypicDataProgeny_Quebradas_2020Marzo.csv" 
@@ -36,7 +36,7 @@
 
 # 1) Datos preliminares: Carga de librerías y lectura de datos
 
-# 2) Seleccionar las variables a usar en cada tabla
+# 2) Seleccionar las variables de reclutamiento en cada muestreo en base a si fue muestreado el crecimiento
 
 # 3) Crear marco de datos del reclutamiento
 
@@ -98,7 +98,7 @@ datos.fenotipicos.junio <-
 
 #################################################################################################################
 #################################################################################################################
-# 2) Seleccionar las variables a usar en cada tabla
+# 2) Seleccionar las variables de reclutamiento en cada muestreo en base a si fue muestreado el crecimiento
 #################################################################################################################
 #################################################################################################################
 
@@ -108,8 +108,8 @@ summary(datos.fenotipicos.marzo)
 head(datos.fenotipicos.marzo)
 dim(datos.fenotipicos.marzo)# 250 plantas hijas sembradas y 26 variables
 
-# 2.1.1) subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
-# nombre.progenie; seleccionar las variables para analizar reclutamiento
+# 2.1.1) subconjunto de las Variables: unir las variables Bandeja, fila y columna para crear variable
+# "nombre.progenie" y seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.marzo)
 datos.fenotipicos.marzo.selected <- datos.fenotipicos.marzo %>%
   unite("nombre.progenie", c(Bandeja, Fila, Columna)) %>%
@@ -156,8 +156,8 @@ summary(datos.fenotipicos.octubre)
 head(datos.fenotipicos.marzo)
 dim(datos.fenotipicos.marzo)# 250 plantas hijas sembradas y 26 variables
 
-# 2.2.1) Subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
-# nombre.progenie; seleccionar las variables para analizar reclutamiento
+# 2.2.1) Subconjunto de las variables: unir las variables Bandeja, fila y columna para crear variable
+# "nombre.progenie" y seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.marzo)
 datos.fenotipicos.octubre.selected <- datos.fenotipicos.octubre %>%
   unite("nombre.progenie", c(Bandeja, Fila, Columna)) %>%
@@ -200,8 +200,8 @@ summary(datos.fenotipicos.junio)
 head(datos.fenotipicos.junio)
 dim(datos.fenotipicos.junio)# 180 progenie y 29 variables
 
-# 2.3.1) Subconjunto de las columnas: unir las variables Bandeja, fila y columna para crear variable
-# nombre.progenie; seleccionar las variables para analizar reclutamiento
+# 2.3.1) Subconjunto de las variables: unir las variables Bandeja, fila y columna para crear variable
+# "nombre.progenie" y seleccionar las variables para analizar reclutamiento
 colnames(datos.fenotipicos.junio)
 datos.fenotipicos.junio.selected <- datos.fenotipicos.junio %>%
   unite("nombre.progenie", c(Bandeja, Fila, Columna)) %>%
@@ -412,6 +412,7 @@ class(sobrevivientes.all)
 dim(sobrevivientes.all)
 head(sobrevivientes.all)
 View(sobrevivientes.all)
+
 #################################################################################################################
 #################################################################################################################
 # 6) Examinar el reclutamiento
@@ -621,21 +622,23 @@ show(Modelos1)# modelos
 # Call:
 #   stepFlexmix(cbind(vivas1, siembra - vivas1) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 1:9, nrep = 5)
-# 
+# # 
 # iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -189.3003 380.6006 382.3618 382.3618
-# 2   15      TRUE 2  2 -128.5333 263.0665 268.3501 272.4862
-# 3   29      TRUE 3  3 -118.6318 247.2635 256.0695 261.4749
-# 4   69      TRUE 4  4 -117.7583 249.5165 261.8449 277.2468
-# 5   44      TRUE 5  5 -117.7582 253.5164 269.3672 300.9094
-# 6   51      TRUE 6  6 -117.7582 257.5165 276.8897 326.0051
-# 7   54      TRUE 7  7 -117.7583 261.5165 284.4121 334.2765
-# 8   71      TRUE 8  8 -117.7590 265.5179 291.9359 365.3740
-# 9   51      TRUE 8  9 -117.7589 265.5178 291.9358 359.0328
+# 2    9      TRUE 2  2 -128.5333 263.0665 268.3501 272.4157
+# 3   25      TRUE 3  3 -118.6318 247.2635 256.0695 261.4761
+# 4   70      TRUE 4  4 -117.7583 249.5166 261.8450 277.2499
+# 5   39      TRUE 5  5 -117.7581 253.5162 269.3670 302.4333
+# 6   46      TRUE 6  6 -117.7583 257.5167 276.8899 308.9821
+# 7   54      TRUE 6  7 -117.7583 257.5166 276.8898 313.0651
+# 8   38      TRUE 5  8 -117.7581 253.5161 269.3669 295.6215
+# 9  107      TRUE 9  9 -117.7591 269.5182 299.4586 355.6271
 
 sort(BIC(Modelos1)) # organizar según BIC delta = 5.7
-# 3        4        2        5        6        7        9        8        1 
-# 256.0695 261.8449 268.3501 269.3672 276.8897 284.4121 291.9358 291.9359 382.3618 
+# 3        4        2        8        5        7        6        9 
+# 256.0695 261.8450 268.3501 269.3669 269.3670 276.8898 276.8899 299.4586 
+# 1 
+# 382.3618 
 
 sort(BIC(Modelos1))[[1]]-sort(BIC(Modelos1))[[2]]#-5.775409
 
@@ -840,13 +843,13 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
+#################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
 # Directorio para guardar figuras
 #setwd("C:/_transfer/Review/MelissaPineda/Figures")
 #setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# Directorio de Diana
 
 # Graficar soporte empírico para el mejor modelo de mezclas binomiales
-
 models1 <- show(Modelos1)
 models1[,7] <- round(models1[,7],3)
 bic.models1 <- models1[!duplicated(models1$BIC),c(3,7)]
@@ -1178,6 +1181,7 @@ mtext(side = 4,
       cex = 1.5,
       line = 2.8)
 
+#################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
 
 # Directorio para guardar figuras
@@ -1308,7 +1312,7 @@ plot(Modelos3)
 #   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 1:9, nrep = 5)
 # 
-# iter converged k k0    logLik      AIC      BIC      ICL
+#   iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -166.5155 335.0309 336.7921 336.7921
 # 2   11      TRUE 2  2 -112.1444 230.2887 235.5723 239.5820
 # 3   72      TRUE 2  3 -112.1444 230.2887 235.5723 239.5886
@@ -1719,6 +1723,7 @@ table(grupo.reclutamiento.3.vs.3.1[,3],
       grupo.reclutamiento.3.vs.3.1[, 2]
 )
 
+#################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
 models3 <- show(Modelos3)
 models3[,7] <- round(models3[,7],3)
@@ -1773,7 +1778,7 @@ axis(2,
      cex.axis = 1.5,
      las=1)
 abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
-abline(v =OtroModelo3@k, lty = 3)
+segments(x0 =OtroModelo3@k,y0 = -110, x1 = OtroModelo3@k, y1 = -0.090, lty = 3)
 title(expression("E)"), adj = 0)
 
 # Acotando soporte empírico entre 0-10
@@ -1818,9 +1823,8 @@ axis(2,
      cex.axis = 1.5,
      las=1)
 abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
-abline(v =OtroModelo3@k, lty = 3)
+segments(x0 =OtroModelo3@k,y0 = -10, x1 = OtroModelo3@k, y1 = -0.090, lty = 3)
 title(expression("F)"), adj = 0)#para determinar el modelo con el mejor soporte
-
 
 
 #################################################################################################################
@@ -2046,7 +2050,7 @@ sum(
 # 0
 
 #################################################################################################################
-# 8.3) 19.6 meses después de la siembra vs. 51.4 meses después de la siembra (grupo con igual soporte empírico)
+# 8.3) 19.6 meses después de la siembra vs. 51.4 meses después de la siembra (grupo con similar soporte empírico)
 grupo.reclutamiento.2.vs.3.1 <-
   merge(
     grupo.reclutamiento.2[, c(1, 3)],
