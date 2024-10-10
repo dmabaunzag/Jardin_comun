@@ -7,15 +7,13 @@
 #
 #Este código  hace parte del material suplementario del artículo "La naturaleza de las especies de frailejones:
 #un experimento de jardín común en Sumapaz", adaptado del código de Pineda et al. (en prep. The Nature of
-#Espeletia Species). El objetivo es hacer un análisis de delimitación de especies basado en caracteres
-#morfológicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes (Colombia), que incluye  los datos del
-#trabajo de Pineda et al. junto con a 43 especímenes colectados que fueron usadas como
-#plantas madre dentro del experimento del jardín común. Primero, realizamos grupos morfológicos de los
-#frailejones silvestres del páramo de Sumapaz sin información a priori. Posteriormente, determinamos la
-#correspondencia de los grupos morfológico de las plantas madre con los grupos de plantas madre según el
-#reclutamiento y crecimiento en el jardín común durante cuatro años. Esta correspondencia indicaría que los
-#grupos morfológicos de frailejones silvestres corresponden a especies que difieren en aspectos de nicho
-#ecológico durante los primeros años de vida
+#Espeletia Species). El objetivo es hacer un análisis de delimitación de los grupos morfológicos de las plantas
+#madre basado en caracteres morfológicos de frailejones de del Páramo Sumapaz, cordillera Oriental de los Andes
+#(Colombia).Los datos analizados corresponden a los 307 especímenes analizados en Pineda et al. (2020) junto con
+#a 43 especímenes que fueron usadas como plantas madre dentro del experimento del jardín común. Primero,
+#realizamos grupos morfológicos de los frailejones silvestres del páramo de Sumapaz sin información a priori. La
+#variación morfológica expresada se analizó con modelos de mezclas normales utilizando el paquete de R mclust v.
+#6.0.0.
 
 #DATOS REQUERIDOS PARA CORRER ESTE CÓDIGO####
 
@@ -64,22 +62,21 @@
 #################################################################################################################
 # 1.1) Librerías
 
-library(mclust) # librería para adaptar modelos de mezclas normales
+library(mclust) # librería para analizar modelos de mezclas normales
 library(clustvarsel) #librería para la selección de variables para el modelos de mezclas normales
 library(ellipse)
 library(GoodmanKruskal) # estadístico tau (τ) de Goodman y Kruskal
 
 ###################################################################################################################
-# 1.2) lectura de los datos morfológicos. Estos datos son promedios de cada variable para cada espécimen.
+# 1.2) lectura de los datos morfológicos. Estos datos son promedios de cada variable para cada espécimen que
+#fueron promediados previamente.
 
 # Seleccionar directorio de trabajo
 setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
-#
-#leer tablas de datos morfológicos: examinar y resumir los datos
 
-# datos morfológicos usados en Pineda et al.(2020)
+# Leer datos morfológicos usados en Pineda et al.(2020)
 mean.phenodata.pineda <-
   read.table("meanphenodata_2022Apr27_160817.csv",
              header = T,
@@ -89,7 +86,7 @@ summary(mean.phenodata.pineda)
 head(mean.phenodata.pineda)
 dim(mean.phenodata.pineda)# 1020 Especímenes y 21 variables
 
-# datos morfológicos de las 43 plantas madre
+# Leer datos morfológicos de las 43 plantas madre
 mean.phenodata.piloto <-
   read.table("meanphenodatapilot_2023Aug02_095547.csv",
              header = T,
@@ -107,14 +104,15 @@ mean.phenodata.piloto <-
   merge(mean.phenodata.piloto[, c(-4,-5,-6)], coordenadas.piloto[, c(-2,-3)],
         by = "Collector.Collection.Number")
 
-# combinar las dos tablas
+# Combinar los datos morfológicos usados en Pineda et al. (2020) y los datos morfológicos de las 43 plantas madre
+# en el jardín común.
 mean.phenodata <-
   rbind(mean.phenodata.pineda, mean.phenodata.piloto)
 summary(mean.phenodata)
 head(mean.phenodata)
 dim(mean.phenodata) # con 1063 especímenes y 21 variables
 
-# unidades de medida de cada variables
+# Unidades de medida de cada variables
 measurement.units <-
   c(
     NA,
@@ -154,6 +152,7 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #        ".RData",
 #        sep = ""
 #      ))
+# load("Mcluster.phenodata_2023agosto19.RData")
 
 #################################################################################################################
 #################################################################################################################
@@ -170,72 +169,67 @@ data.frame(colnames(mean.phenodata), measurement.units)
 #setwd("C:/_transfer/Proposals/Espeletia/TesisMelissa/Data") #Ivan's working directory Waterman
 colnames(mean.phenodata) # nombre de las variables
 
-# Histogramas con la distribución de cada carácter morfológico
+# Escoger variable fenotípica
+trait <- 7 # eg., largo de la lámina
 
-for (trait.x in c(7:19)) {
-  colnames(mean.phenodata)[trait.x] # Qué variable
-  # Distribución escala lineal
-  hist(
-    mean.phenodata[, trait.x],
-    breaks = 100,
-    xlab = colnames(mean.phenodata)[trait.x],
-    main = "",
-    col = "gray80"
-  )
-  summary(mean.phenodata[, trait.x])
-  #Distribución en escala logarítmica
-  hist(
-    log(mean.phenodata[, trait.x]),
-    breaks = 100,
-    xlab = paste(
-      "log(",
-      colnames(mean.phenodata)[trait.x],
-      "(",
-      measurement.units[trait.x],
-      "))"
-    ),
-    main = "",
-    col = "gray80"
-  )
-  summary(log(mean.phenodata[, trait.x]))
-  
-  # Distribución en escala logarítmica +1; puede ser útil cuando hay ceros en los datos crudos
-  hist(
-    log(mean.phenodata[, trait.x] + 1),
-    breaks = 100,
-    xlab = paste(
-      "log(",
-      colnames(mean.phenodata)[trait.x],
-      "+1(",
-      measurement.units[trait.x],
-      "))"
-    ),
-    main = "",
-    col = "gray80"
-  )
-  summary(log(mean.phenodata[, trait.x] + 1))
-}
+# Histogramas con la distribución de cada carácter morfológico
+colnames(mean.phenodata)[trait] # Qué variable
+# Distribución escala lineal
+hist(
+  mean.phenodata[, trait],
+  breaks = 100,
+  xlab = colnames(mean.phenodata)[trait],
+  main = "",
+  col = "gray80"
+)
+summary(mean.phenodata[, trait])
+#Distribución en escala logarítmica
+hist(
+  log(mean.phenodata[, trait]),
+  breaks = 100,
+  xlab = paste(
+    "log(",
+    colnames(mean.phenodata)[trait],
+    "(",
+    measurement.units[trait],
+    "))"
+  ),
+  main = "",
+  col = "gray80"
+)
+summary(log(mean.phenodata[, trait]))
+
+# Distribución en escala logarítmica +1; puede ser útil cuando hay ceros en los datos crudos
+hist(
+  log(mean.phenodata[, trait] + 1),
+  breaks = 100,
+  xlab = paste(
+    "log(",
+    colnames(mean.phenodata)[trait],
+    "+1(",
+    measurement.units[trait],
+    "))"
+  ),
+  main = "",
+  col = "gray80"
+)
+summary(log(mean.phenodata[, trait] + 1))
+
 
 # Examinar gráficamente relaciones bivariables entre caracteres morfológicos
 colnames(mean.phenodata)
+trait.x <- 7 # eg., longitud de la lámina vs.,
+trait.y <- 8 # ancho de la lámina
 
-for (trait.x in c(7:19)) {
-  for (trait.y in c(7:19)) {
-    if (trait.x == trait.y) {
-      next
-    }
-    plot(
-      mean.phenodata[, trait.x],
-      mean.phenodata[, trait.y],
-      xlab = paste(colnames(mean.phenodata)[trait.x], "(", measurement.units[trait.x], ")"),
-      ylab = paste(colnames(mean.phenodata)[trait.y], "(", measurement.units[trait.y], ")"),
-      cex.lab = 1.5,
-      cex.axis = 1.5,
-      asp = 1
-    )
-  }
-}
-
+plot(
+  mean.phenodata[, trait.x],
+  mean.phenodata[, trait.y],
+  xlab = paste(colnames(mean.phenodata)[trait.x], "(", measurement.units[trait.x], ")"),
+  ylab = paste(colnames(mean.phenodata)[trait.y], "(", measurement.units[trait.y], ")"),
+  cex.lab = 1.5,
+  cex.axis = 1.5,
+  asp = 1
+)
 #################################################################################################################
 # 2.2) Realizar un subconjunto de datos sólo con los caracteres morfológicos para el análisis. La selección de los
 #caracteres fue hecha a priori en bases en ideas de importancia de caracteres para distinguir las especies y
@@ -307,7 +301,7 @@ mean.phenodata.selected.log <-
   log(
     data.frame(
       mean.phenodata.selected[, 1:4],
-      mean.phenodata.selected[, 5] + 1,
+      mean.phenodata.selected[, 5] + 1, #varios especímenes no tienen brácteas estériles
       mean.phenodata.selected[, 6:13]
     )
   )
@@ -355,7 +349,8 @@ mean.phenodata.selected.log.pca$rotation # Coeficientes (o "loadings") de cada c
 # )
 
 # Cargar el análisis de CPs
-#load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")# Directorio de Diana
+# load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 #
 #Examinar las distribuciones univariadas de los principales componentes:
 colnames(mean.phenodata.selected.log.pca$x)
@@ -387,37 +382,31 @@ dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.x]
 dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.y]
 
 # Graficar las relaciones bivariadas
-for (PCA.x in 1:length(colnames(mean.phenodata.selected.log.pca$x))) {
-  for (PCA.y in 1:length(colnames(mean.phenodata.selected.log.pca$x))) {
-    if (PCA.x == PCA.y) {
-      next
-    }
-    plot(
-      mean.phenodata.selected.log.pca$x[, PCA.x],
-      mean.phenodata.selected.log.pca$x[, PCA.y],
-      xlab = dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.x],
-      ylab = dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.y],
-      cex.lab = 1.5,
-      cex.axis = 1.5,
-      asp = 1
-    )
-  }
-}
-
+plot(
+  mean.phenodata.selected.log.pca$x[, PCA.x],
+  mean.phenodata.selected.log.pca$x[, PCA.y],
+  xlab = dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.x],
+  ylab = dimnames(mean.phenodata.selected.log.pca$x)[[2]][PCA.y],
+  cex.lab = 1.5,
+  cex.axis = 1.5,
+  asp = 1
+)
 #################################################################################################################
 #################################################################################################################
 # 3) Selección de variables para los modelos de mezclas normales.#####
 #################################################################################################################
 #################################################################################################################
-
+# Cargar el análisis de CPs
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")# Directorio de Diana
+# load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 #################################################################################################################
 # 3.1) selección de variables hacia atrás usando CPs de la matriz de varianza-covarianza de los caracteres
 #morfológicos con transformación logarítmica.
 
-# Ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
-#argumento "hcUse"; revisar las opciones de MClust: hep("Mclust)
-
-mclust.options(hcUse = "PCS")
+# Ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando
+# el argumento "hcUse"; revisar las opciones de MClust: hep("Mclust)
+for (option in c("PCS", "VARS", "STD", "SPH", "PCR", "SVD")) {
+mclust.options(hcUse = option)
 mean.phenodata.selected.log.pca.varsel.back <-
   clustvarsel(
     mean.phenodata.selected.log.pca$x,
@@ -426,219 +415,51 @@ mean.phenodata.selected.log.pca.varsel.back <-
     direction = c("backward")
   )
 # Examinar los resultados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
-mclust.options(hcUse = "VARS")# original variables
-mean.phenodata.selected.log.pca.varsel.back <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("backward")
-  )
-# Resultados examinados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
-mclust.options(hcUse = "STD")# standardized variables (centered and scaled)
-mean.phenodata.selected.log.pca.varsel.back <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("backward")
-  )
-# Resultados examinados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
-mclust.options(hcUse = "SPH")# sphered variables (centered, scaled and uncorrelated) computed using SVD
-mean.phenodata.selected.log.pca.varsel.back <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("backward")
-  )
-# Resultados examinados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-#Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
-mclust.options(hcUse = "PCR")#principal components computed using SVD on standardized (center and scaled)
-#variables (i.e. using the correlation matrix)
-
-mean.phenodata.selected.log.pca.varsel.back <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("backward")
-  )
-# Resultados examinados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-#Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
-mclust.options(hcUse = "SVD")#scaled SVD transformation (default)
-mean.phenodata.selected.log.pca.varsel.back <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("backward")
-  )
-# Resultados examinados
-attributes(mean.phenodata.selected.log.pca.varsel.back)
-summary(mean.phenodata.selected.log.pca.varsel.back)
-names(mean.phenodata.selected.log.pca.varsel.back$subset)
-mean.phenodata.selected.log.pca.varsel.back$steps.info
-mean.phenodata.selected.log.pca.varsel.back$search
-mean.phenodata.selected.log.pca.varsel.back$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,2,3,4,5,6,7,8,9,10,11,12
-
+print(attributes(mean.phenodata.selected.log.pca.varsel.back))
+print(summary(mean.phenodata.selected.log.pca.varsel.back))
+print(names(mean.phenodata.selected.log.pca.varsel.back$subset))
+print(mean.phenodata.selected.log.pca.varsel.back$steps.info)
+print(mean.phenodata.selected.log.pca.varsel.back$search)
+print(mean.phenodata.selected.log.pca.varsel.back$direction)
+}
+#Si existe concordancia entre cada uno de la selección de variables en los valores de inicialización, se prosigue
+#a examinar si hay concordancia, según la dirección de la selección de variables, en caso contrario se utilizarán
+#todas las variables para delimitar grupos de novo por mclust:
 #################################################################################################################
-# 3.2) selección de variables hacia adelante usando CPs de la matriz de varianza-covarianza de los caracteres
+#3.2) selección de variables hacia adelante usando CPs de la matriz de varianza-covarianza de los caracteres
 #morfológicos con transformación logarítmica.
 
 # Ejecutar selección de variables con dirección hacia atrás para los diferentes valores de incialización, usando el
 #argumento "hcUse"; revisar las opciones de MClust: help("Mclust)
 
-mclust.options(hcUse = "PCS")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-mclust.options(hcUse = "VARS")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-#Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-mclust.options(hcUse = "STD")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-#Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-mclust.options(hcUse = "SPH")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-mclust.options(hcUse = "PCR")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-mclust.options(hcUse = "SVD")
-mean.phenodata.selected.log.pca.varsel.for <-
-  clustvarsel(
-    mean.phenodata.selected.log.pca$x,
-    G = 1:9,
-    search = c("greedy"),
-    direction = c("forward")
-  )
-# Resultados:
-attributes(mean.phenodata.selected.log.pca.varsel.for)
-summary(mean.phenodata.selected.log.pca.varsel.for)
-names(mean.phenodata.selected.log.pca.varsel.for$subset)
-mean.phenodata.selected.log.pca.varsel.for$steps.info
-mean.phenodata.selected.log.pca.varsel.for$search
-mean.phenodata.selected.log.pca.varsel.for$direction
-# Estos son los caracteres seleccionados en orden por el modelo: 1,3,2,4,6,5,10,8,9,11,12,7
-
-# La selección de las variables tanto hacia adelante como hacia atrás, escogieron los primeros 12 caracteres
-#morfológicos
+for (option in c("PCS", "VARS", "STD", "SPH", "PCR", "SVD")) {
+  mclust.options(hcUse = option)
+  mean.phenodata.selected.log.pca.varsel.for <-
+    clustvarsel(
+      mean.phenodata.selected.log.pca$x,
+      G = 1:9,
+      search = c("greedy"),
+      direction = c("forward")
+    )
+  # Resultados:
+  print(attributes(mean.phenodata.selected.log.pca.varsel.for))
+  print(summary(mean.phenodata.selected.log.pca.varsel.for))
+  print(names(mean.phenodata.selected.log.pca.varsel.for$subset))
+  print(mean.phenodata.selected.log.pca.varsel.for$steps.info)
+  print(mean.phenodata.selected.log.pca.varsel.for$search)
+  print(mean.phenodata.selected.log.pca.varsel.for$direction)
+}
+# La selección de las variables tanto hacia adelante como hacia atrás, escogieron los primeros 12 componentes
+# principales:
 
 #################################################################################################################
 #################################################################################################################
 # 4) Ajuste de los modelos de mezclas normales####
 #################################################################################################################
 #################################################################################################################
-
+# Cargar el análisis de CPs
+# setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")# Directorio de Diana
+# load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
 #################################################################################################################
 # 4.1) Seleccionar caracteres morfológicos (PCs) para la inclusión del método de mezclas normales basado en los
 #resultados de las secciones 3.1 3.2.
@@ -649,8 +470,8 @@ data.for.GMM <- mean.phenodata.selected.log.pca$x[, 1:12]
 
 for (option in c("PCS", "VARS", "STD", "SPH", "PCR", "SVD")) {
   mclust.options(hcUse = option)
-  Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:9)
-  #Resultados:
+  Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:9)# con 1-9 componentes
+  #Imprimir resultados:
   Mcluster.phenodata
   print(option)
   print(summary(Mcluster.phenodata))
@@ -746,7 +567,7 @@ for (option in c("PCS", "VARS", "STD", "SPH", "PCR", "SVD")) {
 #   1   2   3   4   5 
 # 23 163  76  27  61 
 
-
+# de acuerdo al BIC los modelos inicializados en PCS y/o VARS tuvieron mayor soporte emírico:
 #"PCS"
 mclust.options(hcUse = "PCS")
 Mcluster.phenodata <- Mclust(data.for.GMM, G = 1:9)
@@ -769,9 +590,12 @@ attributes(Mcluster.phenodata)
 #   1   2   3   4   5
 #   85 107  58  22  78
 
-# Gráficas de los grupos morfológicos, de acuerdo con el mejor modelo
+
+# Graficar de los grupos morfológicos, de acuerdo con el mejor modelo, eg. graficar el mejor modelo de mezclas
+# normales en la dimension 1 vs 2 (PCs)
 plot(Mcluster.phenodata, what = "classification", dimens = c(1, 2))
-# Gráfica del soporte empírico de los diferentes modelos
+
+# Graficar el soporte empírico de los diferentes modelos
 plot(Mcluster.phenodata, what = "BIC")
 
 #Graficar soporte empírico para el mejor modelo
@@ -1009,8 +833,17 @@ setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# Diana's direc
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/Figuras")# directorio de Diana
 
 #################################################################################################################
-# 5.3.1)Todos los datos
-#CP1 vs CP2: FS_2_A
+# 5.3.1) Con todos los datos
+
+# puede usar la función plot de mclust, para examinar rápidamente:
+
+
+plot(
+  Mcluster.phenodata,
+  what = c("classification"),
+  dimens = c(1, 2))
+
+# o puede hacer graficarla manualmente:
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar = c(5, 5, 4, 2) + 0.1)
 plot(

@@ -704,7 +704,7 @@ head(grupo.reclutamiento.1)
 #          ),
 #       row.names = F
 #     )
-
+#################################################################################################################
 #Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
 #binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
@@ -742,10 +742,10 @@ par(mar = c(6, 5, 4, 5) + 0.1)
 hist(
   vivas1[MejorModelo1@cluster == 1],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Reclutamiento\n(Número de plantas hijas)",
-  ylab = "Número de plantas madre",
+  xlab = "", # "Reclutamiento\n(Número de plantas hijas)",
+  ylab = "", #Número de\n plantas madre",
   main = NA,
-  cex.lab = 1.5,
+  cex.lab = 1.4,
   ylim = c(0, 10),
   xaxt = "n",
   yaxt = "n",
@@ -771,48 +771,37 @@ axis(
 axis(
   side = 2,
   at = 0:10,
-  labels = T,
+  labels = F,
   tcl = -0.5,
   cex.axis = 1.3
 )
+axis(
+  side = 2,
+  at = seq(0,10,5),
+  labels = seq(0,10,5) ,
+  tcl = -0.7,
+  cex.axis = 1.3,
+  las =1
+)
+
 hist(
-  vivas1[MejorModelo1@cluster == 2],#R3
+  vivas1[MejorModelo1@cluster == 3],#R3
   breaks = seq(-0.5, 24.5, 1),
   add = T,
   density = 15,
   col = "black"
 )
-hist(vivas1[MejorModelo1@cluster == 3],# R1
+hist(vivas1[MejorModelo1@cluster == 2],# R1
      breaks = seq(-0.5, 24.5, 1),
      add = T,
      col = "transparent")
-#hist(vivas1[MejorModelo1@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=-45, col="black")
-#hist(vivas1[MejorModelo1@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=45, col="black")
-# Leyenda
-legend(
-  16,
-  10,
-  c("R1", "R2", "R3"),
-  pch = c(24, 4, 19),
-  lty = 1,
-  pt.cex = c(1.5, 1, 1),
-  cex = 1.5
-)
-legend(
-  7,
-  10,
-  c("R1", "R2", "R3"),
-  density = c(NA, NA, 15),
-  fill = c("transparent", "gray90", "black"),
-  cex = 1.5
-)
 
 #Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
 #correspondiente a cada componente del mejor modelo
 par(new = T)
 plot(
   0:24,
-  pm.comp.2,# R3
+  pm.comp.3,# R3
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 19,
@@ -831,18 +820,59 @@ points(
 )
 points(
   0:24,
-  pm.comp.3,#R1
+  pm.comp.2,#R1
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
-  cex = 1.5
+  cex = 1.3
 )
-axis(side = 4, cex.axis = 1.5)
+axis(side = 4, cex.axis = 1.3, las =1)
 mtext(side = 4,
       "Probabilidad",
-      cex = 1.5,
-      line = 2.8)
+      cex = 1.4,
+      line = 3.8)
+mtext(side = 2,
+      "Número de\n plantas madre",
+      cex = 1.4,
+      line = 1.8)
 
+#################################################################################################################
+#Leyenda
+par(mar = c(6, 5, 4, 5) + 0.1)
+hist(
+  vivas1[MejorModelo1@cluster == 1],#R2
+  breaks = seq(-0.5, 24.5, 1),
+  xlab = "", # "Reclutamiento\n(Número de plantas hijas)",
+  ylab = "", #Número de plantas madre",
+  main = NA,
+  cex.lab = 1.4,
+  ylim = c(0, 10),
+  xaxt = "n",
+  yaxt = "n",
+  bty = "n",
+  col = "transparent",
+  border = "transparent"
+)
+
+legend(
+  16,
+  10,
+  c("R1", "R2", "R3"),
+  pch = c(24, 4, 19),
+  lty = 1,
+  pt.cex = c(1.5, 1, 1),
+  cex = 1.3,
+  text.width = NA
+)
+legend(
+  7,
+  10,
+  c("R1", "R2", "R3"),
+  density = c(NA, NA, 15),
+  fill = c("transparent", "gray90", "black"),
+  cex = 1.3,
+  text.width = NA
+)
 #################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
 # Directorio para guardar figuras
@@ -1057,7 +1087,7 @@ head(grupo.reclutamiento.2)
 #   ),
 #   row.names = F
 # )
-
+#################################################################################################################
 #Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad
 #de la distribución binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
@@ -1095,10 +1125,10 @@ par(mar = c(6, 5, 4, 5) + 0.1)
 hist(
   vivas2[MejorModelo2@cluster == 3],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Reclutamiento (Número de plantas hijas)",
-  ylab = "Número de plantas madre",
+  xlab = "", #Reclutamiento (Número de plantas hijas)",
+  ylab = "", #Número de plantas madre",
   main = NA,
-  cex.lab = 1.5,
+  cex.lab = 1.4,
   ylim = c(0, 10),
   xaxt = "n",
   yaxt = "n",
@@ -1124,10 +1154,19 @@ axis(
 axis(
   side = 2,
   at = 0:10,
-  labels = T,
+  labels = F,
   tcl = -0.5,
-  cex.axis = 1.5
+  cex.axis = 1.3
 )
+axis(
+  side = 2,
+  at = seq(0, 10, 5),
+  labels = seq(0, 10, 5),
+  tcl = -0.7,
+  cex.axis = 1.3,
+  las = 1
+)
+
 hist(
   vivas2[MejorModelo2@cluster == 1], #R3
   breaks = seq(-0.5, 24.5, 1),
@@ -1173,14 +1212,17 @@ points(
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
-  cex = 1.5
+  cex = 1.3
 )
-axis(side = 4, cex.axis = 1.5)
+axis(side = 4, cex.axis = 1.3, las = 1)
 mtext(side = 4,
       "Probabilidad",
-      cex = 1.5,
-      line = 2.8)
-
+      cex = 1.4,
+      line = 3.8)
+mtext(side = 2,
+      "Número de\n plantas madre",
+      cex = 1.4,
+      line = 1.8)
 #################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
 
@@ -1388,6 +1430,7 @@ colnames(grupo.reclutamiento.3) <-
 
 head(grupo.reclutamiento.3)
 
+#################################################################################################################
 #Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
 #binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
@@ -1417,10 +1460,10 @@ par(mar = c(5, 5, 4, 5) + 0.1)
 hist(
   vivas3[MejorModelo3@cluster == 2],#R2
   breaks = seq(-0.5, 24.5, 1),
-  xlab = "Reclutamiento (Número de plantas hijas)",
-  ylab = "Número de plantas madre",
+  xlab = "", #Reclutamiento (Número de plantas hijas)",
+  ylab = "", #Número de plantas madre",
   main = NA,
-  cex.lab = 1.5,
+  cex.lab = 1.4,
   ylim = c(0, 10),
   xaxt = "n",
   yaxt = "n",
@@ -1446,9 +1489,17 @@ axis(
 axis(
   side = 2,
   at = 0:10,
-  labels = T,
+  labels = F,
   tcl = -0.5,
-  cex.axis = 1.5
+  cex.axis = 1.3
+)
+axis(
+  side = 2,
+  at = seq(0, 10,5),
+  labels = seq(0, 10, 5),
+  tcl = -0.7,
+  cex.axis = 1.3,
+  las =1
 )
 hist(vivas3[MejorModelo3@cluster == 1],#R1
      breaks = seq(-0.5, 24.5, 1),
@@ -1482,12 +1533,15 @@ points(
   pch = 24,
   cex = 1.5
 )
-axis(side = 4, cex.axis = 1.5)
+axis(side = 4, cex.axis = 1.3, las =1)
 mtext(side = 4,
       "Probabilidad",
-      cex = 1.5,
-      line = 2.8)
-
+      cex = 1.4,
+      line = 3.8)
+mtext(side = 2,
+      "Número de\n plantas madre",
+      cex = 1.4,
+      line = 1.8)
 #Guardar asignación de grupos de reclutamiento a 51.4 meses
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
 # setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
@@ -1502,7 +1556,7 @@ mtext(side = 4,
 #   ),
 #   row.names = F
 # )
-
+#################################################################################################################
 # 7.3.1) Grupo alternativo a 51.4 meses después de la siembra
 
 OtroModelo3  <- getModel(Modelos3, 9)
@@ -1571,7 +1625,7 @@ head(grupo.reclutamiento.3.1)
 #   ),
 #   row.names = F
 # )
-
+#################################################################################################################
 #Para representar el mejor modelo gráficamente, aquí se calcula la masa de probabilidad de la distribución
 #binomial correspondiente a cada componente del mejor modelo
 p.comp.1 <-
@@ -1610,15 +1664,19 @@ hist(
   vivas2[OtroModelo3@cluster == 1],#R2
   breaks = seq(-0.5, 24.5, 1),
   xlab = "Reclutamiento (Número de plantas hijas)",
-  ylab = "Número de plantas madre",
+  ylab = "", #Número de plantas madre",
   main = NA,
-  cex.lab = 1.5,
+  cex.lab = 1.4,
   ylim = c(0, 10),
   xaxt = "n",
   yaxt = "n",
   bty = "n"
 )
-title(expression("51.4 meses"),
+mtext(side = 2,
+      "Número de\n plantas madre",
+      cex = 1.4,
+      line = 1.8)
+title(expression("D) 51.4 meses"),
       adj = 0,
       cex.main = 1.5)
 axis(
@@ -1633,14 +1691,24 @@ axis(
   at = seq(0, 24, 4),
   labels = T,
   tcl = -0.7,
-  cex.axis = 1.3
+  cex.axis = 1.3,
+  las = 1
 )
 axis(
   side = 2,
   at = 0:10,
-  labels = T,
+  labels = F,
   tcl = -0.5,
-  cex.axis = 1.5
+  cex.axis = 1.3,
+  las = 1
+)
+axis(
+  side = 2,
+  at = seq(0, 10, 5),
+  labels = seq(0, 10, 5),
+  tcl = -0.7,
+  cex.axis = 1.3,
+  las = 1
 )
 hist(
   vivas2[OtroModelo3@cluster == 2], #R3
@@ -1655,24 +1723,24 @@ hist(vivas2[OtroModelo3@cluster == 3], #R1
      col = "transparent")
 #hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=-45, col="black")
 #hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=45, col="black")
-# Leyenda
-legend(
-  16,
-  10,
-  c("R1", "R2", "R3"),
-  pch = c(24, 4, 19),
-  lty = 1,
-  pt.cex = c(1.5, 1, 1),
-  cex = 1.5
-)
-legend(
-  7,
-  10,
-  c("R1", "R2", "R3"),
-  density = c(NA, NA, 15),
-  fill = c("transparent", "gray90", "black"),
-  cex = 1.5
-)
+# # Leyenda
+# legend(
+#   16,
+#   10,
+#   c("R1", "R2", "R3"),
+#   pch = c(24, 4, 19),
+#   lty = 1,
+#   pt.cex = c(1.5, 1, 1),
+#   cex = 1.5
+# )
+# legend(
+#   7,
+#   10,
+#   c("R1", "R2", "R3"),
+#   density = c(NA, NA, 15),
+#   fill = c("transparent", "gray90", "black"),
+#   cex = 1.5
+# )
 
 #Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
 #correspondiente a cada componente del mejor modelo
@@ -1704,11 +1772,11 @@ points(
   pch = 24,
   cex = 1.5
 )
-axis(side = 4, cex.axis = 1.5)
+axis(side = 4, cex.axis = 1.3, las = 1)
 mtext(side = 4,
       "Probabilidad",
-      cex = 1.5,
-      line = 2.8)
+      cex = 1.4,
+      line = 3.8)
 
 grupo.reclutamiento.3.vs.3.1 <- 
   merge(

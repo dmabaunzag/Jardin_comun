@@ -68,6 +68,7 @@ region.estudio.ele
 
 # Leer archivo con datos de especímenes
 #setwd("C:/_transfer/Papers/EspeletiaPilotCommonGarden/Data") #Ivan en Lehmann
+setwd("~/Jardin_comun/Especimenes/datos")
 datos.especimenes <-
   read.table(
     "PhenotypicGroupAssignment_2023septiembre08_120644.csv",

@@ -24,6 +24,9 @@
 #"PhenotypicDataProgeny_Quebradas_2023Junio.csv", datos fenotípicos de la progenie a 51.4 meses después de la
 #siembra
 
+#"PhenotypicGroupAssignment_2023septiembre08_120644.csv", datos de la clasificación de los grupos según
+#morfología para las plantas madres + 307 especímenes usados en Pineda et al. (2020)
+
 #CONTENIDO
 
 # 1) Datos preliminares: Carga de librerías y lectura de datos
@@ -90,6 +93,20 @@ datos.fenotipicos.junio <-
 summary(datos.fenotipicos.junio)
 head(datos.fenotipicos.junio)
 dim(datos.fenotipicos.junio)# 180 plantas hijas sembradas y 29 variables
+
+# directorio de los datos fenotípicos segín su morfología:
+
+setwd("~/Jardin_comun/Especimenes/datos")
+
+phenotypic.group.assignment <-
+  read.table(
+    "PhenotypicGroupAssignment_2023septiembre08_120644.csv",
+    header = T,
+    sep = ","
+  )
+summary(phenotypic.group.assignment)
+head(phenotypic.group.assignment)
+dim(phenotypic.group.assignment)
 
 #################################################################################################################
 #################################################################################################################
@@ -347,8 +364,39 @@ promedio.numero.hojas.madre <-
             promedio.numero.hojas.madre)
 head(promedio.numero.hojas.madre)
 
-# Gráfica Media del número de hojas en el tiempo: Fig. S12A####
-par(mar = c(5, 5, 4, 5) + 0.1)
+# subconjunto del número de hojas por plantas madre medido en el tiempo sólo para las plantas asignadas a M3
+phenotypic.group.assignment.madres <-
+  phenotypic.group.assignment[308:350,]
+
+phenotypic.group.assignment.madres$Collector.Collection.Number <-
+  as.numeric(substring(
+    phenotypic.group.assignment.madres$Collector.Collection.Number,
+    5
+  ))
+
+
+promedio.numero.hojas.madre.m3 <-
+  numero.hojas.madre %>%
+  select(tiempo, Collector.Collection.Number, y) %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>% 
+  filter(Phenotypic.Group == 3)
+  
+promedio.numero.hojas.madre.m3 <-
+  promedio.numero.hojas.madre.m3 %>% 
+  select(tiempo, Collector.Collection.Number, y) %>%
+  spread(Collector.Collection.Number, y)
+dim(promedio.numero.hojas.madre.m3)
+
+tiempo.0 <- data.frame(matrix(0, ncol = dim(promedio.numero.hojas.madre.m3)[2], nrow = 1))
+colnames(tiempo.0) <- colnames(promedio.numero.hojas.madre.m3)
+
+promedio.numero.hojas.madre.m3 <-
+  bind_rows(tiempo.0,
+            promedio.numero.hojas.madre.m3)
+head(promedio.numero.hojas.madre.m3)
+
+# Gráfica Media del número de hojas en el tiempo####
+par(mar = c(5, 6, 4, 1) + 0.1)
 matplot(
   promedio.numero.hojas.madre$tiempo,
   promedio.numero.hojas.madre[,-1],
@@ -362,8 +410,8 @@ matplot(
   xlim = c(0, 55),
   xaxt = "n",
   bty = "n",
-  xlab = "Meses después de la siembra",
-  ylab = "Media del número de hojas"
+  xlab = NA,
+  ylab = "Media del número\n de hojas"
 )
 title(expression("A)"), adj = 0, cex.main = 1.5)
 # Eje por año
@@ -380,6 +428,13 @@ axis(
   cex.axis = 1.5
 )
 axis(
+  side = 1,
+  at = 19.6,
+  labels = T,
+  cex.axis = 1.5,
+  tcl= F
+  )
+axis(
   side = 2,
   at = seq(0, 30, 5),
   labels = T,
@@ -393,7 +448,23 @@ axis(
   labels = F,
   tcl = -0.3
 )
-
+#Agregar sólo a las plantas madres asignadas a M3
+matplot(
+  promedio.numero.hojas.madre.m3$tiempo,
+  promedio.numero.hojas.madre.m3[,-1],
+  axes = F,
+  type = "l",
+  lty = 1,
+  col = "green3",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 30),
+  xlim = c(0, 55),
+  xaxt = "n",
+  bty = "n",
+  add= T
+)
+#################################################################################################################
 # 4.1.2) Gráfica del Número hojas por plántula en el tiempo medido
 
 numero.hojas <-
@@ -414,8 +485,31 @@ numero.hojas <-
 
 head(numero.hojas)
 
-#Gráfica del número de hojas por plántula en el tiempo: Fig. S12B####
-par(mar = c(5, 5, 4, 5) + 0.1)
+# Solo plantas madre de M3
+numero.hojas.madre.m3 <-
+  crecimiento %>%
+  select(Numero.hojas,
+         tiempo, nombre.progenie, Collector.Collection.Number) %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  select(Numero.hojas,
+         tiempo, nombre.progenie) %>%
+  filter(!is.na(Numero.hojas)) %>%
+  spread(nombre.progenie, Numero.hojas)
+
+dim(numero.hojas.madre.m3) #  3 93
+
+tiempo.0 <- data.frame(matrix(0, ncol = dim(numero.hojas.madre.m3)[2], nrow = 1))
+colnames(tiempo.0) <- colnames(numero.hojas.madre.m3)
+
+numero.hojas.madre.m3 <-
+  bind_rows(tiempo.0,
+            numero.hojas.madre.m3)
+
+head(numero.hojas.madre.m3)
+
+#Gráfica del número de hojas por plántula en el tiempo:####
+par(mar = c(5, 6, 4, 1) + 0.1)
 matplot(
   numero.hojas$tiempo,
   numero.hojas[,-1],
@@ -429,7 +523,7 @@ matplot(
   bty = "n",
   col = "black",
   lty = 1,
-  xlab = "Meses después de la siembra",
+  xlab = NA,
   ylab = "Número de hojas"
 )
 title(expression("B)"), adj = 0, cex.main = 1.5)
@@ -448,6 +542,13 @@ axis(
   cex.axis = 1.5
 )
 axis(
+  side = 1,
+  at = 19.6,
+  labels = T,
+  cex.axis = 1.5,
+  tcl = F
+)
+axis(
   side = 2,
   at = seq(0, 40, 10),
   labels = T,
@@ -460,6 +561,22 @@ axis(
   at = seq(0, 40, 2),
   labels = F,
   tcl = -0.3
+)
+# Agregas datos de número de hojas de la progenie de las plantas madre asignadas a M3
+matplot(
+  numero.hojas.madre.m3$tiempo,
+  numero.hojas.madre.m3[,-1],
+  axes = F,
+  type = "l",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 40),
+  xlim = c(0, 55),
+  xaxt = "n",
+  bty = "n",
+  col = "green3",
+  lty = 1,
+  add= T
 )
 
 #################################################################################################################
@@ -573,9 +690,35 @@ promedio.longitud.tallo.madre <-
   bind_rows(tiempo.0,
             promedio.longitud.tallo.madre)
 
-# Gráfica promedio de la longitud del tallo en el tiempo: Fig. S12C####
+# Longitud del tallo promedio para plantas madre asignadas a M3
+longitud.tallo.madre.m3 <-
+  crecimiento %>%
+  select(Collector.Collection.Number,
+         Longitud.tallo,
+         tiempo) %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(!is.na(Longitud.tallo)) %>%
+  group_by(tiempo, Collector.Collection.Number) %>%
+  summarise(promedio = list(mean_se(Longitud.tallo))) %>%
+  unnest(cols = c(promedio))
+
+promedio.longitud.tallo.madre.m3 <-
+  longitud.tallo.madre.m3 %>%
+  select(tiempo, Collector.Collection.Number, y) %>%
+  spread(Collector.Collection.Number, y)
+dim(promedio.longitud.tallo.madre.m3)
+
+tiempo.0 <- data.frame(matrix(0, ncol = dim(promedio.longitud.tallo.madre.m3)[2], nrow = 1))
+colnames(tiempo.0) <- colnames(promedio.longitud.tallo.madre.m3)
+
+promedio.longitud.tallo.madre.m3 <-
+  bind_rows(tiempo.0,
+            promedio.longitud.tallo.madre.m3)
+
+# Gráfica promedio de la longitud del tallo en el tiempo:####
 #par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 6, 4, 1) + 0.1)
 matplot(
   promedio.longitud.tallo.madre$tiempo,
   promedio.longitud.tallo.madre[,-1],
@@ -590,7 +733,7 @@ matplot(
   bty = "n",
   col = "black",
   xlab = "Meses después de la siembra",
-  ylab = "Media de la longitud del tallo (cm)"
+  ylab = "Media de la longitud\n del tallo (cm)"
 )
 title(expression("C)"), adj = 0, cex.main = 1.5)
 # Eje por año
@@ -607,6 +750,13 @@ axis(
   cex.axis = 1.5
 )
 axis(
+  side = 1,
+  at = 19.6,
+  labels = T,
+  cex.axis = 1.5,
+  tcl = F
+)
+axis(
   side = 2,
   at = seq(0, 10, 2),
   labels = T,
@@ -619,6 +769,22 @@ axis(
   at = seq(0, 10, 0.5),
   labels = F,
   tcl = -0.3
+)
+
+matplot(
+  promedio.longitud.tallo.madre.m3$tiempo,
+  promedio.longitud.tallo.madre.m3[,-1],
+  axes = F,
+  type = "l",
+  lty = 1,
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 10),
+  xlim = c(0, 55),
+  xaxt = "n",
+  bty = "n",
+  col = "green3",
+  add = T
 )
 
 # 4.2.2) Gráfica longitud de tallo por plántula en el tiempo medido
@@ -639,8 +805,30 @@ longitud.tallo <-
   bind_rows(tiempo.0,
             longitud.tallo)
 
-# Gráfica de la longitud del tallo de las plántulas en el tiempo medido: Fig. S12D####
-par(mar = c(5, 5, 4, 5) + 0.1)
+# Longitud del tallo para la progenie del as plantas madre asignadas a M3
+longitud.tallo.m3 <-
+  crecimiento %>%
+  select(Longitud.tallo,
+         tiempo, nombre.progenie, Collector.Collection.Number) %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  select(Longitud.tallo,
+         tiempo, nombre.progenie) %>%
+  filter(!is.na(Longitud.tallo)) %>%
+  spread(nombre.progenie, Longitud.tallo)
+
+dim(longitud.tallo.m3)
+
+tiempo.0 <- data.frame(matrix(0, ncol = dim(longitud.tallo.m3)[2], nrow = 1))
+colnames(tiempo.0) <- colnames(longitud.tallo.m3)
+
+longitud.tallo.m3 <-
+  bind_rows(tiempo.0,
+            longitud.tallo.m3)
+
+
+# Gráfica de la longitud del tallo de las plántulas en el tiempo medido:####
+par(mar = c(5, 6, 4, 1) + 0.1)
 matplot(
   longitud.tallo$tiempo,
   longitud.tallo[,-1],
@@ -675,7 +863,8 @@ axis(
   side = 1,
   at = 19.6,
   labels = T,
-  cex.axis = 1.5
+  cex.axis = 1.5,
+  tcl =F
 )
 axis(
   side = 2,
@@ -690,6 +879,22 @@ axis(
   at = seq(0, 10, 0.5),
   labels = F,
   tcl = -0.3
+)
+# Agregar longitud del tallo para la progenie de las plantas madre asignadas a M3
+matplot(
+  longitud.tallo.m3$tiempo,
+  longitud.tallo.m3[,-1],
+  axes = F,
+  type = "l",
+  lty = 1,
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 10),
+  xlim = c(0, 55),
+  xaxt = "n",
+  bty = "n",
+  col = "green3",
+  add = T
 )
 
 #################################################################################################################
@@ -736,10 +941,19 @@ m.marzo <-
   filter(diff.tiempo == "0.95") %>%
   select(pendiente)
 
+m.marzo.m3 <-
+  pendiente.promedio.tallos.madre %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(diff.tiempo == "0.95") %>%
+  select(pendiente)
+
+
+
 # Seleccionar directorio de trabajo para guardar figuras
 # setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Figuras")
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 11.4 meses después de la siembra: Fig. S14A
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
   m.marzo$pendiente,
   breaks = seq(0, 3.0, 0.2),
@@ -780,15 +994,39 @@ axis(
   tcl = -0.3
 )
 
+hist(
+  m.marzo.m3$pendiente,
+  breaks = seq(0, 3.0, 0.2),
+  xlab = NA,
+  ylab = "Número de plantas madre",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 12),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
+)
+
 # Pendiente por de la longitud del tallo por año por planta madre a 19.6 meses después de la siembra
 m.octubre <-
   pendiente.promedio.tallos.madre %>%
   filter(diff.tiempo < 0.95) %>%
   select(pendiente)
 
+m.octubre.m3 <-
+  pendiente.promedio.tallos.madre %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(diff.tiempo < 0.95) %>%
+  select(pendiente)
+
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 19.6 meses después de la
 # siembra: Fig. S14B
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
   m.octubre$pendiente,
   breaks = seq(0, 3, 0.2),
@@ -829,14 +1067,38 @@ axis(
   tcl = -0.3
 )
 
+hist(
+  m.octubre.m3$pendiente,
+  breaks = seq(0, 3, 0.2),
+  xlab = NA,
+  ylab = "Número de plantas madre",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 12),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
+)
+
 # Pendiente por de la longitud del tallo por año por planta madre a 51.4 meses después de la siembra
 m.junio <-
   pendiente.promedio.tallos.madre %>%
   filter(diff.tiempo > 0.95) %>%
   select(pendiente)
 
+m.junio.m3 <-
+  pendiente.promedio.tallos.madre %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(diff.tiempo > 0.95) %>%
+  select(pendiente)
+
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 51.4 meses después de la siembra: Fig. S14C
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
   m.junio$pendiente,
   breaks = seq(0, 3.0, 0.2),
@@ -876,6 +1138,19 @@ axis(
   labels = F,
   tcl = -0.3
 )
+hist(
+  m.junio.m3$pendiente,
+  breaks = seq(0, 3.0, 0.2),
+  cex.lab = 1.5,
+  ylim = c(0, 12),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
+)
 
 #################################################################################################################
 # 5.2) Pendiente del la longitud del tallo por año (por plántula)
@@ -906,15 +1181,20 @@ pendiente.tallos %>%
 # 3  4.28  1.71    0.525  1.69  0.378  2.95
 
 # Pendiente por de la longitud del tallo por año a 11.4 meses después de la siembra
-m.marzo <-
+m.plantula.marzo <-
   pendiente.tallos %>%
   filter(diff.tiempo == "0.95") %>%
   select(pendiente)
-
+m.plantula.marzo.m3 <-
+  pendiente.tallos %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(diff.tiempo == "0.95") %>%
+  select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 11.4 meses después de la siembra: Fig. S14D
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
-  m.marzo$pendiente,
+  m.plantula.marzo$pendiente,
   breaks = seq(-0.8, 3.6, 0.2),
   xlab = NA,
   ylab = "Número de plantas hijas",
@@ -952,17 +1232,39 @@ axis(
   las =2,
   cex.axis = 1.5
 )
+hist(
+  m.plantula.marzo.m3$pendiente,
+  breaks = seq(-0.8, 3.6, 0.2),
+  xlab = NA,
+  ylab = "Número de plantas hijas",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 60),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
+)
 
 # Pendiente por de la longitud del tallo por año a 19.6 meses después de la siembra
-m.octubre <-
+m.plantula.octubre <-
   pendiente.tallos %>%
   filter(diff.tiempo < 0.95) %>%
   select(pendiente)
 
+m.plantula.octubre.m3 <-
+  pendiente.tallos %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+    filter(diff.tiempo < 0.95) %>%
+  select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 19.6 meses después de la siembra: Fig. S14E
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
-  m.octubre$pendiente,
+  m.plantula.octubre$pendiente,
   breaks = seq(-0.8, 3.6, 0.2),
   xlab = NA,
   ylab = "Número de plantas hijas",
@@ -1001,17 +1303,39 @@ axis(
   cex.axis = 1.5
 )
 
+hist(
+  m.plantula.octubre.m3$pendiente,
+  breaks = seq(-0.8, 3.6, 0.2),
+  xlab = NA,
+  ylab = "Número de plantas hijas",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 60),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
+)
 # Pendiente por de la longitud del tallo por año a 51.4 meses después de la siembra
-m.junio <-
+m.plantula.junio <-
   pendiente.tallos %>%
   filter(diff.tiempo > 0.95) %>%
   select(pendiente)
 
+m.plantula.junio.m3 <-
+  pendiente.tallos %>%
+  inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
+  filter(Phenotypic.Group == 3) %>% 
+  filter(diff.tiempo > 0.95) %>%
+  select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 51.4 meses después de la
 # siembra: Fig. S14F
-par(mar = c(5, 5, 4, 5) + 0.1)
+par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
-  m.junio$pendiente,
+  m.plantula.junio$pendiente,
   breaks = seq(-0.8, 3.6, 0.2),
   xlab = "Longitud del tallo (cm) / año",
   ylab = "Número de plantas hijas",
@@ -1048,4 +1372,20 @@ axis(
   tcl = -0.5,
   las =2,
   cex.axis = 1.5
+)
+hist(
+  m.plantula.junio.m3$pendiente,
+  breaks = seq(-0.8, 3.6, 0.2),
+  xlab = "Longitud del tallo (cm) / año",
+  ylab = "Número de plantas hijas",
+  main = NA,
+  cex.lab = 1.5,
+  ylim = c(0, 60),
+  xaxt = "n",
+  yaxt = "n",
+  density = 30,
+  angle = 36,
+  col= "green3",
+  border = "black",
+  add =T
 )
