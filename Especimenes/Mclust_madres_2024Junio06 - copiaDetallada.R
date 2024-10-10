@@ -823,9 +823,9 @@ title(expression("B)"), adj = 0)
 #################################################################################################################
 # 5.3) Graficar grupos morfológicos en el mejor modelo de mezclas normales.
 # Seleccionar directorio de trabajo : datos
-setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/data")# Diana's directory
-#load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
-#load("Mcluster.phenodata_2023agosto19.RData")
+setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")# Diana's directory
+load("MeanPhenodataSelectedLogPca_2023agosto15_190054.RData")
+load("Mcluster.phenodata_2023agosto19.RData")
 #summary(mean.phenodata.selected.log.pca)
 
 # Directorio para guardar figuras
@@ -843,7 +843,82 @@ plot(
   what = c("classification"),
   dimens = c(1, 2))
 
-# o puede hacer graficarla manualmente:
+#################################################################################################################
+#par(mar=c(5,4,4,2)+0.1) #default
+par(mar = c(5, 5, 4, 2) + 0.1)
+plot(
+  Mcluster.phenodata,
+  what = c("classification"),
+  dimens = c(1, 2),
+  main = "",
+  addEllipses = F,
+  xlab = NA, #paste0(colnames(Mcluster.phenodata$data)[1], " (",round((loadings$importance[2,1]*100),1), " % varianza)"),
+  ylab = paste0(colnames(Mcluster.phenodata$data)[2], " (",round((loadings$importance[2,2]*100),1), " % varianza)"),
+  cex.axis = 1.5,
+  cex.lab = 1.5,
+  yaxt = "n",
+  xaxt = "n",
+  asp = 1,
+  cex = 0,
+  ylim = c(-1.3, 1.6),
+  xlim = c(-2.8,2.8)
+)
+axis(
+  1,
+  at = seq(-3, 3, 0.5),
+  labels = F,
+  tcl = -0.5,
+  cex.axis =1.5,
+  las =1
+)
+axis(
+  1,
+  at = seq(-3, 3, 1),
+  labels = T,
+  tcl = -0.7,
+  cex.axis =1.5,
+  las =1
+)
+axis(
+  2,
+  at = seq(-2, 2, 0.5),
+  labels = F,
+  tcl = -0.5,
+  cex.axis =1.5,
+  las =1
+)
+
+axis(
+  2,
+  at = seq(-1, 1, 1),
+  labels = T,
+  tcl = -0.7,
+  cex.axis =1.5,
+  las =1
+)
+
+for (i in 1:Mcluster.phenodata$G) {
+  # add specimens by phenotypic groups
+  points(
+    Mcluster.phenodata$data[Mcluster.phenodata$classification == i, c(1, 2)],
+    pch = mclust.options("classPlotSymbols")[i],
+    col = mclust.options("classPlotColors")[i]
+  )
+}
+
+#add ellipses
+for (i in 1:Mcluster.phenodata$G) {
+  points(
+    ellipse(
+      x = Mcluster.phenodata$parameters$variance$sigma[c(1, 2), c(1, 2), i],
+      centre = Mcluster.phenodata$parameters$mean[c(1, 2), i],
+      level = pchisq(1, 2)
+    ),
+    type = "l",
+    col = "black"
+  )
+}
+
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar = c(5, 5, 4, 2) + 0.1)
 plot(
@@ -860,11 +935,11 @@ plot(
   asp = 1
 )
 legend(
-  "bottomleft",
+  "bottomright",
   paste("M", 1:5),
   col = mclust.options("classPlotColors"),
   xpd = T,
-  ncol = 3,
+  ncol = 2,
   pch = mclust.options("classPlotSymbols"),
   pt.lwd = 0.8,
   pt.cex = 0.9,
@@ -914,8 +989,9 @@ text(
   "M5",
   cex = 0.9
 )
-title(expression("A) Todos los especímenes"), adj = 0)
+title(expression("A) Todos los especímenes"), adj = 0, cex.main = 1.5)
 
+#################################################################################################################
 #CP1 vs CP3:Figura_2_A
 #par(mar=c(5,4,4,2)+0.1) #default
 par(mar = c(5, 5, 4, 2) + 0.1)
