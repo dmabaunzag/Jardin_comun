@@ -20,8 +20,8 @@
 
 # REQUERIMIENTOS: Tablas de asignación de grupos según crecimiento y reclutamiento para cada muestreo
 
-#  "grupo.reclutamiento.3.1_2024abril28_114129.csv"
-#  "grupo.reclutamiento.3_2023diciembre26_150045.csv"
+#  "grupo.reclutamiento.3.1_2025abril20_114731.csv"
+#  "grupo.reclutamiento.3_2025abril20_114604.csv"
 #  "grupo.reclutamiento.2_2023diciembre26_143302.csv"
 #  "grupo.reclutamiento.1_2023diciembre26_141927.csv"
 
@@ -51,10 +51,19 @@
 
 library(GoodmanKruskal)
 
+# Seleccionar el directorio de trabajo 
+project_dir <- "C:/Users/dmaba/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Jardin_comun" # Diana's directory
+
+# Define sub directories
+data_path <- file.path(project_dir, "Progenie", "datos") # data file
+figures_path <- file.path(project_dir, "Progenie", "Figuras") # figures file
+datos_reclutamiento_path <- file.path(project_dir, "Progenie", "reclutamiento", "datos")
+datos_crecimiento_path <- file.path(project_dir, "Progenie", "Crecimiento", "datos")
+
 #################################################################################################################
 # 1.2) lectura de las asignaciones de grupos según reclutamiento
 
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+setwd(datos_reclutamiento_path)#Directorio de Diana
 grupo.reclutamiento.1 <- 
   read.table(
     "grupo.reclutamiento.1_2023diciembre26_141927.csv",
@@ -77,7 +86,7 @@ dim(grupo.reclutamiento.2)
 
 grupo.reclutamiento.3<- 
   read.table(
-    "grupo.reclutamiento.3_2023diciembre26_150045.csv",
+    "grupo.reclutamiento.3_2025abril20_114604.csv",
     header = T,
     sep = ","
   )
@@ -87,7 +96,7 @@ dim(grupo.reclutamiento.3)
 
 grupo.reclutamiento.3.1<- 
   read.table(
-    "grupo.reclutamiento.3.1_2024abril28_114129.csv",
+    "grupo.reclutamiento.3.1_2025abril20_114731.csv",
     header = T,
     sep = ","
   )
@@ -98,7 +107,7 @@ dim(grupo.reclutamiento.3.1)
 #################################################################################################################
 # 1.3) lectura de las asignaciones de grupos según crecimiento
 
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
+setwd(datos_crecimiento_path)
 grupo.crecimiento <- 
   read.table(
     "grupos.crecimiento.morfologicos_2024agosto01_092331.csv",
@@ -153,7 +162,7 @@ colnames(grupo.crecimiento.reclutamiento)
 # 3.1) 11.4 meses (modelo1)
 
 table(grupo.crecimiento.reclutamiento[,2],# crecimiento
-      grupo.crecimiento.reclutamiento[,7], # reclutamiento  
+      grupo.crecimiento.reclutamiento[,8], # reclutamiento  
       exclude= NULL)
 # 1  2  3
 # 1    19  4 13
@@ -163,7 +172,7 @@ table(grupo.crecimiento.reclutamiento[,2],# crecimiento
 # 3.2) 11.4 meses (modelo2)
 
 table(grupo.crecimiento.reclutamiento[,3],# crecimiento
-      grupo.crecimiento.reclutamiento[,7], # reclutamiento  
+      grupo.crecimiento.reclutamiento[,8], # reclutamiento  
       exclude= NULL)
 
 # 1  2  3
@@ -174,7 +183,7 @@ table(grupo.crecimiento.reclutamiento[,3],# crecimiento
 # 3.3) 19.6 meses
 
 table(grupo.crecimiento.reclutamiento[,4],
-      grupo.crecimiento.reclutamiento[,8],
+      grupo.crecimiento.reclutamiento[,9],
       exclude= NULL)
 # 1  2  3
 # 1     4 11  2
@@ -195,22 +204,23 @@ table(grupo.crecimiento.reclutamiento[,5],
 # 3.4) 51.4 meses (modelo1)
 
 table(grupo.crecimiento.reclutamiento[,6],
-      grupo.crecimiento.reclutamiento[,0],
+      grupo.crecimiento.reclutamiento[,10],
       exclude= NULL)
-# 1  2
-# 1    13 15
-# 2     5  0
-# <NA> 10  0
+#       1  2  3
+# 1     2 11 15
+# 2     0  4  1
+# <NA>  0 10  0
+
 
 # 3.5) 51.4 meses (modelo2)
 table(grupo.crecimiento.reclutamiento[,6],
       grupo.crecimiento.reclutamiento[,11],
       exclude= NULL)
 
-      # 1  2  3
-# 1    12 11  5
-# 2     1  4  0
-# <NA>  0 10  0
+#       1  2
+# 1    15 13
+# 2     0  5
+# <NA>  0 10
 
 #################################################################################################################
 #################################################################################################################
@@ -221,9 +231,9 @@ table(grupo.crecimiento.reclutamiento[,6],
 
 #################################################################################################################
 # 4.1) 11.4 meses (modelo 1)
-
+colnames(grupo.crecimiento.reclutamiento)
 grupos.crecimiento.reclutamiento<- 
-  grupo.crecimiento.reclutamiento[, c(2,7)]
+  grupo.crecimiento.reclutamiento[, c(2,8)]
 head(grupos.crecimiento.reclutamiento)
 dim(grupos.crecimiento.reclutamiento)
 # Quitar NAs
@@ -329,7 +339,7 @@ sum(
 # 4.2) 11.4 meses (modelo 2)
 
 grupos.crecimiento.reclutamiento<- 
-  grupo.crecimiento.reclutamiento[, c(3,7)]
+  grupo.crecimiento.reclutamiento[, c(3,8)]
 head(grupos.crecimiento.reclutamiento)
 dim(grupos.crecimiento.reclutamiento)
 # Eliminar NAs
@@ -437,7 +447,7 @@ sum(
 # 4.3) 19.6 meses (1)
 
 grupos.crecimiento.reclutamiento<- 
-  grupo.crecimiento.reclutamiento[, c(4,8)]
+  grupo.crecimiento.reclutamiento[, c(4,9)]
 head(grupos.crecimiento.reclutamiento)
 dim(grupos.crecimiento.reclutamiento)
 # Eliminar NAs
@@ -722,7 +732,7 @@ sum(
     grupos.crecimiento.reclutamiento[,1],
     grupos.crecimiento.reclutamiento[,2])[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.04803
+# 0.15407
 
 # Gráfica de la distribución nula de tau(C, R),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -755,7 +765,7 @@ sum(
     grupos.crecimiento.reclutamiento[,2]
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.04803
+# 0.30144
 
 #################################################################################################################
 # 4.5) 51.4 meses (modelo 2)

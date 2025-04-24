@@ -56,7 +56,14 @@
 library(tidyverse) #limpiar y organizar datos
 
 # Seleccionar directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/datos")
+# Seleccionar el directorio de trabajo 
+project_dir <- "C:/Users/dmaba/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Jardin_comun" # Diana's directory
+
+# Define sub directories
+data_path <- file.path(project_dir, "Progenie", "datos") # data file
+figures_path <- file.path(project_dir, "Progenie", "Figuras") # figures file
+datos_crecimiento_path <- file.path(project_dir, "Progenie", "Crecimiento", "datos")
+setwd(data_path)
 
 #################################################################################################################
 # 1.2)leer las tablas
@@ -94,9 +101,9 @@ summary(datos.fenotipicos.junio)
 head(datos.fenotipicos.junio)
 dim(datos.fenotipicos.junio)# 180 plantas hijas sembradas y 29 variables
 
-# directorio de los datos fenotípicos segín su morfología:
+# directorio de los datos fenotípicos según su morfología:
 
-setwd("~/Jardin_comun/Especimenes/datos")
+setwd(file.path(project_dir, "Especimenes","datos"))
 
 phenotypic.group.assignment <-
   read.table(
@@ -243,7 +250,7 @@ crecimiento <-
   )
 
 # Guardar marco de datos de datos para el crecimiento
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Crecimiento/datos")
+# setwd(datos_crecimiento_path)
 #
 # # #RData
 # save(crecimiento,
@@ -938,20 +945,20 @@ range(pendiente.promedio.tallos.madre$pendiente)# 0.1463415 2.7871698
 # Pendiente por de la longitud del tallo por año por planta madre a 11.4 meses después de la siembra
 m.marzo <-
   pendiente.promedio.tallos.madre %>%
-  filter(diff.tiempo == "0.95") %>%
+  filter(tiempo == "0.95") %>%
   select(pendiente)
 
 m.marzo.m3 <-
   pendiente.promedio.tallos.madre %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-  filter(diff.tiempo == "0.95") %>%
+  filter(tiempo == "0.95") %>%
   select(pendiente)
 
 
 
 # Seleccionar directorio de trabajo para guardar figuras
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/Figuras")
+# setwd(figures_path)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 11.4 meses después de la siembra: Fig. S14A
 par(mar = c(5, 5, 4, 1) + 0.1)
 hist(
@@ -1014,14 +1021,14 @@ hist(
 # Pendiente por de la longitud del tallo por año por planta madre a 19.6 meses después de la siembra
 m.octubre <-
   pendiente.promedio.tallos.madre %>%
-  filter(diff.tiempo < 0.95) %>%
+  filter(tiempo == "1.63333333333333") %>%
   select(pendiente)
 
 m.octubre.m3 <-
   pendiente.promedio.tallos.madre %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-  filter(diff.tiempo < 0.95) %>%
+  filter(tiempo == "1.63333333333333") %>%
   select(pendiente)
 
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 19.6 meses después de la
@@ -1087,14 +1094,14 @@ hist(
 # Pendiente por de la longitud del tallo por año por planta madre a 51.4 meses después de la siembra
 m.junio <-
   pendiente.promedio.tallos.madre %>%
-  filter(diff.tiempo > 0.95) %>%
+  filter(tiempo == "4.28333333333333") %>%
   select(pendiente)
 
 m.junio.m3 <-
   pendiente.promedio.tallos.madre %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-  filter(diff.tiempo > 0.95) %>%
+  filter(tiempo == "4.28333333333333") %>%
   select(pendiente)
 
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 51.4 meses después de la siembra: Fig. S14C
@@ -1176,20 +1183,20 @@ pendiente.tallos %>%
   )
 # tiempo promedio desviacion mediana minimo maximo
 # <dbl>  <dbl>   <dbl>  <dbl> <dbl> <dbl>
-#  1  0.95  0.890   0.396  0.842 0.105  2.21
+#  1  0.95  0.890   0.396  0.842 0.1c105  2.21
 # 2  1.63  0.829   0.732  0.732 -0.732  3.51
 # 3  4.28  1.71    0.525  1.69  0.378  2.95
 
 # Pendiente por de la longitud del tallo por año a 11.4 meses después de la siembra
 m.plantula.marzo <-
   pendiente.tallos %>%
-  filter(diff.tiempo == "0.95") %>%
+  filter(tiempo == "0.95") %>%
   select(pendiente)
 m.plantula.marzo.m3 <-
   pendiente.tallos %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-  filter(diff.tiempo == "0.95") %>%
+  filter(tiempo == "0.95") %>%
   select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 11.4 meses después de la siembra: Fig. S14D
 par(mar = c(5, 5, 4, 1) + 0.1)
@@ -1252,14 +1259,14 @@ hist(
 # Pendiente por de la longitud del tallo por año a 19.6 meses después de la siembra
 m.plantula.octubre <-
   pendiente.tallos %>%
-  filter(diff.tiempo < 0.95) %>%
+  filter(tiempo == "1.63333333333333") %>%
   select(pendiente)
 
 m.plantula.octubre.m3 <-
   pendiente.tallos %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-    filter(diff.tiempo < 0.95) %>%
+    filter(tiempo =="1.63333333333333") %>%
   select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 19.6 meses después de la siembra: Fig. S14E
 par(mar = c(5, 5, 4, 1) + 0.1)
@@ -1322,14 +1329,14 @@ hist(
 # Pendiente por de la longitud del tallo por año a 51.4 meses después de la siembra
 m.plantula.junio <-
   pendiente.tallos %>%
-  filter(diff.tiempo > 0.95) %>%
+  filter(tiempo == "4.28333333333333") %>%
   select(pendiente)
 
 m.plantula.junio.m3 <-
   pendiente.tallos %>%
   inner_join(phenotypic.group.assignment.madres[, c(2,6)], by= "Collector.Collection.Number") %>%
   filter(Phenotypic.Group == 3) %>% 
-  filter(diff.tiempo > 0.95) %>%
+  filter(tiempo== "4.28333333333333") %>%
   select(pendiente)
 # Gráfica de la distribución de la pendiente  de la longitud del tallo por año a 51.4 meses después de la
 # siembra: Fig. S14F

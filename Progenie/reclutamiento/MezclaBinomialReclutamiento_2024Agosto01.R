@@ -71,11 +71,24 @@ library(flexmix)# Modelos de mezclas binomiales
 library(tidyverse) #limpiar y organizar datos
 library(GoodmanKruskal)# paquete GoodmanKruskal
 
+# Seleccionar el directorio de trabajo 
+project_dir <- "C:/Users/dmaba/OneDrive - Universidad Nacional de Colombia/PROYECTO JARDÍN COMUN/Jardin_comun" # Diana's directory
+
+# Define sub directories
+data_path <- file.path(project_dir, "Progenie", "datos") # data file
+figures_path <- file.path(project_dir, "Progenie", "Figuras") # figures file
+datos_reclutamiento_path <- file.path(project_dir, "Progenie", "reclutamiento", "datos")
+#################################################################################################################
+# 1.2) Loading phenotypic groups in the best normal mixture models
+
+#Set working directory
+setwd(data_path)
+
 #################################################################################################################
 # 1.2)leer las tablas
 
 # Seleccionar directorio de trabajo
-setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/datos")
+setwd(data_path)
 
 datos.fenotipicos.marzo <-
   read.table(
@@ -299,7 +312,7 @@ view(reclutamiento)
 #################################################################################################################
 #################################################################################################################
 
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+setwd(datos_reclutamiento_path)
 # 
 # #RData
 # save(reclutamiento,
@@ -322,7 +335,7 @@ view(reclutamiento)
 #   row.names = F
 # )
 
-# load ("reclutamiento_piloto_2023diciembre26_134304.RData")
+load ("reclutamiento_piloto_2023diciembre26_134304.RData")
 
 ################################################################################################################
 #################################################################################################################
@@ -366,7 +379,7 @@ colnames(sobrevivientes) <-
     "vivas.3")
 
 # Guardar el objeto sobrevivientes
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")
+# setwd(datos_reclutamiento_path)
 # 
 # #RData
 # save(sobrevivientes,
@@ -378,7 +391,7 @@ colnames(sobrevivientes) <-
 #      ))
 
 # Agregar las plantas madre que no nacieron ninguna hija mediante la tabla de asignación de grupos de las plantas madre
-setwd("C:/Users/usuario/Documents/Jardin_comun/Especimenes/datos")#directorio de los datos de las plantas madres
+setwd(file.path(project_dir,"Especimenes", "datos"))#directorio de los datos de las plantas madres
 # setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/MedicionesPlantasMadre") #Ivan's working directory Waterman
 phenotypic.group.assignment <-
   read.table(
@@ -619,6 +632,16 @@ Modelos1 <-
     nrep = 5
   )
 show(Modelos1)# modelos
+# Guardar objeto Modelos 1
+setwd(datos_reclutamiento_path)
+# save(Modelos1,
+#      file = paste(
+#        "Reclutamiento_muestreo1_",
+#        format(Sys.time(), "%Y%B%d"),
+#        ".RData",
+#        sep = ""
+#      ))
+load("Reclutamiento_muestreo1_2025abril17.RData")
 # Call:
 #   stepFlexmix(cbind(vivas1, siembra - vivas1) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 1:9, nrep = 5)
@@ -691,7 +714,7 @@ colnames(grupo.reclutamiento.1) <-
 head(grupo.reclutamiento.1)
 
 # Guardar tabla de asignación de grupos
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd(datos_reclutamiento_path)#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -996,6 +1019,18 @@ Modelos2 <-
     nrep = 5
   )
 show(Modelos2) #modelos
+
+# Guardar objeto Modelos 2
+setwd(datos_reclutamiento_path)
+# save(Modelos2,
+#      file = paste(
+#        "Reclutamiento_muestreo2_",
+#        format(Sys.time(), "%Y%B%d"),
+#        ".RData",
+#        sep = ""
+#      ))
+
+load("Reclutamiento_muestreo2_2025abril17.RData")
 # Call:
 #   stepFlexmix(cbind(vivas2, siembra - vivas2) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 1:9, nrep = 5)
@@ -1074,7 +1109,7 @@ colnames(grupo.reclutamiento.2) <-
 
 head(grupo.reclutamiento.2)
 
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd(datos_reclutamiento_path)#Directorio de Diana
 #setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 #setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -1350,60 +1385,76 @@ Modelos3 <-
   )
 show(Modelos3)
 plot(Modelos3)
+# Guardar objeto Modelos 3
+setwd(datos_reclutamiento_path)
+# save(Modelos3,
+#      file = paste(
+#        "Reclutamiento_muestreo3_",
+#        format(Sys.time(), "%Y%B%d"),
+#        ".RData",
+#        sep = ""
+#      ))
+load("Reclutamiento_muestreo3_2025abril20.RData")
+# # 
 # Call:
 #   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
 #               k = 1:9, nrep = 5)
 # 
-#   iter converged k k0    logLik      AIC      BIC      ICL
+# iter converged k k0    logLik      AIC      BIC      ICL
 # 1    2      TRUE 1  1 -166.5155 335.0309 336.7921 336.7921
-# 2   11      TRUE 2  2 -112.1444 230.2887 235.5723 239.5820
-# 3   72      TRUE 2  3 -112.1444 230.2887 235.5723 239.5886
-# 4   73      TRUE 2  4 -112.1444 230.2887 235.5723 239.5886
-# 5  131      TRUE 2  5 -112.1444 230.2887 235.5723 239.5884
-# 6  148      TRUE 2  6 -112.1444 230.2887 235.5723 239.5885
-# 7  178      TRUE 2  7 -112.1444 230.2887 235.5723 239.5885
-# 8  200     FALSE 3  8 -110.1140 230.2281 239.0341 254.8327
-# 9  200     FALSE 3  9 -108.4280 226.8560 235.6620 246.2714
+# 2    6      TRUE 2  2 -112.1443 230.2887 235.5723 239.5713
+# 3   29      TRUE 2  3 -112.1444 230.2887 235.5723 239.5885
+# 4   81      TRUE 2  4 -112.1444 230.2887 235.5723 239.5885
+# 5  110      TRUE 2  5 -112.1444 230.2887 235.5723 239.5885
+# 6  154      TRUE 2  6 -112.1444 230.2887 235.5723 239.5884
+# 7  200     FALSE 3  7 -107.3979 224.7959 233.6019 238.0299
+# 8  200     FALSE 3  8 -107.4589 224.9178 233.7238 238.4332
+# 9  174      TRUE 2  9 -112.1444 230.2887 235.5723 239.5885
+# Call:
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 1:9, nrep = 5)
+# 
 
-
-sort(BIC(Modelos3))# delta =  -0.6129374
-# 2        8        3        4        7        6        5        9        1 
-# 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 236.1852 336.7921
+sort(BIC(Modelos3))# delta =  -1.569537
+# 7        8        2        6        3        4        9        5        1 
+# 233.6019 233.7238 235.5723 235.5723 235.5723 235.5723 235.5723 235.5723 336.7921
 
 sort(BIC(unique(Modelos3)))
-# 2        3        1 
-# 235.5723 236.1852 336.7921 
+# 3        2        1 
+# 233.6019 235.5723 336.7921
 
-sort(BIC(unique(Modelos3)))[[1]]- sort(BIC(unique(Modelos3)))[[2]]# -0.6129374
+sort(BIC(unique(Modelos3)))[[1]]- sort(BIC(unique(Modelos3)))[[2]]# -1.569537
 
 #mantenemos el modelo con mejor BIC
 MejorModelo3  <- getModel(Modelos3, "BIC")
-
+# 
 summary(MejorModelo3)
 # Call:
 #   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 2, nrep = 5)
+#               k = 9, nrep = 5)
 # 
 # prior size post>0 ratio
-# Comp.1 0.378   15     43 0.349
-# Comp.2 0.622   28     35 0.800
+# Comp.1 0.0592    2     18 0.111
+# Comp.2 0.5697   25     34 0.735
+# Comp.3 0.3712   16     43 0.372
 # 
-# 'log Lik.' -112.1444 (df=3)
-# AIC: 230.2887   BIC: 235.5723
-MejorModelo3@df #número de parámetros en el modelo: 3
+# 'log Lik.' -107.5984 (df=5)
+# AIC: 225.1968   BIC: 234.0028
+
+MejorModelo3@df #número de parámetros en el modelo: 5
 
 plot(MejorModelo3)
-BIC(MejorModelo3) # 235.5723
+BIC(MejorModelo3) # 234.0028
 getModel(Modelos3, which = "BIC")
 # Call:
 #   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
-#               k = 2, nrep = 5)
+#               k = 9, nrep = 5)
 # 
 # Cluster sizes:
-#   1  2 
-# 15 28 
+#   1  2  3 
+# 2 25 16 
 # 
-# convergence after 11 iterations
+# no convergence after 200 iterations
 
 # Parámetro binomial para cada componente
 fitted(MejorModelo3)
@@ -1452,13 +1503,23 @@ pm.comp.2 <-
                      prob = p.comp.2,
                      log = FALSE) #masa de probabilidad grupo 2
 
+p.comp.3 <-
+  exp(parameters(MejorModelo3)[3]) / (1 + exp(parameters(MejorModelo3)[3])) #parámetro p grupo 3
+pi.comp.3 <-
+  sum(MejorModelo3@cluster == 3) / length(MejorModelo3@cluster) #parámetro pi grupo 3
+pm.comp.3 <-
+  pi.comp.3 * dbinom(seq(0, 24, 1),
+                     size = siembra,
+                     prob = p.comp.3,
+                     log = FALSE) #masa de probabilidad grupo 3
+
 
 #Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
 #cada componente del mejor modelo
 # par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 par(mar = c(5, 5, 4, 5) + 0.1)
 hist(
-  vivas3[MejorModelo3@cluster == 2],#R2
+  vivas3[MejorModelo3@cluster == 3],#R2
   breaks = seq(-0.5, 24.5, 1),
   xlab = "", #Reclutamiento (Número de plantas hijas)",
   ylab = "", #Número de plantas madre",
@@ -1505,6 +1566,13 @@ hist(vivas3[MejorModelo3@cluster == 1],#R1
      breaks = seq(-0.5, 24.5, 1),
      add = T,
      col = "transparent")
+hist(
+  vivas3[MejorModelo3@cluster == 2], #R3
+  breaks = seq(-0.5, 24.5, 1),
+  add = T,
+  density = 15,
+  col = "black"
+)
 
 # Leyenda
 # legend(16, 9, c("R1", "R2", "R3"), pch=c(24,4,19), lty=1, pt.cex=c(1.5, 1, 1), cex=1.5)
@@ -1515,10 +1583,10 @@ hist(vivas3[MejorModelo3@cluster == 1],#R1
 par(new = T)
 plot(
   0:24,
-  pm.comp.2,
+  pm.comp.2, #R3
   type = "o",
   xlim = c(-0.5, 24.5),
-  pch = 4,
+  pch = 19,
   xaxt = "n",
   yaxt = "n",
   xlab = "",
@@ -1527,7 +1595,14 @@ plot(
 )
 points(
   0:24,
-  pm.comp.1,
+  pm.comp.3, #R2
+  type = "o",
+  xlim = c(-0.5, 24.5),
+  pch = 4
+)
+points(
+  0:24,
+  pm.comp.1, #R1
   type = "o",
   xlim = c(-0.5, 24.5),
   pch = 24,
@@ -1542,8 +1617,8 @@ mtext(side = 2,
       "Número de\n plantas madre",
       cex = 1.4,
       line = 1.8)
-#Guardar asignación de grupos de reclutamiento a 51.4 meses
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# Guardar asignación de grupos de reclutamiento a 51.4 meses
+setwd(datos_reclutamiento_path)#Directorio de Diana
 # setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 # setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -1559,35 +1634,33 @@ mtext(side = 2,
 #################################################################################################################
 # 7.3.1) Grupo alternativo a 51.4 meses después de la siembra
 
-OtroModelo3  <- getModel(Modelos3, 9)
+OtroModelo3  <- getModel(Modelos3, 2)
 
 summary(OtroModelo3)
 # Call:
-#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, 
-#               concomitant = Conc, k = 9, nrep = 5)
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 2, nrep = 5)
 # 
 # prior size post>0 ratio
-# Comp.1 0.130    5     25 0.200
-# Comp.2 0.319   13     43 0.302
-# Comp.3 0.551   25     34 0.735
+# Comp.1 0.377   15     43 0.349
+# Comp.2 0.623   28     35 0.800
 # 
-# 'log Lik.' -108.6896 (df=5)
-# AIC: 227.3792   BIC: 236.1852 
-OtroModelo3@df #número de parámetros en el modelo: 5
+# 'log Lik.' -112.1443 (df=3)
+# AIC: 230.2887   BIC: 235.5723
+OtroModelo3@df #número de parámetros en el modelo: 3
 
 plot(OtroModelo3)
-BIC(OtroModelo3) #  236.1852
-getModel(Modelos3, 9)
+BIC(OtroModelo3) #  235.5723
+getModel(Modelos3, 2)
 # Call:
-#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, 
-#               concomitant = Conc, k = 9, nrep = 5)
+#   stepFlexmix(cbind(vivas3, siembra - vivas3) ~ 1, model = Mod.fam, concomitant = Conc, 
+#               k = 2, nrep = 5)
 # 
 # Cluster sizes:
-#   1  2  3 
-# 5 13 25 
+#   1  2 
+# 15 28 
 # 
-# no convergence after 200 iterations
-
+# convergence after 8 iterations
 # Parámetro binomial para cada componente
 fitted(OtroModelo3)
 p.OtroModelo3 <- fitted(OtroModelo3)[1, ]
@@ -1612,7 +1685,7 @@ colnames(grupo.reclutamiento.3.1) <-
     "Phenotypic.Group")
 
 head(grupo.reclutamiento.3.1)
-# setwd("C:/Users/usuario/Documents/Jardin_comun/Progenie/reclutamiento/datos")#Directorio de Diana
+# setwd(datos_reclutamiento_path)#Directorio de Diana
 # setwd("C:/_transfer/Review/MelissaPineda/Data_Melissa") #Ivan's working directory Lehmann
 # setwd("C:/_transfer/Papers/EspeletiaSumapazCommonGarden/datos/reclutamiento") #Ivan's working directory Waterman
 # write.csv(
@@ -1646,22 +1719,14 @@ pm.comp.2 <-
                      size = siembra,
                      prob = p.comp.2,
                      log = FALSE) #masa de probabilidad grupo 2
-p.comp.3 <-
-  exp(parameters(OtroModelo3)[3]) / (1 + exp(parameters(OtroModelo3)[3])) #parámetro p grupo 1
-pi.comp.3 <-
-  sum(OtroModelo3@cluster == 3) / length(OtroModelo3@cluster) #parámetro pi grupo 3
-pm.comp.3 <-
-  pi.comp.3 * dbinom(seq(0, 24, 1),
-                     size = siembra,
-                     prob = p.comp.3,
-                     log = FALSE)#masa de probabilidad grupo 3
+
 
 #Representación gráfica del mejor modelo: gráficos de barras representando la asignación de cada planta madre a
 #cada componente del mejor modelo 
 # par(mar=c(5, 4, 4, 2) + 0.1) #valor por defecto
 par(mar = c(6, 5, 4, 5) + 0.1)
 hist(
-  vivas2[OtroModelo3@cluster == 1],#R2
+  vivas3[OtroModelo3@cluster == 1],#R2
   breaks = seq(-0.5, 24.5, 1),
   xlab = "Reclutamiento (Número de plantas hijas)",
   ylab = "", #Número de plantas madre",
@@ -1711,16 +1776,13 @@ axis(
   las = 1
 )
 hist(
-  vivas2[OtroModelo3@cluster == 2], #R3
+  vivas3[OtroModelo3@cluster == 2], #R3
   breaks = seq(-0.5, 24.5, 1),
   add = T,
   density = 15,
   col = "black"
 )
-hist(vivas2[OtroModelo3@cluster == 3], #R1
-     breaks = seq(-0.5, 24.5, 1),
-     add = T,
-     col = "transparent")
+
 #hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=-45, col="black")
 #hist(vivas2[OtroModelo3@cluster==3], breaks=seq(-0.5, 24.5, 1), add=T, density=20, angle=45, col="black")
 # # Leyenda
@@ -1745,6 +1807,7 @@ hist(vivas2[OtroModelo3@cluster == 3], #R1
 #Representación gráfica del mejor modelo: adicionar al gráfico de barras anterior la distribución binomial
 #correspondiente a cada componente del mejor modelo
 par(new = T)
+
 plot(
   0:24,
   pm.comp.2, #R3
@@ -1764,14 +1827,6 @@ points(
   xlim = c(-0.5, 24.5),
   pch = 4
 )
-points(
-  0:24,
-  pm.comp.3, #R1
-  type = "o",
-  xlim = c(-0.5, 24.5),
-  pch = 24,
-  cex = 1.5
-)
 axis(side = 4, cex.axis = 1.3, las = 1)
 mtext(side = 4,
       "Probabilidad",
@@ -1790,6 +1845,9 @@ grupo.reclutamiento.3.vs.3.1 <-
 table(grupo.reclutamiento.3.vs.3.1[,3],
       grupo.reclutamiento.3.vs.3.1[, 2]
 )
+#    1  2  3
+# 1  2  0 13
+# 2  0 25  3
 
 #################################################################################################################
 #Graficar el soporte empírico para el mejor modelo para cada grupo según reclutamiento.
@@ -1797,6 +1855,10 @@ models3 <- show(Modelos3)
 models3[,7] <- round(models3[,7],3)
 bic.models3 <- models3[!duplicated(models3$BIC),c(3,7)]
 bic.models3
+# k     BIC
+# 1 1 336.792
+# 2 2 235.572
+# 9 3 234.003
 
 min.BIC.Bin <- min(bic.models3$BIC)
 # Directorio para guardar figuras
@@ -1818,9 +1880,9 @@ plot(
   xlab = "Número de grupos según el reclutamiento\n a 51.4 meses después de la siembra ",
   ylab = expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
   main = "",
-  cex.axis = 1.5,
-  cex.lab = 1.5,
-  cex.main = 1.5
+  cex.axis = 1.3,
+  cex.lab = 1.3,
+  cex.main = 1.3
 )
 points(
   bic.models3$k,
@@ -1837,17 +1899,18 @@ axis(
   at = c(1, seq(2, 9, 1)),
   labels = T,
   tcl = -0.5,
-  cex.axis = 1.5
+  cex.axis = 1.3
 )
 axis(2,
      at = seq(-110, 0,10),
      labels = seq(110, 0,-10),
      tcl = -0.7,
-     cex.axis = 1.5,
+     cex.axis = 1.3,
      las=1)
 abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
 segments(x0 =OtroModelo3@k,y0 = -110, x1 = OtroModelo3@k, y1 = -0.090, lty = 3)
 title(expression("E)"), adj = 0)
+
 
 # Acotando soporte empírico entre 0-10
 par(mar = c(6, 5, 4, 2))
@@ -1863,9 +1926,9 @@ plot(
   xlab = "Número de grupos según el reclutamiento\n a 51.4 meses después de la siembra",
   ylab = "", # expression(paste("Soporte empírico (", Delta, "BIC)", sep = "")),
   main = "",
-  cex.axis = 1.5,
-  cex.lab = 1.5,
-  cex.main = 1.5
+  cex.axis = 1.3,
+  cex.lab = 1.3,
+  cex.main = 1.3
 )
 points(
   bic.models3$k,
@@ -1882,13 +1945,13 @@ axis(
   at = c(1, seq(2, 9, 1)),
   labels = T,
   tcl = -0.5,
-  cex.axis = 1.5
+  cex.axis = 1.3
 )
 axis(2,
      at = seq(-10, 0,2),
      labels = seq(10, 0,-2),
      tcl = -0.7,
-     cex.axis = 1.5,
+     cex.axis = 1.3,
      las=1)
 abline(v =MejorModelo3@k, lty = 3) #para determinar el modelo con el mejor soporte
 segments(x0 =OtroModelo3@k,y0 = -10, x1 = OtroModelo3@k, y1 = -0.090, lty = 3)
@@ -1913,8 +1976,9 @@ grupo.reclutamiento.1.vs.2 <-
     all = T,
     suffixes = c(".11.4", ".19.6")
   )
+colnames(grupo.reclutamiento.1.vs.2)
 table(grupo.reclutamiento.1.vs.2[, 3],
-      grupo.reclutamiento.1.vs.2[, 2])
+      grupo.reclutamiento.1.vs.2[, 2],deparse.level =  2)
 #    1  2  3
 # 1  1  0 20
 # 2 18  0  0
@@ -2020,11 +2084,13 @@ grupo.reclutamiento.2.vs.3 <-
     by = "Collector.Collection.Number",
     suffixes = c(".19.6", ".51.4")
   )
+colnames(grupo.reclutamiento.2.vs.3)
 table(grupo.reclutamiento.2.vs.3[, 3],
-      grupo.reclutamiento.2.vs.3[, 2])
+      grupo.reclutamiento.2.vs.3[, 2],deparse.level =  2)
 #    1  2  3
-# 1 21  7  0
-# 2  0 11  4
+# 1  0  2  0
+# 2 21  0  4
+# 3  0  2 14
 
 # 8.2.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 19.6 y
 #51.4: tau(19.6, 51.4) y tau(51.4, 19.6)
@@ -2036,8 +2102,10 @@ GKtau(
 )
 # xName
 # 1 grupo.reclutamiento.2.vs.3$Phenotypic.Group.19.6
-# yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.2.vs.3$Phenotypic.Group.51.4  3  2 0.562 0.341
+# yName
+# 1 grupo.reclutamiento.2.vs.3$Phenotypic.Group.51.4
+# Nx Ny tauxy tauyx
+# 1  3  3 0.633 0.589
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2126,12 +2194,13 @@ grupo.reclutamiento.2.vs.3.1 <-
     by = "Collector.Collection.Number",
     suffixes = c(".19.6", ".51.4")
   )
+colnames(grupo.reclutamiento.2.vs.3.1)
 table(grupo.reclutamiento.2.vs.3.1[, 3],
-      grupo.reclutamiento.2.vs.3.1[, 2])
-# 1  2  3
-# 1  0  1 12
-# 2 21  0  4
-# 3  0  3  2
+      grupo.reclutamiento.2.vs.3.1[, 2],deparse.level =  2)
+# grupo.reclutamiento.2.vs.3.1[, 2]
+# grupo.reclutamiento.2.vs.3.1[, 3]  1  2  3
+# 1  0  4 11
+# 2 21  0  7
 
 # 8.3.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 19.6 y
 #51.4: tau(19.6, 51.4) y tau(51.4, 19.6)
@@ -2144,7 +2213,7 @@ GKtau(
 # xName
 # 1 grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.19.6
 # yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4  3  3 0.566 0.558
+# 1 grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4  3  2 0.562 0.341
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2222,7 +2291,7 @@ sum(
     grupo.reclutamiento.2.vs.3.1$Phenotypic.Group.51.4
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0
+# 1e-05
 
 #################################################################################################################
 # 8.4) 11.4 meses después de la siembra vs. 51.4 meses después de la siembra
@@ -2235,11 +2304,12 @@ grupo.reclutamiento.1.vs.3 <-
     suffixes = c(".11.4", ".51.4")
   )
 table(grupo.reclutamiento.1.vs.3[, 2],
-      grupo.reclutamiento.1.vs.3[, 3])
-#    1  2
-# 1  8 11
-# 2  0  4
-# 3 20  0
+      grupo.reclutamiento.1.vs.3[, 3], deparse.level = 2)
+# grupo.reclutamiento.1.vs.3[, 3]
+# grupo.reclutamiento.1.vs.3[, 2]  1  2  3
+                                # 1  0  5 14
+                                # 2  2  0  2
+                                # 3  0 20  0
 
 # 8.4.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #11.4: tau(51.4, 11.4) y tau(11.4, 51.4)
@@ -2252,7 +2322,7 @@ GKtau(
 # xName
 # 1 grupo.reclutamiento.1.vs.3$Phenotypic.Group.51.4
 # yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4  2  3 0.306 0.526
+# 1 grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4  3  3 0.539 0.582
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2297,7 +2367,7 @@ sum(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 8e-05
+# 0
 
 # Gráfica de la distribución nula de tau(11.4, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -2330,7 +2400,7 @@ sum(
     grupo.reclutamiento.1.vs.3$Phenotypic.Group.11.4
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 1e-05
+# 0
 
 #################################################################################################################
 # 8.5) 11.4 meses después de la siembra vs. 51.4 meses después de la siembra (Otro modelo)
@@ -2342,12 +2412,14 @@ grupo.reclutamiento.1.vs.3.1 <-
     by = "Collector.Collection.Number",
     suffixes = c(".11.4", ".51.4")
   )
+colnames(grupo.reclutamiento.1.vs.3.1)
 table(grupo.reclutamiento.1.vs.3.1[, 2],
-      grupo.reclutamiento.1.vs.3.1[, 3])
-# 1  2  3
-# 1 12  5  2
-# 2  0 20  0
-# 3  1  0  3
+      grupo.reclutamiento.1.vs.3.1[, 3], deparse.level = 2)
+# grupo.reclutamiento.1.vs.3.1[, 3]
+# grupo.reclutamiento.1.vs.3.1[, 2]  1  2
+# 1 11  8
+# 2  4  0
+# 3  0 20
 
 # 8.5.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #11.4: tau(51.4, 11.4) y tau(11.4, 51.4)
@@ -2360,7 +2432,7 @@ GKtau(
 # xName
 # 1 grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.51.4
 # yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4  3  3 0.509 0.524
+# 1 grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4  2  3 0.306 0.526
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2405,7 +2477,7 @@ sum(
     grupo.reclutamiento.1.vs.3.1$Phenotypic.Group.11.4
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0
+# 3e-05
 
 # Gráfica de la distribución nula de tau(11.4, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -2452,7 +2524,7 @@ grupo.reclutamiento.1.vs.morfologia <-
   )
 
 table(grupo.reclutamiento.1.vs.morfologia[, 2],
-      grupo.reclutamiento.1.vs.morfologia[, 3])
+      grupo.reclutamiento.1.vs.morfologia[, 3], deparse.level = 2)
 #    2  3  4  5
 # 1  4 10  0  5
 # 2  0  1  2  1
@@ -2672,8 +2744,9 @@ grupo.reclutamiento.3.vs.morfologia <-
 table(grupo.reclutamiento.3.vs.morfologia[, 2],
       grupo.reclutamiento.3.vs.morfologia[, 3])
 #    2  3  4  5
-# 1  3 13  3  9
-# 2  3  5  2  5
+# 1  0  0  1  1
+# 2  2 12  3  8
+# 3  4  6  1  5
 
 # 8.7.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #Group.madre: tau(51.4, Group.madre) y tau(Group.madre, 51.4)
@@ -2686,7 +2759,7 @@ GKtau(
 # xName
 # 1 grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.51.4
 # yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre  2  4 0.009 0.025
+# 1 grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre  3  4 0.041 0.062
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2731,7 +2804,7 @@ sum(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.77906
+#0.54648
 
 # Gráfica de la distribución nula de tau(Group.madre, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -2764,7 +2837,7 @@ sum(
     grupo.reclutamiento.3.vs.morfologia$Phenotypic.Group.madre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.8222
+# 0.482
 
 #################################################################################################################
 # 8.8) 51.4 meses después de la siembra (otro modelo) vs. morfología
@@ -2780,9 +2853,8 @@ grupo.reclutamiento.3.1.vs.morfologia <-
 table(grupo.reclutamiento.3.1.vs.morfologia[, 2],
       grupo.reclutamiento.3.1.vs.morfologia[, 3])
 # 2  3  4  5
-# 1  3  6  0  4
-# 2  2 12  3  8
-# 3  1  0  2  2
+# 1  3  5  2  5
+# 2  3 13  3  9
 
 # 8.8.1) Calcular los estadísticos Goodman-Kruskal tau para la concordancia entre grupos de reclutamiento a 51.4 y
 #Group.madre: tau(51.4, Group.madre) y tau(Group.madre, 51.4)
@@ -2795,7 +2867,7 @@ GKtau(
 # xName
 # 1 grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.51.4
 # yName Nx Ny tauxy tauyx
-# 1 grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre  3  4 0.062 0.079
+# 1 grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre  2  4 0.009 0.025
 
 # Modelo nulo para medir la significancia de los valores de los estadísticos Goodman-Kruskal tau
 k <- 100000 #numero de iteraciones del modelo nulo
@@ -2839,7 +2911,7 @@ sum(
     grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
   )[[5]] <= GKtau.nulo.mat[, 1]
 ) / k
-# 0.25451
+# 0.77947
 
 # Gráfica de la distribución nula de tau(Group.madre, 51.4),
 par(mar = c(5, 5, 2, 2) + 0.1)
@@ -2872,4 +2944,4 @@ sum(
     grupo.reclutamiento.3.1.vs.morfologia$Phenotypic.Group.madre
   )[[6]] <= GKtau.nulo.mat[, 2]
 ) / k
-# 0.36088
+# 0.82295
